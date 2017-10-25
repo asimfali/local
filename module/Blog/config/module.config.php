@@ -1,6 +1,6 @@
 <?php
 
-namespace Blog\Controller;
+namespace Blog;
 
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
@@ -17,14 +17,14 @@ return [
             ],
             'orm_default' => [
                 'drivers' => [
-                    'Blog\Entity' => 'blog_entity',
+                    'Entity' => 'blog_entity',
                 ]
             ]
         ]
     ],
     'controllers' => [
         'factories' => [
-            IndexController::class => InvokableFactory::class,
+             Controller\IndexController::class => InvokableFactory::class,
         ]
     ],
     'router' => [
@@ -38,7 +38,7 @@ return [
                         'id'    => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => IndexController::class,
+                        'controller' => Controller\IndexController::class,
                         'action' => 'index',
                     ],
                 ],
