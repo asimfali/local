@@ -7,6 +7,8 @@
  */
 namespace Admin\Controller;
 use Admin\Factory\ArticleControllerFactory;
+use Admin\Factory\CommentControllerFactory;
+use Zend\Navigation\Service\DefaultNavigationFactory;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
@@ -19,6 +21,7 @@ return [
             IndexController::class => InvokableFactory::class,
             CategoryController::class => CategoryControllerFactory::class,
             ArticleController::class => ArticleControllerFactory::class,
+            CommentController::class => CommentControllerFactory::class,
         ],
     ],
     'router' => [
@@ -58,6 +61,16 @@ return [
                             ]
                         ]
                     ],
+                    'comment' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => 'comment/[:action/][:id/]',
+                            'defaults' => [
+                                'controller' => CommentController::class,
+                                'action' => 'index',
+                            ]
+                        ]
+                    ],
             ] //child routes
             ],
 
@@ -75,49 +88,6 @@ return [
 //            ] //child routes
         ]
     ],
-    'navigation' => [
-        'default' => [
-            [
-                'label' => 'Главная',
-                'route' => 'home',
-            ],
-        ],
-        'admin_navigation' => [
-            [
-                'label' => 'Панель управления сайтом',
-                'route' => 'admin',
-                'action' => 'index',
-                'resource' => 'Admin\\Controller\\Index',
-                'pages' => [
-                    [
-                        'label' => 'Статьи',
-                        'route' => 'admin/article',
-                        'action' => 'index',
-                    ],
-                    [
-                        'label' => 'Добавить статью',
-                        'route' => 'admin/article',
-                        'action' => 'add',
-                    ],
-                    [
-                        'label' => 'Категории',
-                        'route' => 'admin/category',
-                        'action' => 'index',
-                    ],
-                    [
-                        'label' => 'Добавить категорию',
-                        'route' => 'admin/category',
-                        'action' => 'add',
-                    ],
-//                    [
-//                        'label' => 'Добавить комментарий',
-//                        'route' => 'admin/comment',
-//                        'action' => 'index',
-//                    ]
-                ]
-            ]
-        ]
-    ],
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',
@@ -128,7 +98,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'navigation' => 'Zend\\Navigation\\Service\\DefaultNavigationFactory',
+            'navigation' => DefaultNavigationFactory::class,
             'admin_navigation' => 'Admin\\Lib\\AdminNavigationFactory'
         ]
     ]

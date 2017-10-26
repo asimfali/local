@@ -13,6 +13,7 @@ use Custom\BaseController;
 use Doctrine\ORM\EntityManager;
 use Entity\Category;
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
 
 class CategoryController extends BaseController
 {
@@ -20,6 +21,13 @@ class CategoryController extends BaseController
     public function __construct(EntityManager $entityManager)
     {
         parent::__construct($entityManager);
+    }
+
+    public function onDispatch(MvcEvent $e)
+    {
+        $r = parent::onDispatch($e);
+        $this->layout()->setTemplate('layout/admin_layout');
+        return $r;
     }
 
     public function indexAction()

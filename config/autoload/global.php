@@ -12,5 +12,52 @@
  */
 
 return [
-    // ...
+    'navigation' => [
+        'default' => [
+            [
+                'label' => 'Главная',
+                'route' => 'home',
+            ],
+        ],
+        'admin_navigation' => [
+            [
+                'label' => 'Панель управления сайтом',
+                'route' => 'admin',
+                'action' => 'index',
+                'resource' => 'Admin\\Controller\\Index',
+                'pages' => [
+                    [
+                        'label' => 'Статьи',
+                        'route' => 'admin/article',
+                        'action' => 'index',
+                    ],
+                    [
+                        'label' => 'Добавить статью',
+                        'route' => 'admin/article',
+                        'action' => 'add',
+                    ],
+                    [
+                        'label' => 'Категории',
+                        'route' => 'admin/category',
+                        'action' => 'index',
+                    ],
+                    [
+                        'label' => 'Добавить категорию',
+                        'route' => 'admin/category',
+                        'action' => 'add',
+                    ],
+                    [
+                        'label' => 'Комментарии',
+                        'route' => 'admin/comment',
+                        'action' => 'index',
+                    ],
+                ]
+            ]
+        ]
+    ],
+    'service_manager' => [
+        'abstract_factories' => [
+            Zend\Navigation\Service\NavigationAbstractServiceFactory::class,
+        ],
+    ],
 ];

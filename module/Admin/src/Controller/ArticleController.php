@@ -13,10 +13,18 @@ use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject as DoctrineHydrator;
 use Entity\Article;
+use Zend\Mvc\MvcEvent;
 use Zend\Paginator\Paginator;
 
 class ArticleController extends BaseController
 {
+    public function onDispatch(MvcEvent $e)
+    {
+        $r = parent::onDispatch($e);
+        $this->layout()->setTemplate('layout/admin_layout');
+        return $r;
+    }
+
     public function indexAction()
     {
         $query = $this->entityManager->createQueryBuilder();

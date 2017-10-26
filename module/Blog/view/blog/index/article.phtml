@@ -1,0 +1,96 @@
+<?php
+    echo "
+        <article>
+        <div class='page-header'>
+        <h1 style='font-size: 2em;'>{$article->getTitle()}</h1>
+        </div>
+        <div>{$article->getFullArticle()}</div>
+        </article>
+    ";
+?>
+
+<div class="bs-docs-section">
+    <div class="well">
+
+        <?php
+        $id = $article->getId();
+        $form->setAttribute('action', $this->url('blog', ['action' => 'comment-add', 'id' => $id]));
+        $form->setAttribute('class', 'form-horizontal');
+        $form->prepare();
+
+        echo $this->form()->openTag($form);
+        echo '<fieldset><legend>Добавить комментарий</legend>';
+        echo "<div id='comment-errors'></div>";
+
+        $e = $form->get('userEmail');
+        $e->setLabelAttributes(['class' => 'col-lg-2 control-label']);
+        echo "<div class='form-group'></div>";
+        echo $this->formLabel($e);
+        echo "<div class='col-lg-10'>{$this->formEmail($e)}</div>";
+
+        $e = $form->get('comment');
+        $e->setLabelAttributes(['class' => 'col-lg-2 control-label']);
+        echo "<div class='form-group'></div>";
+        echo $this->formLabel($e);
+        echo "<div class='col-lg-10'>{$this->formTextarea($e)}</div>";
+        echo "<input type='hidden' value='{$id}' name='article'>";
+
+        echo $this->formRow($form->get('submit'));
+        echo "</div>";
+        echo '</<fieldset>';
+        echo $this->form()->closeTag();
+        ?>
+
+<script>
+    $(function () {
+       $("form#comment").submit(function () {
+           let fData = $('#comment').serialize();
+           $.ajax({
+               url: '/comment-add/',
+               type: 'post',
+               dataType: 'json',
+               data: fData,
+               success: function (data) {
+                   if (data['success'] == 1){
+                       $('#new-comment-email h3').html($('#user_email').val());
+                       $('#new-comment-body').html($('#user_comment').val());
+                       $('#new-comment').show();
+                       $('.bs-docs-section').hide('slow');
+                       $('#no-comments').hide();
+                   } else {
+                       $('#comment-errors').html('');
+                       for (let key in data){
+                           $('#comment-errors').append('<span>'+data[key][0]+'</span>');
+                       }
+                   }
+               }
+           });
+           return false;
+       });
+    });
+</script>
+
+
+<?php
+    $comments = $article->getComments();
+    $commentCnt = $comments->count();
+    if($commentCnt){
+        echo "<h3>Комментарии ({$commentCnt})</h3>";
+        foreach ($comments as $comment) {
+           echo "<div class='panel panel-default'>
+                <div class='panel-heading'>{$comment->getUserEmail()}</div>
+                <div class='panel-body'>{$comment->getComment()}</div>
+                </div>";
+        }
+    } else {
+        echo "<h3 id=\"no-comments\">Комментариев нет</h3>";
+    }
+?>
+
+<div id="new-comment" class="panel panel-success" style="display: none;">
+    <div id="new-comment-email" class="panel-heading"><h3 class="panel-title"></h3></div>
+    <div id="new-comment-body" class="panel-body"></div>
+</div>
+        
+    </div>
+</div>

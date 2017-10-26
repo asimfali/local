@@ -2,6 +2,7 @@
 
 namespace Blog;
 
+use Blog\Factory\IndexControllerFactory;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
 
@@ -24,7 +25,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-             Controller\IndexController::class => InvokableFactory::class,
+             Controller\IndexController::class => IndexControllerFactory::class,
         ]
     ],
     'router' => [
@@ -32,7 +33,7 @@ return [
             'blog' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/',//'[/:action][/:id]',
+                    'route' => '/[:action/][:id/]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'    => '[0-9]+',

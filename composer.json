@@ -18,7 +18,8 @@
         "zfcampus/zf-development-mode": "^3.0",
         "doctrine/doctrine-orm-module": "^1.1",
         "zendframework/zend-mvc-plugin-flashmessenger": "^1.0",
-        "zendframework/zend-mvc-form": "^1.0"
+        "zendframework/zend-mvc-form": "^1.0",
+        "zendframework/zend-navigation": "^2.8"
     },
     "autoload": {
         "psr-4": {
@@ -26,7 +27,8 @@
             "Blog\\": "module/Blog/src/",
             "Admin\\": ["module/Admin/src/", "module/Admin/src/Filter", "module/Admin/src/Form"],
             "Entity\\": "module/Blog/src/Entity/",
-            "Custom\\": "module/Custom/"
+            "Custom\\": "module/Custom/",
+            "AuthDoctrine\\": "module/AuthDoctrine/src/"
         },
         "classmap": ["module/Admin/src/Filter"]
     },
