@@ -8,6 +8,7 @@
 namespace Admin\Factory;
 
 use Admin\Controller\ArticleController;
+use Zend\Http\Header\Location;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Interop\Container\ContainerInterface;
 
@@ -15,6 +16,7 @@ class ArticleControllerFactory implements FactoryInterface{
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        return new ArticleController($entityManager);
+        $auth = $container->get('doctrine.authenticationservice.orm_default');
+        return new ArticleController($entityManager, $auth);
     }
 }

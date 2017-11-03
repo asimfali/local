@@ -45,7 +45,7 @@ class CommentController extends BaseController
             return $this->redirect()->toRoute('admin/comment');
         }
         $commentForm = new CommentForm();
-        $form = $commentForm->getCommentForm($comment, $this->entityManager);
+        $form = $commentForm->getForm($comment, $this->entityManager); //$commentForm->getCommentForm($comment, $this->entityManager);
         if ($this->request->isPost()){
             $form->setData($this->request->getPost());
             if ($form->isValid()){

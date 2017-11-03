@@ -1,0 +1,58 @@
+<?php
+$this->headTitle("Регистрация");
+$flash = $this->flashMessenger();
+$flash->setMessageOpenFormat('<div%s>
+     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+         &times;
+     </button>
+     <ul><li>')
+    ->setMessageSeparatorString('</li><li>')
+    ->setMessageCloseString('</li></ul></div>');
+
+echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+
+$form->prepare();
+$exist = ['usrRegistrationDate','usrPasswordSalt'];
+echo $this->form()->openTag($form);
+echo '<fieldset><legend>Регистрация</legend>';
+foreach ($form as $element){
+    echo '<div class="form-group">';
+    $attr = $element->getAttributes();
+    if (in_array($attr['name'], $exist)) continue;
+    if ($element->getLabel()){
+        $element->setLabelAttributes(['class' => 'col-lg-4 control-label']);
+        $label = $element->getLabel();
+        if (isset($attr['required'])){
+            $element->setLabel($element->getLabel() . ' *');
+        }
+        $label = "<label class='col-lg-2 control-label'>{$label}</label>";
+    }
+    $type = isset($attr['type']) ?  $attr['type'] : '';
+    $formElement = '';
+
+    switch ($type){
+//        case 'text':
+//            $formElement = $this->formInput($element);
+//            break;
+//        case 'textarea':
+//            $formElement = $this->formTextArea($element);
+//            break;
+//        case 'select':
+//            $formElement = $this->formSelect($element);
+//            break;
+        case 'submit':
+            $formElement = $this->formSubmit($element);
+            break;
+        default:
+            $formElement = $this->formRow($element);
+            $label = ''; break;
+    }
+    echo "{$label} <div class='col-lg-10'>{$formElement}</div>";
+    echo "</div>";
+}
+echo '</<fieldset>';
+echo $this->form()->closeTag();
+?>

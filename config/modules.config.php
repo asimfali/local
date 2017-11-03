@@ -23,10 +23,11 @@ return [
     'Zend\Hydrator',
     'Zend\Router',
     'Zend\Validator',
-    'ZendDeveloperTools',
+//    'ZendDeveloperTools',
     'DoctrineModule',
     'DoctrineORMModule',
     'Application',
     'Blog',
     'Admin',
+    "AuthDoctrine",
 ];
