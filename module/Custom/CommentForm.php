@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Stdlib\Hydrator\DoctrineObject;
 use DoctrineORMModule\Form\Annotation\AnnotationBuilder;
 use Entity\Comment;
+use Entity\Role;
 use Entity\User;
 
 class CommentForm
@@ -35,6 +36,11 @@ class CommentForm
         $form->setAttribute('action','/auth-doctrine/index/register/');
         $form->get('submit')->setAttribute('value', 'Зарегистрировать');
         $form->get('usrEmail')->setAttribute('type', 'email');
+        return $form;
+    }
+    public function getRoleForm(Role $role, EntityManager $entityManager){
+        $form = $this->getForm($role, $entityManager);
+        $form->setAttribute('action','/auth-doctrine/role/index');
         return $form;
     }
     public function getForm($class, EntityManager $entityManager){

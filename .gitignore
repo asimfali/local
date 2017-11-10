@@ -4,3 +4,14 @@ config/development.config.php
 data/cache/*
 !data/cache/.gitkeep
 phpunit.xml
+.idea/Zend.iml
+.idea/deployment.xml
+.idea/modules.xml
+.idea/php.xml
+.idea/workspace.xml
+module/Admin/test/
+module/Blog/src/Entity/
+module/Blog/test/
+public/img/!favicon.ico
+public/img/Arrow.png
+data/M

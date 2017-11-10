@@ -12,6 +12,26 @@
  */
 
 return [
+    // Настройка кэша
+    'caches' => [
+        'FilesystemCache' => [
+            'adapter' => [
+                'name' => \Zend\Cache\Storage\Adapter\Filesystem::class,
+                'options' => [
+                    'cache_dir' => './data/cache',
+                    'ttl' => 60*60*1,
+                ],
+            ],
+            'plugins' => [
+                [
+                    'name' => 'serialiser',
+                    'options' => [
+
+                    ],
+                ],
+            ],
+        ],
+    ],
     // Настройка сессии.
     'session_config' => [
         // Срок действия cookie сессии истечет через 1 час.
@@ -38,7 +58,7 @@ return [
                 'route' => 'home',
             ],
             [
-                'label' => 'Регистрация',
+                'label' => 'Вход',
 //                'uri' => 'index/login/',
                 'route' => 'auth-doctrine',
 //                'controller' => 'index',

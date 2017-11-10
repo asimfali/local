@@ -21,7 +21,7 @@ class IndexController extends BaseController
             ->add('select', 'a')
             ->add('from', 'Entity\\Article a')
             ->add('where', 'a.isPublic=1')
-            ->add('orderBy', 'a.id ASC');
+            ->add('orderBy', 'a.id DESC');
         $adapter = new DoctrinePaginator(new ORMPaginator($query));
         $paginator = new Paginator($adapter);
         $paginator->setDefaultItemCountPerPage(2);
