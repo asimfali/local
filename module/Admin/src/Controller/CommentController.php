@@ -15,7 +15,7 @@ use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator;
 use Entity\Comment;
 use Zend\Paginator\Paginator;
 
-class CommentController extends BaseController
+class CommentController extends BaseController  
 {
     public function indexAction()
     {

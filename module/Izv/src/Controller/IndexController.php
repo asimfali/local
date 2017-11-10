@@ -9,7 +9,15 @@
 namespace Izv\Controller;
 
 
-class IndexController
-{
+use Custom\BaseAdminController;
+use Custom\Query;
 
+class IndexController extends BaseAdminController
+{
+    public function indexAction()
+    {
+        $q = new Query($this->entityManager, ['select' => 'a', 'from' => '', 'order' => '', 'desc' => '']);
+        $q->setPaginator(10);
+        return $q->ret('izv');
+    }
 }
