@@ -17,7 +17,7 @@ return [
     ],
     'router' => [
     'routes' => [
-        'blog' => [
+        'izv' => [
             'type' => Segment::class,
             'options' => [
                 'route' => '/[:action/][:id/]',

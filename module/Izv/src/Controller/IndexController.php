@@ -20,4 +20,16 @@ class IndexController extends BaseAdminController
         $q->setPaginator(10);
         return $q->ret('izv');
     }
+    public function addAction()
+    {
+        
+    }
+    public function editAction()
+    {
+
+    }
+    public function deleteAction()
+    {
+
+    }
 }

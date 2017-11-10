@@ -11,15 +11,74 @@ namespace Custom;
 
 use Doctrine\ORM\EntityManager;
 use Zend\Authentication\AuthenticationService;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
 class BaseAdminController extends AbstractActionController
 {
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
+    /**
+     * @var FlashMessenger
+     */
+    protected $fm;
+    /**
+     * @var
+     */
+    protected $status;
+    /**
+     * @var
+     */
+    protected $message;
+    /**
+     * @var
+     */
+    protected $id;
+    /**
+     * @var Request
+     */
+    protected $req;
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+    public function getId()
+    {
+        return $this->id = $this->params()->fromRoute('id',0);
+    }
+    public function getFM()
+    {
+        $this->fm = $this->flashMessenger();
+        $this->fm->setNamespace($this->status);
+        $this->fm->addMessage($this->message);
+        return $this->fm;
+    }
+    public function redir($path)
+    {
+        return $this->redirect()->toRoute($path);
+    }
+    public function getReq()
+    {
+        return $this->req = $this->getRequest();
+    }
+    public function initFM()
+    {
+        $this->fm->setMessageOpenFormat('<div%s>
+         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+             &times;
+         </button>
+         <ul><li>')
+        ->setMessageSeparatorString('</li><li>')
+        ->setMessageCloseString('</li></ul></div>');
+
+        echo $this->fm->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+        echo $this->fm->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+        echo $this->fm->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+        echo $this->fm->render('success', array('alert', 'alert-dismissible', 'alert-success'));
     }
 }
 
