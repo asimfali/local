@@ -75,6 +75,16 @@ class Version20171103085046 extends AbstractMigration
         $table->addForeignKeyConstraint('role', ['role_id'],['id'],
             ['onDelete' => 'CASCADE', 'onUpdate' => 'CASCADE'], 'user_role_role_id_fk');
         $table->addOption('engine', 'InnoDB');
+        // izv_content table
+        $table = $schema->createTable('izv_content');
+        $table->addColumn('id', 'integer', ['autoincrement' => true]);
+        $table->addColumn('name', 'string', ['notnull' => true, 'length' =>128]);
+        $table->addColumn('content', 'string', ['notnull' => true, 'length' =>1024]);
+        $table->setPrimaryKey(['id']);
+        $table->addForeignKeyConstraint('izv', ['content_id'],['id'],
+            ['onDelete' => 'RESTRICT', 'onUpdate' => 'RESTRICT'], 'izv_content_id_fk');
+        $table->addUniqueIndex(['name'], 'name_idx');
+        $table->addOption('engine', 'InnoDB');
     }
 
     /**

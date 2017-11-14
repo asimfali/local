@@ -5,6 +5,7 @@
      * @var \Custom\FlashMsgr $fm
      */
     $fm->pr();
+    $_POST['a'] = "fsdljfsd";
 ?>
 <table class="table table-striped table-hover">
     <tbody>
@@ -32,6 +33,7 @@
             <td>{$item->getId()}</td>
             <td>{$catName}</td>
             <td>{$item->getTxt()}</td>
+            <td>{$item->getCode()}</td>
             <td>{$isPublic}</td>";
         echo '<td><a href="'.$this->url('izv', array('action' => 'edit', 'id' => $item->getId())).'">Редактировать</a>&nbsp;&nbsp;
             <a href="'.$this->url('izv', array('action' => 'delete', 'id' => $item->getId())).'" onclick="if (confirm(\'Удалить запись?\'))

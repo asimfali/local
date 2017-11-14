@@ -105,6 +105,7 @@ class BaseAdminController extends AbstractActionController
             return ['form' => $this->form, 'id' => $this->id];
         }
         $this->redir($arr['Redirect']);
+        return null;
     }
     public function edit($arr)
     {
@@ -127,11 +128,11 @@ class BaseAdminController extends AbstractActionController
             return ['form' => $this->form, 'id' => $this->id];
         }
         $this->redir($arr['Redirect']);
+        return null;
     }
     public function delete($arr)
     {
         try {
-            $r = $this->entityManager->getRepository($arr['Entity']);
             $item = $this->getItem($arr);
             $this->entityManager->remove($item);
             $this->entityManager->flush();

@@ -58,8 +58,10 @@ class FlashMsgr
                 }
                 break;
             default:
+                return;
                 break;
         }
+        if (count($this->entities) == 1) return;
         $this->entities[] = '</ul>';
         $this->entities[] = "</div>";
         echo $header;
