@@ -53,8 +53,25 @@ class BaseAdminController extends AbstractActionController
     public function getFM()
     {
         $this->fm = $this->flashMessenger();
-        $this->fm->setNamespace($this->status);
-        $this->fm->addMessage($this->message);
+        switch ($this->status){
+            case 'error':
+                $this->fm->addErrorMessage($this->message);
+                break;
+            case 'info':
+                $this->fm->addInfoMessage($this->message);
+                break;
+            case 'success':
+                $this->fm->addSuccessMessage($this->message);
+                break;
+            case 'warning':
+                $this->fm->addWarningMessage($this->message);
+                break;
+            default:
+                $this->fm->addMessage($this->message);
+                break;
+        }
+//        $this->fm->setNamespace($this->status);
+//        $this->fm->addMessage($this->message);
         return $this->fm;
     }
     public function redir($path)

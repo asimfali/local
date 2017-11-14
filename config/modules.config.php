@@ -31,4 +31,5 @@ return [
     'Blog',
     'Admin',
     "AuthDoctrine",
+    "Izv",
 ];

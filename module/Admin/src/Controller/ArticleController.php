@@ -55,7 +55,7 @@ class ArticleController extends BaseController
                 $status = 'success';
                 $message = 'Категория добавлена';
             } else {
-                $status = 'erroe';
+                $status = 'error';
                 $message = 'ошибка параметров';
                 foreach ($form->getInputFilter()->getInvalidInput() as $errors) {
                     foreach ($errors->getMessages() as $error){

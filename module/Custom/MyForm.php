@@ -67,6 +67,17 @@ class MyForm
     }
 
     /**
+     * @return Form
+     */
+    public function getForm(){
+        return $this->form;
+    }
+
+    public function setData($arr){
+        $this->form->setData($arr);
+    }
+
+    /**
      * @param $act - контроллер действие
      */
     public function setAction($act)
@@ -91,6 +102,7 @@ class MyForm
     {
         $this->r = $rend;
         $this->helper = $this->r->form();
+        $this->form->setAttribute('class', $arr['form']);
         $this->elements[] = $this->helper->openTag($this->form);
         $this->elements[] = "<fieldset><legend>{$title}</legend>";
         $els = $this->form->getElements();
@@ -104,19 +116,32 @@ class MyForm
                 if (isset($this->attr['required'])){
                     $this->el->setLabel($this->el->getLabel().' *');
                 }
-                $label = "<label class={$arr['label']}>{$label}</label>";
-            }
+                $label = "<label class='{$arr['label']}'>{$label}</label>";
+            } else { $label = '';}
             $type = isset($this->attr['type']) ? $this->attr['type'] : '';
             $fe = '';
             switch ($type){
 //                case 'text':
 ////                    $fe = $this->r->
 //                    break;
+                case 'select':
+                    $fe = $this->r->formSelect($el);
+                    break;
                 default:
                     $fe = $this->r->formElement($this->el);
                     break;
             }
-            $this->elements[] = "{$label} <div class={$arr['e']}>{$fe}</div>";
+            $this->elements[] = $label;
+            $this->elements[] = "<div class={$arr['e']}>{$fe}</div>";
+            $this->elements[] = '</div>';
+        }
+        $this->elements[] = '</<fieldset>';
+
+        $this->elements[] = $this->helper->closeTag();
+    }
+    public function pr(){
+        foreach ($this->elements as $element) {
+            echo $element;
         }
     }
 }

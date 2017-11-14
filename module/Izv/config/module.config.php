@@ -11,26 +11,31 @@ use Zend\Router\Http\Segment;
 
 return [
     'controllers' => [
-    'factories' => [
-        IndexController::class => IndexControllerFactory::class,
-    ]
+        'factories' => [
+            IndexController::class => IndexControllerFactory::class,
+        ]
     ],
     'router' => [
-    'routes' => [
-        'izv' => [
-            'type' => Segment::class,
-            'options' => [
-                'route' => '/[:action/][:id/]',
-                'constraints' => [
-                    'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    'id'    => '[0-9]+',
-                ],
-                'defaults' => [
-                    'controller' => IndexController::class,
-                    'action' => 'index',
+        'routes' => [
+            'izv' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/izv/[:action/][:id/]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'    => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => IndexController::class,
+                        'action' => 'index',
+                    ],
                 ],
             ],
         ],
     ],
+    'view_manager' => [
+        'template_path_stack' => [
+            __DIR__ . '/../view',
+        ],
     ],
     ];

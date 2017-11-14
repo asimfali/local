@@ -41,7 +41,7 @@ class Query
         $this->query = $this->em->createQueryBuilder();
         $this->query
             ->select($arr['select'])
-            ->from($arr['from'])
+            ->from('Entity\\'. $arr['from'], $arr['select'])
             ->orderBy($arr['order'],$arr['desc']);
         $a = new DoctrinePaginator(new ORMPaginator($this->query,false));
         $this->p = new Paginator($a);
@@ -54,6 +54,6 @@ class Query
     }
     public function ret($name)
     {
-        return [$name => $this->p];
+        return $this->p;
     }
 }
