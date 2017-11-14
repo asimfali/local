@@ -23,17 +23,9 @@ class BaseAdminController extends AbstractActionController
      */
     protected $entityManager;
     /**
-     * @var FlashMessenger
+     * @var FlashMsgr
      */
     protected $fm;
-    /**
-     * @var
-     */
-    protected $status;
-    /**
-     * @var
-     */
-    protected $message;
     /**
      * @var
      */
@@ -42,37 +34,24 @@ class BaseAdminController extends AbstractActionController
      * @var Request
      */
     protected $req;
+    /**
+     * @var MyForm
+     */
+    public $form;
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
+    public function getFm(FlashMessenger $flashMessenger){
+        $this->fm = new FlashMsgr($flashMessenger);
+    }
+    public function addMsg($message)
+    {
+        $this->fm->add($message);
+    }
     public function getId()
     {
         return $this->id = $this->params()->fromRoute('id',0);
-    }
-    public function getFM()
-    {
-        $this->fm = $this->flashMessenger();
-        switch ($this->status){
-            case 'error':
-                $this->fm->addErrorMessage($this->message);
-                break;
-            case 'info':
-                $this->fm->addInfoMessage($this->message);
-                break;
-            case 'success':
-                $this->fm->addSuccessMessage($this->message);
-                break;
-            case 'warning':
-                $this->fm->addWarningMessage($this->message);
-                break;
-            default:
-                $this->fm->addMessage($this->message);
-                break;
-        }
-//        $this->fm->setNamespace($this->status);
-//        $this->fm->addMessage($this->message);
-        return $this->fm;
     }
     public function redir($path)
     {
@@ -82,20 +61,87 @@ class BaseAdminController extends AbstractActionController
     {
         return $this->req = $this->getRequest();
     }
-    public function initFM()
+    public function error($message)
     {
-        $this->fm->setMessageOpenFormat('<div%s>
-         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-             &times;
-         </button>
-         <ul><li>')
-        ->setMessageSeparatorString('</li><li>')
-        ->setMessageCloseString('</li></ul></div>');
+        $this->fm->status = 'error';
+        $msg = $message;
+        foreach ($this->form->getForm()->getInputFilter()->getInvalidInput() as $errors) {
+            foreach ($errors->getMessages() as $error){
+                $msg .= ' ' . $error;
+            }
+        }
+        $this->fm->add($msg);
+    }
+    public function getItem($arr)
+    {
+        $id = $this->getId();
+        $r = $this->entityManager->getRepository($arr['Entity']);
+        $item = $r->find($id);
+        if(empty($item)){
+            $this->fm->status = 'error';
+            $this->fm->add($arr['MessageError']);
+            $this->redir($arr['Redirect']);
+            return null;
+        }
+        return $item;
+    }
+    public function add($arr)
+    {
+        $fields = new $arr['Entity']();
+        $this->form = new MyForm($fields, $this->entityManager);
+        $this->getReq();
+        $this->form->setAction($arr['Action']);
+        if ($this->req->isPost()){
+            $this->form->setData($this->req->getPost());
+            if ($this->form->getForm()->isValid()){
+                $this->entityManager->persist($fields);
+                $this->entityManager->flush();
+                $this->fm->add($arr['MessageSuccess']);
+            } else {
+                $this->error($arr['MessageError']);
+            }
+        } else {
+            $this->form->getForm()->prepare();
+            return ['form' => $this->form, 'id' => $this->id];
+        }
+        $this->redir($arr['Redirect']);
+    }
+    public function edit($arr)
+    {
+        $fields = new $arr['Entity']();
+        $item = $this->getItem($arr);
+        $this->form = new MyForm($fields, $this->entityManager);
+        $this->form->getForm()->bind($item);
+        $this->req = $this->getReq();
+        if($this->req->isPost()){
+            $this->form->setData($this->req->getPost());
+            if($this->form->getForm()->isValid()){
+                $this->entityManager->persist($item);
+                $this->entityManager->flush();
+                $this->fm->add($arr['MessageSuccess']);
+            } else {
+                $this->error($arr['MessageError']);
+            }
+        } else {
+            $this->form->getForm()->prepare();
+            return ['form' => $this->form, 'id' => $this->id];
+        }
+        $this->redir($arr['Redirect']);
+    }
+    public function delete($arr)
+    {
+        try {
+            $r = $this->entityManager->getRepository($arr['Entity']);
+            $item = $this->getItem($arr);
+            $this->entityManager->remove($item);
+            $this->entityManager->flush();
+            $this->fm->add($arr['MessageSuccess']);
 
-        echo $this->fm->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
-        echo $this->fm->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
-        echo $this->fm->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
-        echo $this->fm->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+        } catch (\Exception $ex){
+            $this->fm->status = 'error';
+            $this->fm->add($arr['MessageError'] . $ex->getMessage());
+        }
+        return $this->redir($arr['Redirect']);
     }
 }
 

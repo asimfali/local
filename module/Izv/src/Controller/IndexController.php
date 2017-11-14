@@ -13,6 +13,7 @@ use Custom\BaseAdminController;
 use Custom\MyForm;
 use Custom\Query;
 use Entity\Fields;
+use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
 
 class IndexController extends BaseAdminController
 {
@@ -20,58 +21,26 @@ class IndexController extends BaseAdminController
     {
         $q = new Query($this->entityManager, ['select' => 'a', 'from' => 'Fields', 'order' => 'a.id', 'desc' => 'DESC']);
         $q->setPaginator(10);
-        $r = ['izv' => $q->ret('izv'), 'em' => $this->entityManager, 'fm' => $this->getFM()];
-        return $r;
+        $this->getFm($this->flashMessenger());
+        return ['izv' => $q->ret('izv'), 'em' => $this->entityManager, 'fm' => $this->fm,
+            'ths' => ['#','Категория','Текст','Опубликовано','Действие']];
     }
     public function addAction()
     {
-        $fields = new Fields();
-        $form = new MyForm($fields, $this->entityManager);
-        $this->getReq();
-        $form->setAction('/izv/add/');
-        if ($this->req->isPost()){
-            $form->setData($this->req->getPost());
-            if ($form->getForm()->isValid()){
-                $this->entityManager->persist($fields);
-                $this->entityManager->flush();
-                $this->status = 'success';
-                $this->message = "Поле добавлено";
-            } else {
-                $this->status = 'error';
-                $this->message = 'ошибка параметров';
-                foreach ($form->getForm()->getInputFilter()->getInvalidInput() as $errors) {
-                    foreach ($errors->getMessages() as $error){
-                        $this->message .= ' ' . $error;
-                    }
-                }
-            }
-        } else {
-            $form->getForm()->prepare();
-            return ['form' => $form, 'id' => $this->id];
-        }
-        $this->getFM();
-//        return $this->redirect()->toRoute('izv');
-        $this->redir('izv');
+        $this->getFm($this->flashMessenger());
+        return $this->add(['Entity' => '\\Entity\\Fields', 'Action' => '/izv/add/', 'Redirect' => 'izv',
+            'MessageError' => 'Ошибка параметров', 'MessageSuccess' => 'Поле добавлено']);
     }
     public function editAction()
     {
-        $fields = new Fields();
-        $id = $this->getId();
-        try {
-            $r = $this->entityManager->getRepository(Fields::class);
-            $item = $r->find($id);
-            if (empty($item)){
-                $this->message = 'Поле не найдено';
-                $this->status = 'error';
-                $this->getFM();
-                $this->redir('izv/');
-            }
-        } catch (\Exception $ex){
-            
-        }
+        $this->getFm($this->flashMessenger());
+        return $this->edit(['Entity' => '\\Entity\\Fields', 'Action' => '/izv/edit/', 'Redirect' => 'izv',
+            'MessageError' => 'Запись не найдена', 'MessageSuccess' => 'Запись обновлена']);
     }
     public function deleteAction()
     {
-
+        $this->getFm($this->flashMessenger());
+        return $this->edit(['Entity' => '\\Entity\\Fields', 'Action' => '/izv/delete/', 'Redirect' => 'izv',
+            'MessageError' => 'Ошибка удаления записи', 'MessageSuccess' => 'Запись удалена']);
     }
 }

@@ -2,33 +2,18 @@
 <a href="/izv/add/">Добавить</a><br><br>
 <?php
     /**
-     * @var Zend\Mvc\Plugin\FlashMessenger\FlashMessenger $fm
+     * @var \Custom\FlashMsgr $fm
      */
-    $fm = $fm;
-    if (!empty($fm->hasMessages('success'))): ?>
-    <ul>
-        <?php foreach($fm->getMessages('success') as $message): ?>
-            <li><?= $message ?></li>
-        <?php endforeach; ?>
-    </ul>
-
-<?php endif; ?>
-<?php
-if (!empty($fm->hasMessages('error'))): ?>
-    <ul>
-        <?php foreach($fm->getMessages('error') as $message): ?>
-            <li><?= $message ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
+    $fm->pr();
+?>
 <table class="table table-striped table-hover">
     <tbody>
     <tr>
-        <th>#</th>
-        <th>Категория</th>
-        <th>Текст</th>
-        <th>Опубликовано</th>
-        <th>Действие</th>
+        <?php
+        foreach ($ths as $th) {
+                echo "<th>{$th}</th>";
+            }
+        ?>
     </tr>
     <?php
     foreach ($izv as $item){
@@ -57,7 +42,7 @@ if (!empty($fm->hasMessages('error'))): ?>
 </table>
 
 <?php
-echo $this->paginationControl($izv, 'Sliding', 'pagination_control', ['route' => 'admin/article']);
+    echo $this->paginationControl($izv, 'Sliding', 'pagination_control', ['route' => 'izv']);
 ?>
 
 
