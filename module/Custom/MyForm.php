@@ -64,6 +64,8 @@ class MyForm
         $this->form = $this->ab->createForm(new $name());
         $this->form->setHydrator(new DoctrineObject($this->em, '\\'.$name));
         $this->form->bind($class);
+        $el = new Element\Hidden('hidden');
+        $this->form->add($el);
     }
 
     /**

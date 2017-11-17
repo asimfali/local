@@ -1,50 +1,20 @@
 <h1>Извещения</h1>
-<a href="/izv/add/">Добавить</a><br><br>
 <?php
-    /**
-     * @var \Custom\FlashMsgr $fm
-     */
-    $fm->pr();
-    $_POST['a'] = "fsdljfsd";
-?>
-<table class="table table-striped table-hover">
-    <tbody>
-    <tr>
-        <?php
-        foreach ($ths as $th) {
-                echo "<th>{$th}</th>";
-            }
-        ?>
-    </tr>
-    <?php
-    foreach ($izv as $item){
-        $category = $item->getCategory();
-        if ($category){
-            $catName = $category->getCategoryName();
-        } else {
-            $catName = '';
+    if (isset($default)){
+        
+        foreach ($default as $item) {
+            $url = $this->url(). '?name='.$item[0];
+            echo "<h2><a href=\"{$url}\">{$item[1]}</a><br></h2>";
         }
-        if ($item->getIsPublic()){
-            $isPublic = "Да";
-        } else {
-            $isPublic = "Нет";
-        }
-        echo "<tr>
-            <td>{$item->getId()}</td>
-            <td>{$catName}</td>
-            <td>{$item->getTxt()}</td>
-            <td>{$item->getCode()}</td>
-            <td>{$isPublic}</td>";
-        echo '<td><a href="'.$this->url('izv', array('action' => 'edit', 'id' => $item->getId())).'">Редактировать</a>&nbsp;&nbsp;
-            <a href="'.$this->url('izv', array('action' => 'delete', 'id' => $item->getId())).'" onclick="if (confirm(\'Удалить запись?\'))
-            { document.location = this.href; } return false;">Удалить</a></td>';
+//        echo "<a href=\"{$show}\">Показать</a><br><br>";
+        return;
     }
-    ?>
-    </tbody>
-</table>
-
-<?php
-    echo $this->paginationControl($izv, 'Sliding', 'pagination_control', ['route' => 'izv']);
+    if(isset($desc)) echo "<h2>{$desc}</h2>";
+    echo "<a href=\"{$add}\">Добавить</a><br><br>";
+    $q->prTable();
+    $e =  $this->paginationControl($name, 'Sliding', 'pagination_control', ['route' => 'izv']);
+    $e = str_replace('?page', $table.'&page', $e);
+    echo $e;
 ?>
 
 

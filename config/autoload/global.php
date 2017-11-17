@@ -64,6 +64,10 @@ return [
 //                'controller' => 'index',
 //                'action' => 'login',
             ],
+            [
+                'label' => 'Извещения',
+                'route' => 'izv',
+            ],
         ],
         'admin_navigation' => [
             [

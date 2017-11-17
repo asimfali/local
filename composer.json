@@ -26,7 +26,8 @@
         "zendframework/zend-cache": "^2.7",
         "zendframework/zend-serializer": "^2.8",
         "zendframework/zend-i18n-resources": "^2.5",
-        "zendframework/zend-mvc-i18n": "^1.0"
+        "zendframework/zend-mvc-i18n": "^1.0",
+        "icewind/smb": "^2.0"
     },
     "autoload": {
         "psr-4": {
