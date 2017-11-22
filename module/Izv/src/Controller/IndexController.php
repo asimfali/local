@@ -10,7 +10,6 @@ namespace Izv\Controller;
 
 
 use Custom\BaseAdminController;
-use Custom\Files;
 use Zend\Mvc\MvcEvent;
 
 class IndexController extends BaseAdminController
@@ -58,6 +57,14 @@ class IndexController extends BaseAdminController
     {
         return $this->add($this->model);
     }
+    public function addItemAction()
+    {
+        return $this->itemAdd($this->model);
+    }
+    public function collectionAction()
+    {
+        
+    }
     public function editAction()
     {
         return $this->edit($this->model);
@@ -68,7 +75,9 @@ class IndexController extends BaseAdminController
     }
     public function showAction()
     {
-        $f = new Files($this->path);
-        $f->getFiles();
+        $p = $this->params()->fromQuery()['pdf'];
+        if (isset($p)) $pdf = true;
+        return $this->upload($this->path . 'izv/' . $p, $pdf);
     }
+    
 }

@@ -30,12 +30,23 @@ return [
                         'action' => 'index',
                     ],
                 ],
-//                'may_terminate' => true,
-//                'child_routes' => [
-//                    'query' => [
-//                        'type' => 'Query',
-//                    ],
-//                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'pdf' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => 'pdf/[:action/][:name/]',
+                            'constraints' => [
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'name' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                            'defaults' => [
+                                'controller' => IndexController::class,
+                                'action' => 'show',
+                            ]
+                        ],
+                    ],
+                ],
             ],
         ],
     ],
@@ -44,7 +55,7 @@ return [
             __DIR__ . '/../view',
         ],
     ],
-    'Path' => '\\\\obmen\\kb\\Д А Н И Л А\\И З В Е Щ Е Н И Я\\',
+    'Path' => __DIR__ . '/../../../public/content/',
     'models' => [
         'fields' => [
             'name' => 'izv',
@@ -104,7 +115,7 @@ return [
             ],
             'css' => 'table table-striped table-hover',
             'ths' => [
-                '#' => 'id','Отдел' => 'name', 'Псевдоним' => 'alias',
+                'Отдел' => 'name', 'Псевдоним' => 'alias',
                 'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
             'entity' => '\\Entity\\Department',
             'Redirect' => 'izv',
@@ -123,6 +134,91 @@ return [
                 'Action' => '/izv/delete/',
                 'MessageError' => 'Ошибка удаления записи',
                 'MessageSuccess' => 'Запись удалена'
+            ],
+        ],
+        'usrAction' => [
+            'name' => 'izv',
+            'table' => 'usrAction',
+            'desc' => 'Действия',
+            'getUrl' => [
+                'name' => '',
+                'count' => '',
+                'filterName' => '',
+                'filterVal' => '',
+            ],
+            'query' => [
+                'select' => 'a',
+                'from' => 'UsrAction',
+                'order' => 'a.id',
+                'desc' => 'DESC',
+            ],
+            'css' => 'table table-striped table-hover',
+            'ths' => [
+                'Роль' => 'usrAction', 'Пользователь' => ['user','usrFirstName'],
+                'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
+            'entity' => '\\Entity\\UsrAction',
+            'Redirect' => 'izv',
+            'MessageError' => 'Ошибка',
+            'add' => [
+                'Action' => '/izv/add/',
+                'MessageError' => 'Ошибка параметров',
+                'MessageSuccess' => 'Поле добавлено'
+            ],
+            'edit' => [
+                'Action' => '/izv/edit/',
+                'MessageError' => 'Запись не найдена',
+                'MessageSuccess' => 'Запись обновлена'
+            ],
+            'delete' => [
+                'Action' => '/izv/delete/',
+                'MessageError' => 'Ошибка удаления записи',
+                'MessageSuccess' => 'Запись удалена'
+            ],
+        ],
+        'templates' => [
+            'name' => 'izv',
+            'table' => 'templates',
+            'desc' => 'Шаблоны',
+            'itemName' => 'group',
+            'getUrl' => [
+                'name' => '',
+                'count' => '',
+                'filterName' => '',
+                'filterVal' => '',
+            ],
+            'query' => [
+                'select' => 'a',
+                'from' => 'Templates',
+                'order' => 'a.id',
+                'desc' => 'DESC',
+            ],
+            'css' => 'table table-striped table-hover',
+            'ths' => [
+                'Имя' => 'name',
+                'Действие' => ['add-item' => 'Добавить','edit' => 'Редактировать']],
+            'entity' => '\\Entity\\Templates',
+            'refEntity' => '\\Entity\\UsrAction',
+            'Redirect' => '/izv/add-item/',
+            'MessageError' => 'Ошибка',
+            'add' => [
+                'Action' => '/izv/add/',
+                'MessageError' => 'Ошибка параметров',
+                'MessageSuccess' => 'Поле добавлено'
+            ],
+            'edit' => [
+                'Action' => '/izv/edit/',
+                'MessageError' => 'Запись не найдена',
+                'MessageSuccess' => 'Запись обновлена'
+            ],
+            'delete' => [
+                'Action' => '/izv/delete/',
+                'MessageError' => 'Ошибка удаления записи',
+                'MessageSuccess' => 'Запись удалена'
+            ],
+            'add-item' => [
+                'Action' => '/izv/add-item/',
+                'MessageError' => 'Ошибка добавления в коллекцию',
+                'MessageSuccess' => 'Коллекция изменена'
             ],
         ],
     ]

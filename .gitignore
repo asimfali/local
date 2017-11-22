@@ -14,3 +14,5 @@ module/Blog/src/Entity/
 module/Blog/test/
 public/img/!favicon.ico
 public/img/Arrow.png
+data/DoctrineORMModule/Proxy/__CG__EntityUser.php
+public/content/

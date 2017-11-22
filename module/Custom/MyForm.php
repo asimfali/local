@@ -59,6 +59,10 @@ class MyForm
     public function __construct($class ,EntityManager $entityManager)
     {
         $this->em = $entityManager;
+        if ($class == null){
+            $this->form = new Form();
+            return;
+        }
         $this->ab = new AnnotationBuilder($this->em);
         $name = get_class($class);
         $this->form = $this->ab->createForm(new $name());
@@ -66,6 +70,61 @@ class MyForm
         $this->form->bind($class);
         $el = new Element\Hidden('hidden');
         $this->form->add($el);
+    }
+
+    public function add($t, $arr)
+    {
+        $name = $t;
+        if (isset($arr['name'])) $name = $arr['name'];
+        $t = "Zend\\Form\\Element\\" . $t;
+        $this->el = new $t();
+        $this->el->setName($name);
+        if (isset($arr['label'])) $this->el->setLabel($arr['label']);
+        if (isset($arr['attr'])){
+            $this->el->setAttributes($arr['attr']);
+        }
+//        if ($t == 'submit') $this->el->
+        $this->form->add($this->el);
+    }
+    public function addDoctrine($arr)
+    {
+        $opt = [
+            'object_manager' => $this->em,
+            'target_class'   => $arr['target'],
+        ];
+        $prop = $arr['prop'];
+        if (isset($prop) && !is_array($prop)) $opt['property'] = $arr['prop'];
+        else if (isset($arr) && is_array($prop)) $opt['label_generator'] = function ($targetEntity) use ($prop){
+            $str = '';
+            foreach ($prop as $item) {
+                if(is_array($item)){
+                    $ob = call_user_func([$targetEntity, 'get' . $item[0]]);
+                    $ob = call_user_func([$ob, 'get' . $item[1]]);
+                }
+                else $ob = call_user_func([$targetEntity, 'get' . $item]);
+                $str .= $ob . ' - ';
+            }
+             return $str;
+        };
+        if (isset($arr['class'])){
+//            $opt['option_attributes'] = ['class' => $arr['class']];
+        }
+        $this->form->add([
+            'type' => 'DoctrineModule\\Form\\Element\\'. $arr['type'],
+            'name' => $arr['name'],
+            'options' => $opt,
+        ]);
+        $this->el = $this->form->get($arr['name']);
+        if (isset($arr['label']))
+            $this->el->setLabel($arr['label']);
+        if (isset($arr['class'])){
+            $this->el->setAttribute('class', $arr['class']);
+//            $opt['option_attributes'] = ['class' => $arr['class']];
+        }
+    }
+    public function delete($name)
+    {
+        $this->form->remove($name);
     }
 
     /**

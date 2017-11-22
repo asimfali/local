@@ -18,9 +18,66 @@ class Files
      * @var array $files
      */
     public $files;
-    public function __construct($path)
+    /**
+     * @var array $names
+     */
+    protected $names;
+    public function __construct($v)
+    {
+        if (!isset($v))
+            return;
+        else if (is_array($v)){
+            $this->files = $v['tmp_name'];
+            $this->names = $v['name'];
+        } else {
+            $this->path = $v;
+        }
+    }
+    public function copy($path)
     {
         $this->path = $path;
+        $i = 0;
+        foreach ($this->files as $file) {
+            $name =  $this->names[$i];
+//            $name = mb_convert_encoding($name, 'CP1251', mb_detect_encoding($name));
+            $b = move_uploaded_file($file, $path . $name);
+            $i++;
+        }
+        return $b;
+    }
+    public function pdf($name)
+    {
+//        $name = idn_to_utf8($name);
+//        $name = mb_convert_encoding($name, 'UTF-8', mb_detect_encoding($name));
+//        $f_pdf = file_get_contents($name);
+        $items = file($name);
+//        if (empty($f_pdf)) return;
+        ob_start ();
+        header ('Content-type: application/pdf');
+        header ('Content-disposition: inline; filename = ' . $name);
+//        $f = fopen($name, 'r');
+//        if ($f){
+//            while (!feof($f)){
+//                $bufs[] = fgetc($f, 400);
+//            }
+//            fclose($f);
+//            foreach ($bufs as $buf) {
+//                echo $buf;
+//            }
+//        }
+//        echo $f_pdf;
+        foreach ($items as $item) {
+            echo $item;
+        }
+
+        ob_end_flush ();
+    }
+    public function pr()
+    {
+        foreach ($this->names as $name) {
+            $n = urlencode($name);
+            echo "<a href=\"/izv/show/?pdf={$n}\">{$name}</a><br>";
+        }
     }
     public function getDirs()
     {

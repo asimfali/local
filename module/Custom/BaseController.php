@@ -110,7 +110,7 @@ class BaseAdminController extends AbstractActionController
         }
         return null;
     }
-    public function crurl($arr, $name){
+    public function crurl($arr, $name = null){
         $url = '/';
         foreach ($arr as $item) {
             $url .= $item . '/';
@@ -128,6 +128,18 @@ class BaseAdminController extends AbstractActionController
             $c = $this->params()->fromQuery($name);
             if (isset($c)) $arr[$name] = $c;
         }
+    }
+    public function upload($path, $pdf = false)
+    {
+        $this->getReq();
+        if ($this->req->isPost()){
+            $f = new Files($_FILES['upload']);
+            $f->copy($path);
+        } else if ($pdf){
+            $f = new Files(null);
+            $f->pdf($path);
+        }
+        return ['names' => $f];
     }
     public function index($arr, $count = 10)
     {
@@ -174,6 +186,65 @@ class BaseAdminController extends AbstractActionController
         }
         $this->redir($arr['Redirect'],  $getUrls->get());
         return null;
+    }
+    public function itemAdd($arr){
+        $elem = new $arr['refEntity'];
+        $this->getFm($this->flashMessenger());
+        $cl = new $arr['entity']();
+        $this->form = new MyForm($cl, $this->entityManager);
+        $this->form->delete('name');
+        $this->form->delete('submit');
+        $this->form->addDoctrine(['prop' => ["UsrAction", ["User","UsrFirstName"]], 'label' => 'Элемент',
+            'class' => 'form-control', 'type' => 'ObjectSelect', 'name' => 'ua', 'target' => $arr['refEntity']]);
+        $this->form->add('submit', ['attr' => ['value' => 'Добавить', 'id' => 'btn_submit', 'class' => 'btn btn-primary']]);
+        $this->getReq();
+        $data = $this->req->getPost();
+        if ($this->req->isPost()){
+            $this->form->setData($data);
+            $id = $data->get('ua',null);
+            $r = $this->entityManager->getRepository($arr['entity']);
+            $item = $r->find($id);
+            call_user_func([$elem, 'set'. $arr['ItemName']]);
+//            $this->entityManager->persist($item);
+//            $this->entityManager->flush();
+//            $this->getResponse()->setContent(json_encode(['success' => 1]));
+            if ($this->form->getForm()->isValid()){
+//                $this->entityManager->persist($fields);
+//                $this->entityManager->flush();
+                $this->fm->add($arr['add']['MessageSuccess']);
+            } else {
+                $this->error($arr['add']['MessageError']);
+            }
+        } else {
+            $this->form->getForm()->prepare();
+            return ['form' => $this->form, 'id' => $this->id];
+        }
+//        if (!empty($this->req)){
+//            $this->form->setData($data);
+//            $messages = null;
+//            if (!$this->form->getForm()->isValid()){
+//                $errors = $this->form->getForm()->getMessages();
+//                foreach ($errors as $key=>$error) {
+//                    if (! empty($error) && $key != 'submit'){
+//                        foreach ($error as $keyer => $rower) {
+//                            $messages[$key][] = $rower;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if (!empty($messages)){
+//            $this->getResponse()->setContent(json_encode($messages));
+//        } else {
+//            $id = $data[$arr['table']];
+//            $r = $this->entityManager->getRepository($arr['entity']);
+//            $item = $r->findBy($id);
+//            call_user_func([$elem, 'set'. $arr['ItemName']]);
+//            $this->entityManager->persist($item);
+//            $this->entityManager->flush();
+//            $this->getResponse()->setContent(json_encode(['success' => 1]));
+//        }
+//        return $this->getResponse();
     }
     public function edit($arr)
     {

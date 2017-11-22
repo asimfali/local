@@ -69,7 +69,7 @@ class Query
         $this->p->setDefaultItemCountPerPage($count);
         $this->p->setCurrentPageNumber($page);
     }
-    public function ret($name)
+    public function ret($name = null)
     {
         return $this->p;
     }
