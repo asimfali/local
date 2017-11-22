@@ -143,7 +143,7 @@ class BaseAdminController extends AbstractActionController
     }
     public function index($arr, $count = 10)
     {
-        if (empty($arr)) return ['default' => $this->names, 'base' => '/izv/admin/', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
+        if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
         $this->getReq();
         $q = new Query($this->entityManager, $arr['query']);
         $arr['getUrl']['name'] = $arr['table'];
@@ -155,9 +155,9 @@ class BaseAdminController extends AbstractActionController
         $q->setPaginator($count, $page);
 
         $this->getFm($this->flashMessenger());
-        $q->set(['name' => $arr['name'], 'admin' => $arr['admin'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
+        $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
         return ['fm' => $this->fm, 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
-            'add' => $this->crurl([$arr['name'], 'admin' => $arr['admin'], 'add'], $getUrls->get())];
+            'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
     public function add($arr)
     {
@@ -182,9 +182,9 @@ class BaseAdminController extends AbstractActionController
             }
         } else {
             $this->form->getForm()->prepare();
-            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'admin' => $arr['admin'], 'add'], $getUrls->get())];
+            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
         }
-        $this->redir($arr['Redirect'],  $getUrls->get());
+        $this->redir([$arr['Redirect']],  $getUrls->get());
         return null;
     }
     public function itemAdd($arr, $table = null)
@@ -192,7 +192,7 @@ class BaseAdminController extends AbstractActionController
         $this->getFm($this->flashMessenger());
         $cl = new $arr['entity']();
         $this->form = new MyForm(null, $this->entityManager);
-        $this->form->addDoctrine(['prop' => ["UsrAction", ["User", "UsrFirstName"]], 'label' => 'Элемент',
+        $this->form->addDoctrine(['prop' => ["UsrAction", ["User", "UsrFirstName"]], 'label' => 'Элемент', 'criteria' => $arr['where'],
             'class' => 'form-control', 'type' => 'ObjectSelect', 'name' => 'ua', 'target' => $arr['refEntity']]);
         $this->form->add('submit', ['attr' => ['value' => 'Добавить', 'id' => 'btn_submit', 'class' => 'btn btn-primary']]);
         $this->getReq();
@@ -249,7 +249,7 @@ class BaseAdminController extends AbstractActionController
             }
         } else {
             $this->form->getForm()->prepare();
-            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'admin' => $arr['admin'], 'add'], $getUrls->get())];
+            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
         }
         $this->redir([$arr['Redirect']], $getUrls->get());
         return null;
@@ -283,7 +283,7 @@ class BaseAdminController extends AbstractActionController
         call_user_func_array([$elem,'remove'.$arr['collections']], [$item]);
         $this->entityManager->remove($item);
         $this->entityManager->flush();
-        $this->redir(['izv','add-item',$id],"?name=" . $arr['table']);
+        $this->redir([$arr['name'],'add-item',$id],"?name=" . $arr['table']);
     }
 }
 

@@ -61,6 +61,8 @@ class Query
             ->select($arr['select'])
             ->from('Entity\\'. $arr['from'], $arr['select'])
             ->orderBy($arr['order'],$arr['desc']);
+        if (isset($arr['where']))
+        $this->query->where($arr['where']);
         $a = new DoctrinePaginator(new ORMPaginator($this->query,false));
         $this->p = new Paginator($a);
 //        $p->setCurrentPageNumber((int) $this->params()->fromQuery('page',1));

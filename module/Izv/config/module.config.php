@@ -90,7 +90,7 @@ return [
     'Path' => __DIR__ . '/../../../public/content/',
     'models' => [
         'fields' => [
-            'name' => 'izv',
+            'name' => 'izv/admin',
             'admin' => '/admin',
             'table' => 'fields',
             'desc' => 'Общие данные',
@@ -116,6 +116,7 @@ return [
             'MessageError' => 'Ошибка',
             'add' => [
                 'Action' => '/izv/admin/add/',
+                'css' => 'btn btn-success',
                 'MessageError' => 'Ошибка параметров',
                 'MessageSuccess' => 'Поле добавлено'
             ],
@@ -131,7 +132,7 @@ return [
             ],
         ],
         'department' => [
-            'name' => 'izv',
+            'name' => 'izv/admin',
             'admin' => '/admin',
             'table' => 'department',
             'desc' => 'Отделы',
@@ -152,7 +153,7 @@ return [
                 'Отдел' => 'name', 'Псевдоним' => 'alias',
                 'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
             'entity' => '\\Entity\\Department',
-            'Redirect' => 'izv',
+            'Redirect' => 'izv/admin',
             'MessageError' => 'Ошибка',
             'add' => [
                 'Action' => '/izv/admin/add/',
@@ -171,7 +172,7 @@ return [
             ],
         ],
         'usrAction' => [
-            'name' => 'izv',
+            'name' => 'izv/admin',
             'admin' => '/admin',
             'table' => 'usrAction',
             'desc' => 'Действия',
@@ -184,6 +185,7 @@ return [
             'query' => [
                 'select' => 'a',
                 'from' => 'UsrAction',
+                'where' => 'a.category is null',
                 'order' => 'a.id',
                 'desc' => 'DESC',
             ],
@@ -192,7 +194,7 @@ return [
                 'Роль' => 'usrAction', 'Пользователь' => ['user','usrFirstName'],
                 'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
             'entity' => '\\Entity\\UsrAction',
-            'Redirect' => 'izv',
+            'Redirect' => 'izv/admin',
             'MessageError' => 'Ошибка',
             'add' => [
                 'Action' => '/izv/admin/add/',
@@ -211,7 +213,7 @@ return [
             ],
         ],
         'templates' => [
-            'name' => 'izv',
+            'name' => 'izv/admin',
             'admin' => '/admin',
             'table' => 'templates',
             'desc' => 'Шаблоны',
@@ -225,6 +227,7 @@ return [
                 'filterName' => '',
                 'filterVal' => '',
             ],
+            'where' => ['category', null],
             'query' => [
                 'select' => 'a',
                 'from' => 'Templates',
@@ -237,7 +240,7 @@ return [
                 'Действие' => ['add-item' => 'Добавить','edit' => 'Редактировать','delete' => 'Удалить']],
             'entity' => '\\Entity\\Templates',
             'refEntity' => '\\Entity\\UsrAction',
-            'Redirect' => '/izv/add-item/',
+            'Redirect' => '/izv/admin/add-item/',
             'MessageError' => 'Ошибка',
             'add' => [
                 'Action' => '/izv/admin/add/',

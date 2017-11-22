@@ -21,7 +21,7 @@
         <?= $this->headScript()
             ->prependFile($this->basePath('js/bootstrap.min.js'))
             ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
-            ->prependFile($this->basePath('js/script.js'))
+            ->appendFile($this->basePath('js/script.js', 'text/javascript'))
         ?>
     </head>
     <body>
@@ -41,6 +41,7 @@
                     <?= $this->navigation('Zend\\Navigation\\Default')->menu()->setUlClass('nav navbar-nav')->render(); ?>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="/admin/">Admin</a></li>
+                        <li><a href="/izv/admin/">AdminNotice</a></li>
                     </ul>
                 </div>
             </div>

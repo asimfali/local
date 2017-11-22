@@ -109,6 +109,15 @@ class MyForm
         if (isset($arr['class'])){
 //            $opt['option_attributes'] = ['class' => $arr['class']];
         }
+        if (isset($arr['criteria'])){
+            $opt['is_method'] = true;
+            $opt['find_method'] = [
+                'name'   => 'findBy',
+                'params' => [
+                    'criteria' => [$arr['criteria'][0] => $arr['criteria'][1]],
+                ],
+            ];
+        }
         $this->form->add([
             'type' => 'DoctrineModule\\Form\\Element\\'. $arr['type'],
             'name' => $arr['name'],
