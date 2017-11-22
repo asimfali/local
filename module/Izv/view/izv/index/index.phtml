@@ -1,21 +1,2 @@
 <h1>Извещения</h1>
-<?php
-    if (isset($default)){
-        
-        foreach ($default as $item) {
-            $url = $this->url(). '?name='.$item[0];
-            echo "<h2><a href=\"{$url}\">{$item[1]}</a><br></h2>";
-        }
-        echo "<a href=\"{$show}\">Показать</a><br><br>";
-        return;
-    }
-    if(isset($desc)) echo "<h2>{$desc}</h2>";
-    echo "<a href=\"{$add}\">Добавить</a><br><br>";
-    $q->prTable();
-    $e =  $this->paginationControl($name, 'Sliding', 'pagination_control', ['route' => 'izv']);
-    $e = str_replace('?page', $table.'&page', $e);
-    echo $e;
-?>
-
-
-
+<h1><a href="/izv/admin/">Admin</a></h1>

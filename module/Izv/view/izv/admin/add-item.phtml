@@ -1,3 +1,4 @@
 <?php
+if (isset($q)) $q->prTable();
 $form->render('Добавить элемент',['label' => "col-lg-2 control-label", 'type' => '2', 'e' =>'col-lg-10', 'form' => 'bs-example form-horizontal'],$this);
 $form->pr();

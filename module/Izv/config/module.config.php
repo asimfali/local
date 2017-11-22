@@ -6,24 +6,28 @@
  * Time: 13:11
  */
 use Izv\Controller\IndexController;
+use Izv\Controller\AdminController;
 use Izv\Factory\IndexControllerFactory;
+use Izv\Factory\AdminControllerFactory;
 use Zend\Router\Http\Segment;
+use Zend\Router\Http\Literal;
 
 return [
     'controllers' => [
         'factories' => [
             IndexController::class => IndexControllerFactory::class,
+            AdminController::class => AdminControllerFactory::class,
         ]
     ],
     'router' => [
         'routes' => [
             'izv' => [
-                'type' => Segment::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route' => '/izv/[:action/][:id/]',
+                    'route' => '/izv/',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'    => '[0-9]+',
+                        'id' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => IndexController::class,
@@ -32,6 +36,20 @@ return [
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
+                    'all' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => 'all/[:action/][:id/]',
+                            'constraints' => [
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'    => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => IndexController::class,
+                                'action' => 'index',
+                            ],
+                        ],
+                    ],
                     'pdf' => [
                         'type' => Segment::class,
                         'options' => [
@@ -44,6 +62,20 @@ return [
                                 'controller' => IndexController::class,
                                 'action' => 'show',
                             ]
+                        ],
+                    ],
+                    'izv/admin' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => 'admin/[:action/][:id/]',
+                            'constraints' => [
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'    => '[0-9]+',
+                            ],
+                            'defaults' => [
+                                'controller' => AdminController::class,
+                                'action' => 'index',
+                            ],
                         ],
                     ],
                 ],
@@ -59,6 +91,7 @@ return [
     'models' => [
         'fields' => [
             'name' => 'izv',
+            'admin' => '/admin',
             'table' => 'fields',
             'desc' => 'Общие данные',
             'getUrl' => [
@@ -79,26 +112,27 @@ return [
                 'ДопПоле' => 'code', 'Опубликовано(0/1)' => 'is_public', 
                 'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
             'entity' => '\\Entity\\Fields',
-            'Redirect' => 'izv',
+            'Redirect' => 'izv/admin',
             'MessageError' => 'Ошибка',
             'add' => [
-                'Action' => '/izv/add/',
+                'Action' => '/izv/admin/add/',
                 'MessageError' => 'Ошибка параметров',
                 'MessageSuccess' => 'Поле добавлено'
             ],
             'edit' => [
-                'Action' => '/izv/edit/',
+                'Action' => '/izv/admin/edit/',
                 'MessageError' => 'Запись не найдена',
                 'MessageSuccess' => 'Запись обновлена'
             ],
             'delete' => [
-                'Action' => '/izv/delete/',
+                'Action' => '/izv/admin/delete/',
                 'MessageError' => 'Ошибка удаления записи',
                 'MessageSuccess' => 'Запись удалена'
             ],
         ],
         'department' => [
             'name' => 'izv',
+            'admin' => '/admin',
             'table' => 'department',
             'desc' => 'Отделы',
             'getUrl' => [
@@ -121,23 +155,24 @@ return [
             'Redirect' => 'izv',
             'MessageError' => 'Ошибка',
             'add' => [
-                'Action' => '/izv/add/',
+                'Action' => '/izv/admin/add/',
                 'MessageError' => 'Ошибка параметров',
                 'MessageSuccess' => 'Поле добавлено'
             ],
             'edit' => [
-                'Action' => '/izv/edit/',
+                'Action' => '/izv/admin/edit/',
                 'MessageError' => 'Запись не найдена',
                 'MessageSuccess' => 'Запись обновлена'
             ],
             'delete' => [
-                'Action' => '/izv/delete/',
+                'Action' => '/izv/admin/delete/',
                 'MessageError' => 'Ошибка удаления записи',
                 'MessageSuccess' => 'Запись удалена'
             ],
         ],
         'usrAction' => [
             'name' => 'izv',
+            'admin' => '/admin',
             'table' => 'usrAction',
             'desc' => 'Действия',
             'getUrl' => [
@@ -160,26 +195,30 @@ return [
             'Redirect' => 'izv',
             'MessageError' => 'Ошибка',
             'add' => [
-                'Action' => '/izv/add/',
+                'Action' => '/izv/admin/add/',
                 'MessageError' => 'Ошибка параметров',
                 'MessageSuccess' => 'Поле добавлено'
             ],
             'edit' => [
-                'Action' => '/izv/edit/',
+                'Action' => '/izv/admin/edit/',
                 'MessageError' => 'Запись не найдена',
                 'MessageSuccess' => 'Запись обновлена'
             ],
             'delete' => [
-                'Action' => '/izv/delete/',
+                'Action' => '/izv/admin/delete/',
                 'MessageError' => 'Ошибка удаления записи',
                 'MessageSuccess' => 'Запись удалена'
             ],
         ],
         'templates' => [
             'name' => 'izv',
+            'admin' => '/admin',
             'table' => 'templates',
             'desc' => 'Шаблоны',
-            'itemName' => 'group',
+            'itemName' => 'Category',
+            'collection' => 'Actions',
+            'collections' => 'Action',
+            'refTable' => 'usrAction',
             'getUrl' => [
                 'name' => '',
                 'count' => '',
@@ -195,28 +234,28 @@ return [
             'css' => 'table table-striped table-hover',
             'ths' => [
                 'Имя' => 'name',
-                'Действие' => ['add-item' => 'Добавить','edit' => 'Редактировать']],
+                'Действие' => ['add-item' => 'Добавить','edit' => 'Редактировать','delete' => 'Удалить']],
             'entity' => '\\Entity\\Templates',
             'refEntity' => '\\Entity\\UsrAction',
             'Redirect' => '/izv/add-item/',
             'MessageError' => 'Ошибка',
             'add' => [
-                'Action' => '/izv/add/',
+                'Action' => '/izv/admin/add/',
                 'MessageError' => 'Ошибка параметров',
                 'MessageSuccess' => 'Поле добавлено'
             ],
             'edit' => [
-                'Action' => '/izv/edit/',
+                'Action' => '/izv/admin/edit/',
                 'MessageError' => 'Запись не найдена',
                 'MessageSuccess' => 'Запись обновлена'
             ],
             'delete' => [
-                'Action' => '/izv/delete/',
+                'Action' => '/izv/admin/delete/',
                 'MessageError' => 'Ошибка удаления записи',
                 'MessageSuccess' => 'Запись удалена'
             ],
             'add-item' => [
-                'Action' => '/izv/add-item/',
+                'Action' => '/izv/admin/add-item/',
                 'MessageError' => 'Ошибка добавления в коллекцию',
                 'MessageSuccess' => 'Коллекция изменена'
             ],

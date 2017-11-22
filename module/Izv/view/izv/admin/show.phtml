@@ -1,0 +1,20 @@
+<?php
+    if (isset($names)){
+        $names->pr();
+    } else {
+?>
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/izv/show/" method="post" enctype="multipart/form-data" >
+        <h3>Файлы:</h3> <br>
+        <input type="file" name="upload[]" multiple/>
+        <input type="submit" value="Отправить">
+    </form>
+</body>
+</html>
+<?php } ?>

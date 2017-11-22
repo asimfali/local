@@ -2,17 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: Simanov
- * Date: 10.11.2017
- * Time: 13:16
+ * Date: 22.11.2017
+ * Time: 12:19
  */
 
 namespace Izv\Controller;
 
 
-use Custom\BaseAdminController;
+use Custom\BaseController;
 use Zend\Mvc\MvcEvent;
 
-class IndexController extends BaseAdminController
+class AdminController extends BaseController
 {
     /**
      * @var array $config
@@ -26,11 +26,11 @@ class IndexController extends BaseAdminController
      * @var $path
      */
     protected $path;
-    public function __construct($entityManager, $config)
+    public function __construct($entityManager, $authenticationService, $config)
     {
         $this->config = $config;
         $this->path = $this->config['Path'];
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $authenticationService);
     }
     public function onDispatch(MvcEvent $e)
     {
@@ -49,7 +49,34 @@ class IndexController extends BaseAdminController
 
     public function indexAction()
     {
-        return [];
+        $c = $this->params()->fromQuery('count');
+        if (empty($c)) $c = 20;
+        return $this->index($this->model, $c);
+    }
+    public function addAction()
+    {
+        return $this->add($this->model);
+    }
+    public function addItemAction()
+    {
+        return $this->itemAdd($this->model, $this->config[$this->model['refTable']]);
+    }
+    public function deleteItemAction()
+    {
+        $id = $this->params()->fromQuery('id');
+        return $this->deleteItem($this->config['templates'], $id);
+    }
+    public function collectionAction()
+    {
+
+    }
+    public function editAction()
+    {
+        return $this->edit($this->model);
+    }
+    public function deleteAction()
+    {
+        return $this->delete($this->model);
     }
     public function showAction()
     {
@@ -57,5 +84,4 @@ class IndexController extends BaseAdminController
         if (isset($p)) $pdf = true;
         return $this->upload($this->path . 'izv/' . $p, $pdf);
     }
-    
 }
