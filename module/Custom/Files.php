@@ -72,11 +72,11 @@ class Files
 
         ob_end_flush ();
     }
-    public function pr()
+    public function pr($path)
     {
         foreach ($this->names as $name) {
             $n = urlencode($name);
-            echo "<a href=\"/izv/show/?pdf={$n}\">{$name}</a><br>";
+            echo "<a href=\"/{$path}/?pdf={$n}\" target='_blank'>{$name}</a><br>";
         }
     }
     public function getDirs()

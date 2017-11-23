@@ -11,8 +11,9 @@
     }
     if(isset($desc)) echo "<h2>{$desc}</h2>";
     echo "<a href=\"{$add}\">Добавить</a><br><br>";
+    $fm->pr();
     $q->prTable();
-    $e =  $this->paginationControl($name, 'Sliding', 'pagination_control', ['route' => 'izv']);
+    $e =  $this->paginationControl($name, 'Sliding', 'pagination_control', ['route' => $route]);
     $e = str_replace('?page', $table.'&page', $e);
     echo $e;
 ?>

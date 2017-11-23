@@ -1,6 +1,6 @@
 <?php
     if (isset($names)){
-        $names->pr();
+        $names->pr($path);
     } else {
 ?>
 <!doctype html>
@@ -10,7 +10,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/izv/show/" method="post" enctype="multipart/form-data" >
+    <form action="/<?=$path?>/" method="post" enctype="multipart/form-data" >
         <h3>Файлы:</h3> <br>
         <input type="file" name="upload[]" multiple/>
         <input type="submit" value="Отправить">

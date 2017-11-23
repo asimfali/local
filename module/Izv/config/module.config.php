@@ -29,10 +29,6 @@ return [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ],
-                    'defaults' => [
-                        'controller' => IndexController::class,
-                        'action' => 'index',
-                    ],
                 ],
                 'may_terminate' => true,
                 'child_routes' => [
@@ -64,7 +60,7 @@ return [
                             ]
                         ],
                     ],
-                    'izv/admin' => [
+                    'admin' => [
                         'type' => Segment::class,
                         'options' => [
                             'route' => 'admin/[:action/][:id/]',
@@ -131,11 +127,60 @@ return [
                 'MessageSuccess' => 'Запись удалена'
             ],
         ],
+        'user' => [
+            'name' => 'izv/admin',
+            'admin' => '/admin',
+            'table' => 'user',
+            'desc' => 'Пользователи',
+            'getUrl' => [
+                'name' => '',
+                'count' => '',
+                'filterName' => '',
+                'filterVal' => '',
+            ],
+            'query' => [
+                'select' => 'a',
+                'from' => 'User',
+                'order' => 'a.id',
+                'desc' => 'DESC',
+            ],
+            'css' => 'table table-striped table-hover',
+            'ths' => [
+                'Фамилия' => 'usrFirstName','Имя' => 'usrMiddleName', 'Отчество' => 'usrLastName'
+            ],
+            'entity' => '\\Entity\\User',
+            'Redirect' => 'izv/admin',
+            'MessageError' => 'Ошибка',
+            'add' => [
+                'Action' => '/izv/admin/add/',
+                'css' => 'btn btn-success',
+                'MessageError' => 'Ошибка параметров',
+                'MessageSuccess' => 'Поле добавлено'
+            ],
+            'edit' => [
+                'Action' => '/izv/admin/edit/',
+                'MessageError' => 'Запись не найдена',
+                'MessageSuccess' => 'Запись обновлена'
+            ],
+            'delete' => [
+                'Action' => '/izv/admin/delete/',
+                'MessageError' => 'Ошибка удаления записи',
+                'MessageSuccess' => 'Запись удалена'
+            ],
+        ],
         'department' => [
             'name' => 'izv/admin',
             'admin' => '/admin',
             'table' => 'department',
             'desc' => 'Отделы',
+            'noCopy' => '1',
+            'itemName' => 'usrDepartment',
+            'collection' => 'Users',
+            'collections' => 'User',
+            'refTable' => 'user',
+            'prop' => ["usrFirstName", "usrMiddleName"],
+            'label' => 'Элемент',
+//            'where' => ['department_id', null],
             'getUrl' => [
                 'name' => '',
                 'count' => '',
@@ -151,8 +196,9 @@ return [
             'css' => 'table table-striped table-hover',
             'ths' => [
                 'Отдел' => 'name', 'Псевдоним' => 'alias',
-                'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
+                'Действие' => ['add-item' => 'Добавить пользователей', 'edit' => 'Редактировать', 'delete' => 'Удалить']],
             'entity' => '\\Entity\\Department',
+            'refEntity' => '\\Entity\\User',
             'Redirect' => 'izv/admin',
             'MessageError' => 'Ошибка',
             'add' => [
@@ -221,6 +267,8 @@ return [
             'collection' => 'Actions',
             'collections' => 'Action',
             'refTable' => 'usrAction',
+            'prop' => ["UsrAction", ["User", "UsrFirstName"]],
+            'label' => 'Элемент',
             'getUrl' => [
                 'name' => '',
                 'count' => '',
@@ -261,6 +309,46 @@ return [
                 'Action' => '/izv/admin/add-item/',
                 'MessageError' => 'Ошибка добавления в коллекцию',
                 'MessageSuccess' => 'Коллекция изменена'
+            ],
+        ],
+        'notice' => [
+            'name' => 'izv/all',
+            'table' => 'notice',
+            'desc' => 'Извещения',
+            'getUrl' => [
+                'name' => '',
+                'count' => '',
+                'filterName' => '',
+                'filterVal' => '',
+            ],
+            'query' => [
+                'select' => 'a',
+                'from' => 'Izv',
+                'order' => 'a.id',
+                'desc' => 'DESC',
+            ],
+            'css' => 'table table-striped table-hover',
+            'ths' => [
+                'Номер извещения' => 'numberIzv',
+                'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
+            'entity' => '\\Entity\\Izv',
+            'Redirect' => 'izv/all',
+            'MessageError' => 'Ошибка',
+            'add' => [
+                'Action' => '/izv/all/add/',
+                'css' => 'btn btn-success',
+                'MessageError' => 'Ошибка параметров',
+                'MessageSuccess' => 'Извещение добавлено'
+            ],
+            'edit' => [
+                'Action' => '/izv/all/edit/',
+                'MessageError' => 'Запись не найдена',
+                'MessageSuccess' => 'Запись обновлена'
+            ],
+            'delete' => [
+                'Action' => '/izv/all/delete/',
+                'MessageError' => 'Ошибка удаления записи',
+                'MessageSuccess' => 'Запись удалена'
             ],
         ],
     ]

@@ -129,9 +129,9 @@ class BaseAdminController extends AbstractActionController
             if (isset($c)) $arr[$name] = $c;
         }
     }
-    public function upload($path, $pdf = false)
+    public function upload($path, $name, $pdf = false)
     {
-        $this->getReq();
+        $this->getReq(); $f = null;
         if ($this->req->isPost()){
             $f = new Files($_FILES['upload']);
             $f->copy($path);
@@ -139,7 +139,7 @@ class BaseAdminController extends AbstractActionController
             $f = new Files(null);
             $f->pdf($path);
         }
-        return ['names' => $f];
+        return ['names' => $f, 'path' => $name];
     }
     public function index($arr, $count = 10)
     {
@@ -156,7 +156,7 @@ class BaseAdminController extends AbstractActionController
 
         $this->getFm($this->flashMessenger());
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
-        return ['fm' => $this->fm, 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
+        return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
     public function add($arr)
@@ -192,7 +192,7 @@ class BaseAdminController extends AbstractActionController
         $this->getFm($this->flashMessenger());
         $cl = new $arr['entity']();
         $this->form = new MyForm(null, $this->entityManager);
-        $this->form->addDoctrine(['prop' => ["UsrAction", ["User", "UsrFirstName"]], 'label' => 'Элемент', 'criteria' => $arr['where'],
+        $this->form->addDoctrine(['prop' => $arr['prop'], 'label' => $arr['label'], 'criteria' => $arr['where'],
             'class' => 'form-control', 'type' => 'ObjectSelect', 'name' => 'ua', 'target' => $arr['refEntity']]);
         $this->form->add('submit', ['attr' => ['value' => 'Добавить', 'id' => 'btn_submit', 'class' => 'btn btn-primary']]);
         $this->getReq();
@@ -205,7 +205,12 @@ class BaseAdminController extends AbstractActionController
             $r = $this->entityManager->getRepository($arr['refEntity']);
             $item = $r->find($id);
             $cat = call_user_func([$item, 'get' . $arr['itemName']]);
-            if ($cat == null || $cat != $elem) {
+            if (isset($arr['noCopy'])){
+                call_user_func_array([$item, 'set' . $arr['itemName']], [$elem]);
+                $this->entityManager->persist($item);
+                $this->entityManager->flush();
+            }
+            else if ($cat == null || $cat != $elem) {
                 $item = clone $item;
                 $this->entityManager->detach($item);
                 call_user_func_array([$item, 'set' . $arr['itemName']], [$elem]);
@@ -221,7 +226,7 @@ class BaseAdminController extends AbstractActionController
             unset($table['ths']['Действие']);
             $table['ths']['Действие'] = ['delete-item' => 'Удалить элемент'];
             $q->set(['name' => $table['name'], 'class' => $table['css'], 'ths' => $table['ths'],
-                'table' => $table['table'], 'id' => $pid['id']]);
+                'table' => $table['table'], 'pname' => $arr['table'] , 'id' => $pid['id']]);
             $this->form->getForm()->prepare();
             return ['form' => $this->form, 'id' => $this->id, 'q' => $q];
     }
@@ -279,10 +284,18 @@ class BaseAdminController extends AbstractActionController
         $p = $this->entityManager->getRepository($arr['entity']);
         $pid = $this->params()->fromRoute();
         $item = $r->find($pid['id']);
-        $elem = $p->find($id);
-        call_user_func_array([$elem,'remove'.$arr['collections']], [$item]);
-        $this->entityManager->remove($item);
-        $this->entityManager->flush();
+        if (isset($arr['noCopy'])){
+            $elem = $p->find($id);
+            call_user_func_array([$elem, 'remove' . $arr['collections']], [$item]);
+            call_user_func_array([$item, 'set' . $arr['itemName']], [null]);
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+        } else {
+            $elem = $p->find($id);
+            call_user_func_array([$elem, 'remove' . $arr['collections']], [$item]);
+            $this->entityManager->remove($item);
+            $this->entityManager->flush();
+        }
         $this->redir([$arr['name'],'add-item',$id],"?name=" . $arr['table']);
     }
 }

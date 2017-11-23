@@ -66,7 +66,8 @@ return [
             ],
             [
                 'label' => 'Извещения',
-                'route' => 'izv',
+                'route' => 'izv/all',
+                'action' => 'index',
             ],
         ],
         'admin_navigation' => [

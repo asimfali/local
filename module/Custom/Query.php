@@ -83,7 +83,9 @@ class Query
     {
         $url = '';
         if (isset($arr['id']))
-            $url = '&' . 'id=' . $arr['id'];
+            $url .= '&' . 'id=' . $arr['id'];
+        if (isset($arr['pname']))
+            $url .= '&' . 'pname=' . $arr['pname'];
         $this->actions[] = "<a href=\"{$arr['url']}?name={$arr['name']}{$url}\" $confirm>{$arr['txt']}</a>";
     }
     public function camelCase($str)
@@ -116,11 +118,11 @@ class Query
             foreach ($arr['ths'] as $k => $n) {
                 if ($k == 'Действие'){
                     foreach ($n as $key => $d) {
-                        $url = '/' . $arr['name'] . $arr['admin'] . '/' . $key . '/' . call_user_func([$item, 'getId']) . '/';
+                        $url = '/' . $arr['name'] .'/' . $key . '/' . call_user_func([$item, 'getId']) . '/';
                         $onClick = '';
                         if ($key == 'delete')
                             $onClick = "onclick=\"if (confirm('Удалить запись?')){ document.location = this.href; } return false;\"";
-                        $this->addAction(['url' => $url, 'txt' => $d, 'name' => $arr['table'], 'id' => $arr['id']],$onClick);
+                        $this->addAction(['url' => $url, 'txt' => $d, 'name' => $arr['table'], 'id' => $arr['id'], 'pname' => $arr['pname']],$onClick);
                     }
                     $tmp = '';
                     foreach ($this->actions as $action) {
