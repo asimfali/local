@@ -95,8 +95,12 @@ class Files
 //        foreach ($shares as $share) {
 //            echo $share->getName(). "\n";
 //        }
-        $pattern = $this->path . '*\\*.pdf';
-        $pattern = "T:\\Д А Н И Л А\\И З В Е Щ Е Н И Я\\2017\\ТПМШ.012-17\\*.pdf";
+        $pattern = $this->path . '*.pdf';
         $this->files = glob($pattern, GLOB_NOSORT);
+        foreach ($this->files as $file) {
+            $file = explode('/',$file);
+            $file = end($file);
+            echo "<a href=\"/izv/all/show/?pdf={$file}\" target='_blank'>{$file}</a><br>";
+        }
     }
 }

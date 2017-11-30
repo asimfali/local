@@ -16,4 +16,5 @@ public/img/!favicon.ico
 public/img/Arrow.png
 data/DoctrineORMModule/Proxy/
 public/content/
+tmp/
 data/DoctrineORMModule/Proxy/__CG__EntityTemplates.php

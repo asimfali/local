@@ -1,0 +1,36 @@
+.border{
+    border: 0.3mm solid black;
+}
+.fl{
+    float: left;
+}
+.tac{
+    text-align: center;
+}
+.m{
+    margin: auto;
+}
+.ml{
+    margin-left: 5mm;
+}
+.dib{
+    display: inline-block;
+}
+.pd-2{
+    padding: 2mm;
+}
+.bl-n{
+    border-left:none;
+}
+.br-n{
+    border-right:none;
+}
+.bb-n{
+    border-bottom:none;
+}
+.bt-n{
+    border-top:none;
+}
+.w100{
+    width: 100%;
+}

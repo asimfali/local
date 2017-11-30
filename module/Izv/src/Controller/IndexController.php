@@ -10,6 +10,7 @@ namespace Izv\Controller;
 
 
 use Custom\BaseAdminController;
+use Entity\Templates;
 use Zend\Mvc\MvcEvent;
 
 class IndexController extends BaseAdminController
@@ -57,12 +58,41 @@ class IndexController extends BaseAdminController
         if (empty($c)) $c = 20;
         return $this->index($this->model, $c);
     }
+    public function addAction()
+    {
+        $arr = $this->model;
+        $this->set($arr, true, true);
+        $this->form->setAction($arr['add']['Action']);
+        $v = null;
+        $this->form->setElemPar('date', 'Format', 'Y-m-d');
+        $this->form->setElemPar('date', 'Value', date('Y-m-d'));
+        return $this->showForm($arr);
+    }
     public function showAction()
     {
         $pdf = null;
         $p = $this->params()->fromQuery()['pdf'];
         if (isset($p)) $pdf = true;
-        return $this->upload($this->path . 'izv/' . $p, $pdf);
+        $name = reset($this->config);
+        $name = $name['name'];
+        $name .= '/show';
+        return $this->upload($this->path . 'izv/'. $p, $name, $pdf);
     }
-    
+    public function prAction()
+    {
+        $tmpl = $this->entityManager->getRepository(Templates::class);
+        $kb = $tmpl->find(2);
+        $foot = $this->toArray($kb, ['getActions','getUsrAction',['getUser', 'getUsrFirstName']]);
+        $foot['addKey'] = 'Составил'; $foot['addValue'] = 'asdf';
+        return ['head' => [], 'foot' => $foot];
+    }
+
+    public function downloadAction()
+    {
+        $tmpl = $this->entityManager->getRepository(Templates::class);
+        $kb = $tmpl->find(2);
+        $foot = $this->toArray($kb, ['getActions','getUsrAction',['getUser', 'getUsrFirstName']]);
+        $foot['addKey'] = 'Составил'; $foot['addValue'] = 'asdf';
+        return ['head' => [], 'foot' => $foot];
+    }
 }

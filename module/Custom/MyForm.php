@@ -52,6 +52,10 @@ class MyForm
      */
     protected $helper;
     /**
+     * @var DoctrineObject $hydrator
+     */
+    public $hydrator;
+    /**
      * MyForm constructor.
      * @param $class
      * @param EntityManager $entityManager
@@ -66,7 +70,7 @@ class MyForm
         $this->ab = new AnnotationBuilder($this->em);
         $name = get_class($class);
         $this->form = $this->ab->createForm(new $name());
-        $this->form->setHydrator(new DoctrineObject($this->em, '\\'.$name));
+        $this->hydrator = $this->form->setHydrator(new DoctrineObject($this->em, '\\'.$name));
         $this->form->bind($class);
         $el = new Element\Hidden('hidden');
         $this->form->add($el);
@@ -82,6 +86,10 @@ class MyForm
         if (isset($arr['label'])) $this->el->setLabel($arr['label']);
         if (isset($arr['attr'])){
             $this->el->setAttributes($arr['attr']);
+        }
+        if (isset($arr['class'])){
+            $this->el->setAttribute('class', $arr['class']);
+//            $opt['option_attributes'] = ['class' => $arr['class']];
         }
 //        if ($t == 'submit') $this->el->
         $this->form->add($this->el);
@@ -165,10 +173,24 @@ class MyForm
         $this->form->get($e)->setAttribute($t, $v);
     }
 
+    public function setElemPar($e, $name, $value)
+    {
+        $elem = $this->form->get($e);
+        call_user_func_array([$elem, 'set' . $name],[$value]);
+    }
+
+    public function customRender()
+    {
+        
+    }
+
     /**
      * @param $arr - array
+     * @param  $rend
+     * @param string $title
+     * @param string $class
      */
-    public function render($title ,$arr, $rend)
+    public function render($title ,$arr, $rend, $class = "form-group")
     {
         $this->r = $rend;
         $this->helper = $this->r->form();
@@ -177,7 +199,7 @@ class MyForm
         $this->elements[] = "<fieldset><legend>{$title}</legend>";
         $els = $this->form->getElements();
         foreach ($els as $el) {
-            $this->elements[] = '<div class="form-group">';
+            $this->elements[] = "<div class=\"{$class}\">";
             $this->el = $el;
             $this->attr = $this->el->getAttributes();
             if($this->el->getLabel()){

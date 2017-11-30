@@ -1,0 +1,172 @@
+body {
+	font: 1.2em Arial;
+	margin: 0;
+    border-color: black;
+    color: black;
+}
+table > tbody > tr > td {
+    border-color: black;
+    opacity: 1;
+}
+td, tr {
+	border: 0.3mm solid black;
+	border-left: 0.6mm solid black;
+} 
+.Main {
+	width: 210mm;
+	height: 297mm;
+    padding: 5mm 5mm 5mm 20mm;
+	background-color: white;
+}
+.container0{
+    position: relative;
+    border: 0.6mm solid black;
+    width: 100%;
+    height: auto;
+}
+.container1 {
+	top: 0;
+	right: 0;
+	left: 0;
+	text-align: center;
+}
+.m-1 {
+    margin: -0.6mm;
+}
+.container2 {
+	border: 0.6mm solid black;
+	right: 5mm;
+	bottom: 5mm;
+	left: 20mm;
+	width: 100mm;
+}
+.container3 {
+	width: 100%;
+}
+.table1 {
+	text-indent: 1mm;
+	/*border: 0.6mm solid black;*/
+	border-collapse: collapse;
+	width: 100%;
+	height: 115mm;
+}
+.table3 {
+	font: 0.9em Arial;
+	text-indent: 1mm;
+	border: 0.6mm solid black;
+	border-collapse: collapse;
+	width: 100%;
+	height: 25mm;
+}
+.cell-1 {
+	width: 23mm;
+}
+.cell-2 {
+	width: 28mm;	
+}
+.cell-3 {
+	width: 37mm;
+}
+.cell-4 {
+	width: 32mm;
+}
+.cell-5 {
+	width: 18mm;
+}
+.cell-6 {
+	width: 13mm;
+}
+.w-30 {
+	width: 30%;
+	display: inline-block;
+}
+@media screen
+{
+    .noPrint{}
+    .noScreen{display:none;}
+}
+
+@media print
+{
+    .hi{display:none;}
+    .noScreen{}
+    @page{
+        margin: 0;
+    }
+    body {
+        font: 1.2em Arial;
+        margin: 0;
+    }
+    .Main {
+        page-break-after: auto;
+    }
+}
+.border{
+    border: 0.3mm solid black;
+}
+.fl{
+    float: left;
+}
+.tac{
+    text-align: center;
+}
+.m{
+    margin: auto;
+}
+.ml{
+    margin-left: 5mm;
+}
+.dib{
+    display: inline-block;
+}
+.pd-2{
+    padding: 2mm;
+}
+.bl-n{
+    border-left:none;
+}
+.br-n{
+    border-right:none;
+}
+.bb-n{
+    border-bottom:none;
+}
+.bt-n{
+    border-top:none;
+}
+.w100{
+    width: 100%;
+}
+.br-a{
+    border-right: 1px solid red;
+}
+.bl-a{
+    border-left: 1px solid red;
+}
+.bb-a{
+    border-bottom: 1px solid red;
+}
+.bt-a{
+    border-top: 1px solid red;
+}
+.pa{
+    position: absolute;
+}
+.pr{
+    position: relative;
+}
+.bc-n{
+    background-color: white;
+}
+.df{
+    display: flex;
+}
+.ma{
+    margin:auto;
+}
+.aac{
+    align-items: center;
+}
+.vac{
+    vertical-align: middle;
+}

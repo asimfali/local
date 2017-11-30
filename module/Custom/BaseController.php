@@ -9,6 +9,7 @@
 namespace Custom;
 
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request;
@@ -46,6 +47,14 @@ class BaseAdminController extends AbstractActionController
      * @var integer $count
      */
     protected $count;
+    /**
+     * @var MyURL $getUrls
+     */
+    protected $getUrls;
+    /**
+     * @var $fields
+     */
+    protected $fields;
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -70,6 +79,31 @@ class BaseAdminController extends AbstractActionController
             return $this->redirect()->toUrl($url);
         }
 
+    }
+    public function toArray($ent, $act)
+    {
+        $arr = null;
+        /**
+         * @var Collection $tmp
+         */
+        $tmp = call_user_func([$ent, $act[0]]);
+        $i = 1;
+        foreach ($tmp as $item) {
+            $arr['Key'.$i] = $this->getValue($item, $act[1]);
+            $arr['Val'.$i] = $this->getValue($item, $act[2]);
+            $i++;
+        }
+        return $arr;
+    }
+    public function getValue($ob,$name)
+    {
+        if (is_array($name)){
+            $ob = call_user_func([$ob,$name[0]]);
+            $ob = call_user_func([$ob,$name[1]]);
+        } else {
+            $ob = call_user_func([$ob,$name]);
+        }
+        return $ob;
     }
     public function getReq()
     {
@@ -154,43 +188,87 @@ class BaseAdminController extends AbstractActionController
         if (empty($page)) $page = 1;
         $q->setPaginator($count, $page);
 
-        $this->getFm($this->flashMessenger());
+        $this->getFm($this->plugin('flashMessenger'));
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
-    public function add($arr)
+    public function set($arr, $is_form = false, $is_req = false)
     {
-        $this->getFm($this->flashMessenger());
+        $this->getFm($this->plugin('flashMessenger'));
         $arr['getUrl']['name'] = $arr['table'];
         $this->setParam($arr['getUrl'],['count']);
-        $getUrls = new MyURL($arr['getUrl']);
-
-        $fields = new $arr['entity']();
-        $this->form = new MyForm($fields, $this->entityManager);
-        $this->form->setValue('hidden', 'value', $arr['table']);
-        $this->getReq();
+        $this->getUrls = new MyURL($arr['getUrl']);
+        if ($is_form){
+            $this->fields = new $arr['entity']();
+            $this->form = new MyForm($this->fields, $this->entityManager);
+            $this->form->setValue('hidden', 'value', $arr['table']);
+        }
+        if ($is_req){
+            $this->getReq();
+        }
+    }
+    public function flush($arr, $item)
+    {
+        $this->form->setData($this->req->getPost());
+        if ($this->form->getForm()->isValid()){
+            $this->entityManager->persist($item);
+            $this->entityManager->flush();
+            $this->fm->add($arr['add']['MessageSuccess']);
+        } else {
+            $this->error($arr['add']['MessageError']);
+        }
+    }
+    public function showForm($arr)
+    {
+        $this->form->getForm()->prepare();
+        return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $this->getUrls->get())];
+    }
+    public function add($arr)
+    {
+        $this->set($arr, true, true);
         $this->form->setAction($arr['add']['Action']);
         if ($this->req->isPost()){
-            $this->form->setData($this->req->getPost());
-            if ($this->form->getForm()->isValid()){
-                $this->entityManager->persist($fields);
-                $this->entityManager->flush();
-                $this->fm->add($arr['add']['MessageSuccess']);
-            } else {
-                $this->error($arr['add']['MessageError']);
-            }
+            $this->flush($arr, $this->fields);
         } else {
-            $this->form->getForm()->prepare();
-            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
+            return $this->showForm($arr);
         }
-        $this->redir([$arr['Redirect']],  $getUrls->get());
+        $this->redir([$arr['Redirect']],  $this->getUrls->get());
         return null;
+    }
+    public function edit($arr)
+    {
+        $this->set($arr, true, true);
+        $item = $this->getItem($arr);
+        $this->form->getForm()->bind($item);
+        if($this->req->isPost()){
+            $this->flush($arr, $item);
+        } else {
+            return $this->showForm($arr);
+        }
+        $this->redir([$arr['Redirect']], $this->getUrls->get());
+        return null;
+    }
+    public function delete($arr)
+    {
+        $this->set($arr);
+
+        try {
+            $item = $this->getItem($arr);
+            $this->entityManager->remove($item);
+            $this->entityManager->flush();
+            $this->fm->add($arr['delete']['MessageSuccess']);
+
+        } catch (\Exception $ex){
+            $this->fm->status = 'error';
+            $this->fm->add($arr['delete']['MessageError'] . $ex->getMessage());
+        }
+        return $this->redir([$arr['Redirect']], $this->getUrls->get());
     }
     public function itemAdd($arr, $table = null)
     {
-        $this->getFm($this->flashMessenger());
-        $cl = new $arr['entity']();
+        $this->getFm($this->plugin('flashMessenger'));
+//        $cl = new $arr['entity']();
         $this->form = new MyForm(null, $this->entityManager);
         $this->form->addDoctrine(['prop' => $arr['prop'], 'label' => $arr['label'], 'criteria' => $arr['where'],
             'class' => 'form-control', 'type' => 'ObjectSelect', 'name' => 'ua', 'target' => $arr['refEntity']]);
@@ -220,63 +298,15 @@ class BaseAdminController extends AbstractActionController
         }
 //            $this->redir($_SERVER['SCRIPT_NAME'],);
 //            header('Location: ' . $_SERVER["HTTP_REFERER"]);
-            $cols = call_user_func([$elem, 'get' . $arr['collection']]);
-            $q = new Query($this->entityManager);
-            $q->resetPaginator($cols);
-            unset($table['ths']['Действие']);
-            $table['ths']['Действие'] = ['delete-item' => 'Удалить элемент'];
-            $q->set(['name' => $table['name'], 'class' => $table['css'], 'ths' => $table['ths'],
-                'table' => $table['table'], 'pname' => $arr['table'] , 'id' => $pid['id']]);
-            $this->form->getForm()->prepare();
-            return ['form' => $this->form, 'id' => $this->id, 'q' => $q];
-    }
-    public function edit($arr)
-    {
-        $this->getFm($this->flashMessenger());
-        $arr['getUrl']['name'] = $arr['table'];
-        $this->setParam($arr['getUrl'],['count']);
-        $getUrls = new MyURL($arr['getUrl']);
-
-        $fields = new $arr['entity']();
-        $item = $this->getItem($arr);
-        $this->form = new MyForm($fields, $this->entityManager);
-        $this->form->setValue('hidden', 'value', $arr['table']);
-        $this->form->getForm()->bind($item);
-        $this->req = $this->getReq();
-        if($this->req->isPost()){
-            $this->form->setData($this->req->getPost());
-            if($this->form->getForm()->isValid()){
-                $this->entityManager->persist($item);
-                $this->entityManager->flush();
-                $this->fm->add($arr['edit']['MessageSuccess']);
-            } else {
-                $this->error($arr['edit']['MessageError']);
-            }
-        } else {
-            $this->form->getForm()->prepare();
-            return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
-        }
-        $this->redir([$arr['Redirect']], $getUrls->get());
-        return null;
-    }
-    public function delete($arr)
-    {
-        $this->getFm($this->flashMessenger());
-        $arr['getUrl']['name'] = $arr['table'];
-        $this->setParam($arr['getUrl'],['count']);
-        $getUrls = new MyURL($arr['getUrl']);
-
-        try {
-            $item = $this->getItem($arr);
-            $this->entityManager->remove($item);
-            $this->entityManager->flush();
-            $this->fm->add($arr['delete']['MessageSuccess']);
-
-        } catch (\Exception $ex){
-            $this->fm->status = 'error';
-            $this->fm->add($arr['delete']['MessageError'] . $ex->getMessage());
-        }
-        return $this->redir([$arr['Redirect']], $getUrls->get());
+        $cols = call_user_func([$elem, 'get' . $arr['collection']]);
+        $q = new Query($this->entityManager);
+        $q->resetPaginator($cols);
+        unset($table['ths']['Действие']);
+        $table['ths']['Действие'] = ['delete-item' => 'Удалить элемент'];
+        $q->set(['name' => $table['name'], 'class' => $table['css'], 'ths' => $table['ths'],
+            'table' => $table['table'], 'pname' => $arr['table'] , 'id' => $pid['id']]);
+        $this->form->getForm()->prepare();
+        return ['form' => $this->form, 'id' => $this->id, 'q' => $q];
     }
     public function deleteItem($arr, $id)
     {
@@ -317,6 +347,6 @@ class BaseController extends BaseAdminController
                 return $this->redirect()->toRoute('auth-doctrine',['controller' => 'index', 'action' => 'login']);
             }
         }
-        return parent::onDispatch($e); // TODO: Change the autogenerated stub
+        return parent::onDispatch($e);
     }
 }

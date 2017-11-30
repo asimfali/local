@@ -1,0 +1,41 @@
+<?php
+$this->headLink()->appendStylesheet('/css/izvContent.css');
+$this->headLink()->appendStylesheet('/css/jsrecord.css')
+    ?>
+<div class="main border">
+    <div class="border dib m" style="border-bottom: none; width: 185mm;">
+        <div class="fl">
+            <div class="border tac" style="width: 15mm; margin: -1px 0 0 -1px;">1</div>
+        </div>
+        <div class="fl" style="width: 90%;">
+            <div class="tac">
+                <div id="name" class="dib">КЭВ-П4040Е.00.000</div>
+                <div id="act" class="dib">Заменить</div>
+            </div>
+            <div id="cont" class="dib" style="width: 100%; margin-left: 5mm">a</div>
+        </div>
+    </div>
+</div>
+
+<table class="w-100">
+    <tr>
+        <th class="w-15">Номер чертежа</th>
+        <th class="w-15">Действие</th>
+        <th class="w-60">Примечание (содержание изменения)</th>
+        <th class="w-10"></th>
+    </tr>
+</table>
+<div class="record">
+    <div class="va">
+        <div class="w-15 va form-group-sm"><a href="#"><input class="w-100 form-control" type="text" title="#"></a></div>
+        <div class="w-15 va form-group-sm">
+            <select class="w-100 form-control" name="" id="" title="#">
+                <option value="">заменить</option>
+                <option value="">добавить</option>
+                </select>
+        </div>
+        <div class="w-60 va form-group-sm"><textarea class="w-100 form-control" style="height: 30px;" title="#"></textarea>
+        </div>
+        <div class="w-10 form-group-sm"><input class="btn btn-default form-control w-100" type="button" id="dob" value="Добавить"></div>
+    </div>
+</div>

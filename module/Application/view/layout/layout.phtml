@@ -25,7 +25,7 @@
         ?>
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-top hi" role="navigation">
             <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -47,10 +47,10 @@
             </div>
         </nav>
         <div class="container">
-            <?= '<div class="breadcrumbs"> <br>'. $this->navigation('Zend\\Navigation\\Admin_navigation')->breadcrumbs()->setLinkLast(false)->setMinDepth(0)->render() . '</div>';?>
+            <?= '<div class="breadcrumbs hi"> <br>'. $this->navigation('Zend\\Navigation\\Admin_navigation')->breadcrumbs()->setLinkLast(false)->setMinDepth(0)->render() . '</div>';?>
             <?= $this->content ?>
-            <hr>
-            <footer class="container">
+            <hr class="hi">
+            <footer class="container hi">
                 <p>&copy; 1992 - <?= date('Y') ?> Teplomash. All rights reserved.</p>
             </footer>
         </div>

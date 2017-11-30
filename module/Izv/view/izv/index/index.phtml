@@ -3,17 +3,19 @@
 if (isset($default)){
 
     foreach ($default as $item) {
-        $url = $base . '?name='.$item[0];
+        $url = $this->base . '?name='.$item[0];
         echo "<h2><a href=\"{$url}\">{$item[1]}</a><br></h2>";
     }
-    echo "<a href=\"{$show}\">Показать</a><br><br>";
+    echo "<a href=\"show/\">Показать</a><br><br>";
+    echo "<a href=\"/izv/all/pr/\">Просмотр</a><br><br>";
+    echo "<a href=\"/izv/all/download/\">Скачать pdf</a><br><br>";
     return;
 }
 if(isset($desc)) echo "<h2>{$desc}</h2>";
-echo "<a href=\"{$add}\">Добавить</a><br><br>";
-$fm->pr();
-$q->prTable();
-$e =  $this->paginationControl($name, 'Sliding', 'pagination_control', ['route' => $route]);
-$e = str_replace('?page', $table.'&page', $e);
+echo "<a href=\"{$this->add}\">Добавить</a><br><br>";
+$this->fm->pr();
+$this->q->prTable();
+$e =  $this->paginationControl($this->name, 'Sliding', 'pagination_control', ['route' => $this->route]);
+$e = str_replace('?page', $this->table.'&page', $e);
 echo $e;
 ?>

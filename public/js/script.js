@@ -22,11 +22,29 @@ $(function (urlName) {
         })
     })
 });
-$(function () {
-    $("a:contains('Добавить')").addClass('btn-sm btn-success').css('border-radius','4px')
-        .css('text-decoration','none');
-    $("a:contains('Редактировать')").addClass('btn-sm btn-warning')
-        .css('text-decoration','none').css('color', 'black').css('border-radius','4px');
-    $("a:contains('Удалить')").addClass('btn-sm btn-danger')
-        .css('text-decoration','none').css('border-radius','4px');
+
+
+
+function addRecord() {
+    console.log(this.innerHTML);
+}
+
+$(document).ready(function () {
+    $(':button').click(function () {
+        let divs;
+        let str = {};
+        let p = $(this).parent().parent();
+        divs = p.children();
+        str.name = divs.eq(0).find(".w-100").val();
+        str.act = divs.eq(1).find(".w-100 option:selected").text();
+        str.content = divs.eq(2).find(".w-100").val();
+        let clone = $('.m').first().clone();
+        clone.find("#name").html(str.name);
+        clone.find("#act").html(str.act);
+        clone.find("#cont").html('Примечание: ' + str.content);
+        let main = $('.main');
+        main.append(clone);
+        p.remove();
+        // console.log(main.height());
+    });
 });
