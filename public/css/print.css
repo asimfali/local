@@ -11,8 +11,8 @@
     box-sizing: border-box;
 }
 body {
-	font: var(--fs) Arial;
-	margin: 0 auto;
+    font: var(--fs) Arial;
+    margin: 0 auto;
     border-color: var(--b-c);
     color: var(--b-c);
 }
@@ -21,14 +21,14 @@ table > tbody > tr > td {
     opacity: 1;
 }
 td, tr {
-	border: var(--b-t) solid var(--b-c);
-	border-left: 0.6mm solid var(--b-c);
-} 
+    border: var(--b-t) solid var(--b-c);
+    border-left: 0.6mm solid var(--b-c);
+}
 .Main {
-	width: 210mm;
-	height: 297mm;
+    width: 210mm;
+    height: 297mm;
     padding: 5mm 5mm 5mm 20mm;
-	background-color: var(--b-bgc);
+    background-color: var(--b-bgc);
 }
 .subMain{
     width: 185mm;
@@ -42,56 +42,56 @@ td, tr {
     height: auto;
 }
 .container1 {
-	top: 0;
-	right: 0;
-	left: 0;
-	text-align: center;
+    top: 0;
+    right: 0;
+    left: 0;
+    text-align: center;
 }
 .m-1 {
     margin: -0.6mm;
 }
 .container2 {
-	border: 0.6mm solid var(--b-c);
-	right: 5mm;
-	bottom: 5mm;
-	left: 20mm;
-	width: 100mm;
+    border: 0.6mm solid var(--b-c);
+    right: 5mm;
+    bottom: 5mm;
+    left: 20mm;
+    width: 100mm;
 }
 .container3 {
-	width: 100%;
+    width: 100%;
 }
 .table1 {
-	text-indent: 1mm;
-	/*border: 0.6mm solid var(--b-c);*/
-	border-collapse: collapse;
-	width: 100%;
-	height: 115mm;
+    text-indent: 1mm;
+    /*border: 0.6mm solid var(--b-c);*/
+    border-collapse: collapse;
+    width: 100%;
+    height: 115mm;
 }
 .table3 {
-	font: var(--fs) Arial;
-	text-indent: 1mm;
-	border: 0.6mm solid var(--b-c);
-	border-collapse: collapse;
-	width: 100%;
-	height: 25mm;
+    font: var(--fs) Arial;
+    text-indent: 1mm;
+    border: 0.6mm solid var(--b-c);
+    border-collapse: collapse;
+    width: 100%;
+    height: 25mm;
 }
 .cell-1 {
-	width: 23mm;
+    width: 23mm;
 }
 .cell-2 {
-	width: 28mm;	
+    width: 28mm;
 }
 .cell-3 {
-	width: 37mm;
+    width: 37mm;
 }
 .cell-4 {
-	width: 32mm;
+    width: 32mm;
 }
 .cell-5 {
-	width: 18mm;
+    width: 18mm;
 }
 .cell-6 {
-	width: 13mm;
+    width: 13mm;
 }
 .w-13{
     width: 13mm;
@@ -133,8 +133,8 @@ td, tr {
     width: calc(21mm - 0.3mm);
 }
 .w-30 {
-	width: 30%;
-	display: inline-block;
+    width: 30%;
+    display: inline-block;
 }
 .border{
     border: var(--b-t) solid var(--b-c);

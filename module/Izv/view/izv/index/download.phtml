@@ -1,41 +1,47 @@
 <?php
 ob_start();
-echo "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document</title><link rel='stylesheet' href='css/izv.css'></head><body>";
+echo "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document</title><link rel='stylesheet' media='print' href='css/print.css'></head><body>";
 $this->headLink(['rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'all'])->appendStylesheet('/css/izv.css');
-$cont = null;
-echo "<div class=\"Main\">";
-echo "<div class=\"container0\">";
-echo $this->partial('head.phtml', $this->head);
-echo $this->partial('contentHead.html',  $this->head);
-echo "<div class=\"w100\" style='height: 175mm;'>";
-echo $this->partialLoop('content.phtml', [
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'заменить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '3','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-    array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '2','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-            Примечание: Изменено количество пазов на фланце, введен вид А"),
+$c = "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document
+    </title><link rel='stylesheet' media='all' href='css/print.css'></head><body>";
+$cont = null; $h = 5.5;
+$par = ['cause' => 'Введение конструктивных улучшений', 'list' => '&nbsp', 'listov' => '1', 'date' => '30.11.17',
+    'dep' => 'КБВиГ', 'desc' => 'см. ниже', 'name' => 'ТПМШ.001-18', 'code' => '1', 'zadel' =>'&nbsp', 'vn' => '&nbsp',
+    'inherit' => '&nbsp', 'mailto' => 'Учтенным абонентам', 'attach' => '2 эл черт в PDF; 2 развертки дет. в DXF'];
+$r = $this;
+$style = ['line-height' => $h . 'mm'];
+$style1 = ['line-height' => $h*2 . 'mm'];
+$style3 = ['line-height' => 10 . 'mm'];
+$style4 = ['line-height' => 5 . 'mm'];
+$style5 = ['line-height' => 15.3 . 'mm'];
+$style6 = ['line-height' => 20 . 'mm'];
 
-]);
-echo "</div>";
-echo $this->partial('foot1.phtml', $this->foot);
-echo "</div>";
-echo "</div>";
+$bv = new \Custom\BaseView($r, 'main', 'Main fs-0');
+$bv->addPrefixDiv('subMain');
+$bv->addPostfixDiv();
+$bv->head($par);
+$bv->headIzm();
+$c .= $bv->pr();
 
-$this->headLink()->appendStylesheet('/css/jsrecord.css');
-$this->headScript()->appendFile('/js/hiddenPrint.js');
-echo "</body></html>";
+$bv = new \Custom\BaseView($r, 'main1', 'Main fs-0');
+$bv->addPrefixDiv('subMain');
+$bv->addPostfixDiv();
+$bv->head1($par);
+$bv->headIzm();
+$c .= $bv->pr();
+
+$c .= "</body></html>";
+echo $c;
+
 $cont = ob_get_clean();
-echo $cont;
 $fn = uniqid() . '.html';
 $fout = 'test' . '.pdf';
 file_put_contents(\Custom\Exec::$path . $fn, $cont);
-$cmd = new \Custom\Exec('wkhtmltopdf', ['--margin-top 0mm --margin-bottom 0mm --margin-left 0mm --margin-right 0mm',
+$cmd = new \Custom\Exec('wkhtmltopdf', ['--margin-top 0mm --margin-bottom 0mm --margin-left 0mm --margin-right 0mm --zoom 1.5',
     \Custom\Exec::$path . $fn, \Custom\Exec::$path . $fout]);
 $cmd->runExec();
 rename(\Custom\Exec::$path . $fout, \Custom\Exec::$contMovePath . $fout);
-unlink(\Custom\Exec::$path.$fn);
+//unlink(\Custom\Exec::$path.$fn);
 file_force_download(\Custom\Exec::$contMovePath . $fout);
 //    ob_start ();
 //    header('Content-type: application/pdf');
