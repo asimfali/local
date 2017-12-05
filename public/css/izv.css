@@ -112,7 +112,7 @@ td, tr {
     width: 42mm;
 }
 .w-40 {
-    width: 41.5mm;
+    width: 41.4mm;
 }
 .w-65 {
     width: 65mm;
@@ -132,9 +132,27 @@ td, tr {
 .w-list {
     width: calc(21mm - 0.3mm);
 }
-.w-30 {
+.w30 {
 	width: 30%;
 	display: inline-block;
+}
+.w10 {
+    width: 10%;
+}
+.w15 {
+    width: 15%;
+}
+.w20 {
+    width: 20%;
+}
+.w30 {
+    width: 30%;
+}
+.w50 {
+    width: 50%;
+}
+.w60 {
+    width: 60%;
 }
 .border{
     border: var(--b-t) solid var(--b-c);
@@ -229,4 +247,16 @@ td, tr {
 }
 .mt-03{
     margin-top: -0.3mm;
+}
+.pd-10{
+    padding: 1mm 10mm;
+}
+label{
+    color: white;
+}
+.bn{
+    border: none;
+}
+.c-w{
+    color: white;
 }

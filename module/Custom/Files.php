@@ -88,19 +88,21 @@ class Files
             if (!is_dir($e)) continue;
         }
     }
+    public function getF($pat)
+    {
+        $pattern = $this->path . $pat;
+        return $this->files = glob($pattern, GLOB_NOSORT);
+    }
+    public function linkF($href)
+    {
+        foreach ($this->files as $file) {
+            $file = basename($file);
+            echo "<a href=\"{$href}?pdf={$file}\" target='_blank'>{$file}</a><br>";
+        }
+    }
     public function getFiles()
     {
-//        $server = new Server('191.168.0.161', 'simanov', 'P@ssword1');
-//        $shares = $server->listShares();
-//        foreach ($shares as $share) {
-//            echo $share->getName(). "\n";
-//        }
-        $pattern = $this->path . '*.pdf';
-        $this->files = glob($pattern, GLOB_NOSORT);
-        foreach ($this->files as $file) {
-            $file = explode('/',$file);
-            $file = end($file);
-            echo "<a href=\"/izv/all/show/?pdf={$file}\" target='_blank'>{$file}</a><br>";
-        }
+        $this->getF('*.pdf');
+        $this->linkF('/izv/all/show/');
     }
 }

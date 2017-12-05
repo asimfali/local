@@ -9,11 +9,12 @@
 namespace Izv\Controller;
 
 
-use Custom\BaseAdminController;
+use Custom\BaseAddController;
 use Entity\Templates;
+use Entity\User;
 use Zend\Mvc\MvcEvent;
 
-class IndexController extends BaseAdminController
+class IndexController extends BaseAddController
 {
     /**
      * @var array $config
@@ -27,11 +28,11 @@ class IndexController extends BaseAdminController
      * @var $path
      */
     protected $path;
-    public function __construct($entityManager, $config)
+    public function __construct($entityManager, $authenticationService, $config)
     {
         $this->config = $config;
         $this->path = $this->config['Path'];
-        parent::__construct($entityManager);
+        parent::__construct($entityManager, $authenticationService);
     }
     public function onDispatch(MvcEvent $e)
     {
@@ -60,13 +61,28 @@ class IndexController extends BaseAdminController
     }
     public function addAction()
     {
+        if (!isset($this->auth) || !$this->auth->hasIdentity()){
+            return $this->redirect()->toRoute('auth-doctrine',['controller' => 'index', 'action' => 'login']);
+        }
+        /**
+         * @var User $user
+         */
+        $user = $this->auth->getIdentity();
+        $dep = $user->getUsrDepartment();
+        $alias = $dep->getAlias();
+        $tmpl = $this->entityManager->getRepository(Templates::class);
+        $tmpl = $tmpl->findOneBy(['name' => $alias]);
+        $p = $this->lastNumber('Izv','numberIzv');
+        if (!isset($p)) $p = 1;
         $arr = $this->model;
-        $this->set($arr, true, true);
+        $p = $this->numberIzv($p, date('y'));
+        $this->set($arr, true, true, ['NumberIzv' => $p, 'Appendix' => $this->PDF_DXF(2,2),
+            'UsrFirstName' => $user, 'Department' => $dep]);
         $this->form->setAction($arr['add']['Action']);
         $v = null;
         $this->form->setElemPar('date', 'Format', 'Y-m-d');
         $this->form->setElemPar('date', 'Value', date('Y-m-d'));
-        return $this->showForm($arr);
+        return $this->showForm($arr, ['vals' => [1,1], 'user' => $user->getUsrFirstName()]);
     }
     public function showAction()
     {

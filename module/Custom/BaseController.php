@@ -11,6 +11,7 @@ namespace Custom;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -193,7 +194,7 @@ class BaseAdminController extends AbstractActionController
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
-    public function set($arr, $is_form = false, $is_req = false)
+    public function set($arr, $is_form = false, $is_req = false, $sets = null)
     {
         $this->getFm($this->plugin('flashMessenger'));
         $arr['getUrl']['name'] = $arr['table'];
@@ -201,6 +202,11 @@ class BaseAdminController extends AbstractActionController
         $this->getUrls = new MyURL($arr['getUrl']);
         if ($is_form){
             $this->fields = new $arr['entity']();
+            if (isset($sets)){
+                foreach ($sets as $k => $set) {
+                    call_user_func_array([$this->fields,'set'.$k],[$set]);
+                }
+            }
             $this->form = new MyForm($this->fields, $this->entityManager);
             $this->form->setValue('hidden', 'value', $arr['table']);
         }
@@ -219,10 +225,37 @@ class BaseAdminController extends AbstractActionController
             $this->error($arr['add']['MessageError']);
         }
     }
-    public function showForm($arr)
+    public function showForm($arr, $v = null)
     {
         $this->form->getForm()->prepare();
-        return ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $this->getUrls->get())];
+        $r = ['form' => $this->form, 'id' => $this->id, 'add' => $this->crurl([$arr['name'], 'add'], $this->getUrls->get())];
+        if (isset($v)) $r = $r + $v;
+        return $r;
+    }
+
+    public function numberIzv($p, $y)
+    {
+        return 'ТПМШ.' . sprintf("%03d", $p) . '-' . $y;
+    }
+
+    public function PDF_DXF($pdf, $dxf)
+    {
+        $r = '';
+        if (isset($pdf)) $r .= $pdf . ' эл. черт в PDF; ';
+        if (isset($pdf)) $r .= $dxf . ' разв. детали в DXF; ';
+        return $r;
+    }
+
+    public function lastNumber($table,$sort)
+    {
+        $query = $this->entityManager->createQueryBuilder();
+        $query
+            ->select('a')
+            ->from('Entity\\'. $table, 'a')
+            ->orderBy('a.'.$sort,'DESC')
+            ->setMaxResults(1);
+        $p = $query->getQuery()->getResult();
+        return $p[0];
     }
     public function add($arr)
     {
@@ -327,6 +360,18 @@ class BaseAdminController extends AbstractActionController
             $this->entityManager->flush();
         }
         $this->redir([$arr['name'],'add-item',$id],"?name=" . $arr['table']);
+    }
+}
+
+class BaseAddController extends BaseAdminController
+{
+    protected $auth;
+    public function __construct($entityManager, AuthenticationService $authenticationService = null)
+    {
+        parent::__construct($entityManager);
+        if (isset($authenticationService)){
+            $this->auth = $authenticationService;
+        }
     }
 }
 

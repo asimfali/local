@@ -51,6 +51,7 @@ class Query
      * Query constructor.
      * @param EntityManager $entityManager
      * @param $arr - array
+     * @param integer $max
      */
     public function __construct(EntityManager $entityManager, $arr = null)
     {

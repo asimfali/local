@@ -7,7 +7,7 @@
  */
 use Izv\Controller\IndexController;
 use Izv\Controller\AdminController;
-use Izv\Factory\IndexControllerFactory;
+use Izv\Factory\AdderControllerFactrory;
 use Izv\Factory\AdminControllerFactory;
 use Zend\Router\Http\Segment;
 use Zend\Router\Http\Literal;
@@ -15,7 +15,7 @@ use Zend\Router\Http\Literal;
 return [
     'controllers' => [
         'factories' => [
-            IndexController::class => IndexControllerFactory::class,
+            IndexController::class => AdderControllerFactrory::class,
             AdminController::class => AdminControllerFactory::class,
         ]
     ],

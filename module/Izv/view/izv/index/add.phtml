@@ -1,8 +1,52 @@
 <?php
-$this->headLink()->appendStylesheet('/css/izvContent.css');
-$this->headLink()->appendStylesheet('/css/jsrecord.css')
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $r
+ */
+$r = $this;
+
+$r->headLink()->appendStylesheet('/css/izv.css');
+$r->headLink()->appendStylesheet('/css/jsrecord.css');
+/**
+ * @var \Zend\Form\Element $el
+ */
+$el = null;
+/**
+ * @var \Custom\MyForm $form
+ */
+$form = null;
+$bclass = 'form-horizontal col-lg-6';
+$cclass = 'pd-10';
+$lclass = 'pd-10 control-label';
+
+$bv = new \Custom\BaseView($r, 'izvAdd1', 'form-horizontal col-lg-4');
+//$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('usrFirstName'), ['lclass' => $lclass.' col-lg-6',
+//    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('numberIzv'), ['lclass' => $lclass.' col-lg-6',
+    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('date'), ['lclass' => $lclass.' col-lg-6',
+    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('applicability'), ['lclass' => $lclass.' col-lg-6',
+    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('mailto'), ['lclass' => $lclass.' col-lg-6',
+    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+echo $bv->pr();
+
+$bv = new \Custom\BaseView($this, 'izvAdd2', 'form-horizontal col-lg-8');
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('reason'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('zadel'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('impl'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('department'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('appendix'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+echo $bv->pr();
+
     ?>
-<div class="main border">
+
+<div class="main hidden">
     <div class="border dib m" style="border-bottom: none; width: 185mm;">
         <div class="fl">
             <div class="border tac" style="width: 15mm; margin: -1px 0 0 -1px;">1</div>
@@ -17,25 +61,15 @@ $this->headLink()->appendStylesheet('/css/jsrecord.css')
     </div>
 </div>
 
-<table class="w-100">
-    <tr>
-        <th class="w-15">Номер чертежа</th>
-        <th class="w-15">Действие</th>
-        <th class="w-60">Примечание (содержание изменения)</th>
-        <th class="w-10"></th>
+<div class="bn c-w">
+<table class="w100 bn">
+    <tr class="bn">
+        <th class="w15">Номер чертежа</th>
+        <th class="w15">Действие</th>
+        <th class="w60">Примечание (содержание изменения)</th>
+        <th class="w10"></th>
     </tr>
-</table>
-<div class="record">
-    <div class="va">
-        <div class="w-15 va form-group-sm"><a href="#"><input class="w-100 form-control" type="text" title="#"></a></div>
-        <div class="w-15 va form-group-sm">
-            <select class="w-100 form-control" name="" id="" title="#">
-                <option value="">заменить</option>
-                <option value="">добавить</option>
-                </select>
-        </div>
-        <div class="w-60 va form-group-sm"><textarea class="w-100 form-control" style="height: 30px;" title="#"></textarea>
-        </div>
-        <div class="w-10 form-group-sm"><input class="btn btn-default form-control w-100" type="button" id="dob" value="Добавить"></div>
-    </div>
-</div>
+</table></div>
+<?php foreach ($this->vals as $val) {
+    echo $r->partial('record.phtml');
+}?>

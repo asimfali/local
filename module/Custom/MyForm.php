@@ -178,6 +178,10 @@ class MyForm
         $elem = $this->form->get($e);
         call_user_func_array([$elem, 'set' . $name],[$value]);
     }
+    public function getEl($name)
+    {
+        return $this->form->get($name);
+    }
 
     public function customRender()
     {

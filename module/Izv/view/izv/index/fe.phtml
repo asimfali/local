@@ -1,0 +1,5 @@
+<?php
+    $l = '';
+    if(isset($lclass)) $l = "<label class=\"{$lclass}\">{$label}</label>";
+?>
+<?=$l?><div class="<?=$this->EscapeHtml($this->eclass)?>"><?=$el?></div>

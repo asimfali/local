@@ -9,6 +9,7 @@
 namespace Custom;
 
 
+use Zend\Form\Element;
 use Zend\View\Helper\Partial;
 use Zend\View\Helper\PartialLoop;
 use Zend\View\Helper\Placeholder;
@@ -40,8 +41,8 @@ class BaseView
     public function __construct(PhpRenderer $phpRenderer, $name, $class = null, $arr = null)
     {
         $this->r = $phpRenderer;
+        if (isset($name)) $name = uniqid (rand(), true);
         $this->cont = $this->r->placeholder($name);
-        $this->cont->captureStart();
         if (isset($class)) $this->setClass($class);
         if (isset($arr)) {
             $this->addArr($arr);
@@ -121,19 +122,55 @@ class BaseView
         $pr .= $val;
         $this->cont->setPostfix($pr);
     }
-    public function pr()
+
+    public function capStart()
+    {
+        $this->cont->captureStart();
+    }
+
+    public function capEnd()
     {
         $this->cont->captureEnd();
+    }
+    public function pr()
+    {
         if (!empty($this->col)) $this->addCol();
-        return $this->cont->toString();
+        $p = $this->cont->toString();
+        return $p;
     }
     public static function addNewDiv($r, $name, $class, $arr){
         $e = new BaseView($r, $name, $class, $arr);
         return $e->pr();
     }
+    public static function createEl(PhpRenderer $r,Element $el, $arr)
+    {
+        $set = [];
+        $attr = $el->getAttributes();
+        if($el->getLabel()){
+            $el->setLabelAttributes(['class', $arr['lclass']]);
+            $label = $el->getLabel();
+            if (isset($attr['required'])){
+                $el->setLabel($el->getLabel().' *');
+            }
+            $set['lclass'] = $arr['lclass']; $set['label'] = $label;
+        } else { $label = '';}
+        $type = isset($attr['type']) ? $attr['type'] : '';
+        $fe = '';
+        switch ($type){
+            case 'select':
+                $fe = $r->formSelect($el);
+                break;
+            default:
+                $fe = $r->formElement($el);
+                break;
+        }
+        $set['el'] = $fe; $set['eclass'] = $arr['eclass'];
+        $set = ['fe.phtml' => [$set]]; $name = $attr['name'];
+        return self::addNewDiv($r, $name, $arr['class'], $set);
+    }
     public static function createSub($r,$style,$style1,$par,$title)
     {
-        $name = uniqid();
+        $name = uniqid (rand(), true);
         $arr0 = ['div.phtml' => [
             ['class' => ' bb-a tac fs', 'style' => $style1, 'cont' => $par],
             ['class' => ' tac fs', 'style' => $style1, 'cont' => '&nbsp'],
@@ -147,7 +184,7 @@ class BaseView
     }
     public static function createLine($r,$style,$par,$title)
     {
-        $name = uniqid();
+        $name = uniqid (rand(), true);
         $arr = ['div.phtml' =>[
             ['class' => 'fl br-a tac w-32 fs', 'style' => $style, 'cont' => $title],
             ['class' => 'fl tac w-153 fs','style' => $style, 'cont' => $par],
@@ -156,7 +193,7 @@ class BaseView
     }
     public static function createStack($r, $class ,$vals)
     {
-        $name = uniqid();
+        $name = uniqid (rand(), true);
         $arr = ['div.phtml' => $vals];
         return self::addNewDiv($r, $name, $class, $arr);
     }
