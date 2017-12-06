@@ -160,6 +160,9 @@ td, tr {
 .fl{
     float: left;
 }
+.fr{
+    float: right;
+}
 .tac{
     text-align: center;
 }
@@ -218,9 +221,6 @@ td, tr {
 .dg{
     display: grid;
 }
-.ma{
-    margin:auto;
-}
 .wa{
     width: auto;
 }
@@ -259,4 +259,22 @@ label{
 }
 .c-w{
     color: white;
+}
+.c-b{
+    color: black;
+}
+.bold{
+    font-weight: bold;
+}
+.mt-2mm{
+     margin-top: 2mm;
+ }
+.mt-1mm{
+    margin-top: 1mm;
+}
+.pr-1mm{
+    padding-right: 1mm;
+}
+.pl-1mm{
+    padding-left: 1mm;
 }

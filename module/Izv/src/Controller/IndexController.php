@@ -10,6 +10,7 @@ namespace Izv\Controller;
 
 
 use Custom\BaseAddController;
+use Custom\Files;
 use Entity\Templates;
 use Entity\User;
 use Zend\Mvc\MvcEvent;
@@ -74,9 +75,14 @@ class IndexController extends BaseAddController
         $tmpl = $tmpl->findOneBy(['name' => $alias]);
         $p = $this->lastNumber('Izv','numberIzv');
         if (!isset($p)) $p = 1;
-        $arr = $this->model;
-        $p = $this->numberIzv($p, date('y'));
-        $this->set($arr, true, true, ['NumberIzv' => $p, 'Appendix' => $this->PDF_DXF(2,2),
+        $arr = $this->model; $dir = '';
+        $p = $this->numberIzv($p, date('y'), $dir);
+        $path = $this->path . '/izv/' . $dir;
+        $this->upload($path);
+        $f = new Files($path);
+        $pdf = $f->countF('*.pdf');
+        $dxf = $f->countF('*.dxf');
+        $this->set($arr, true, true, ['NumberIzv' => $p, 'Appendix' => $this->PDF_DXF($pdf,$dxf),
             'UsrFirstName' => $user, 'Department' => $dep]);
         $this->form->setAction($arr['add']['Action']);
         $v = null;

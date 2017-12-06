@@ -5,6 +5,7 @@
 $r = $this;
 
 $r->headLink()->appendStylesheet('/css/izv.css');
+$r->headLink()->appendStylesheet('/css/upload.css');
 $r->headLink()->appendStylesheet('/css/jsrecord.css');
 /**
  * @var \Zend\Form\Element $el
@@ -17,6 +18,10 @@ $form = null;
 $bclass = 'form-horizontal col-lg-6';
 $cclass = 'pd-10';
 $lclass = 'pd-10 control-label';
+
+if (empty($status)){
+   echo $r->partial('loadFile.phtml',['act' => '/izv/all/add/?name=notice']);
+}
 
 $bv = new \Custom\BaseView($r, 'izvAdd1', 'form-horizontal col-lg-4');
 //$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('usrFirstName'), ['lclass' => $lclass.' col-lg-6',

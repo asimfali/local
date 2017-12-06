@@ -164,7 +164,7 @@ class BaseAdminController extends AbstractActionController
             if (isset($c)) $arr[$name] = $c;
         }
     }
-    public function upload($path, $name, $pdf = false)
+    public function upload($path, $name = null, $pdf = false)
     {
         $this->getReq(); $f = null;
         if ($this->req->isPost()){
@@ -233,8 +233,9 @@ class BaseAdminController extends AbstractActionController
         return $r;
     }
 
-    public function numberIzv($p, $y)
+    public function numberIzv($p, $y, &$dir)
     {
+        $dir = $y . sprintf("%03d", $p);
         return 'ТПМШ.' . sprintf("%03d", $p) . '-' . $y;
     }
 

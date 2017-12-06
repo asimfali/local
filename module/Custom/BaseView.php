@@ -102,6 +102,10 @@ class BaseView
         $this->cont->setPrefix("<div class=\"{$class}\">");
         $this->cont->setPostfix("</div>");
     }
+    public function addFields($legend)
+    {
+
+    }
     public function addPrefixDiv($class)
     {
         $this->addPrefix("<div class=\"{$class}\">");
@@ -135,8 +139,7 @@ class BaseView
     public function pr()
     {
         if (!empty($this->col)) $this->addCol();
-        $p = $this->cont->toString();
-        return $p;
+        return $this->cont->toString();
     }
     public static function addNewDiv($r, $name, $class, $arr){
         $e = new BaseView($r, $name, $class, $arr);

@@ -31,19 +31,28 @@ class Files
             $this->names = $v['name'];
         } else {
             $this->path = $v;
+            $this->slash();
         }
     }
     public function copy($path)
     {
         $this->path = $path;
+        if (!file_exists($this->path))
+            $this->mkDir($path);
         $i = 0;
         foreach ($this->files as $file) {
             $name =  $this->names[$i];
 //            $name = mb_convert_encoding($name, 'CP1251', mb_detect_encoding($name));
-            $b = move_uploaded_file($file, $path . $name);
+            $this->slash();
+            $b = move_uploaded_file($file, $this->path . $name);
             $i++;
         }
         return $b;
+    }
+    public function slash()
+    {
+        if (substr($this->path,-1) != '/')
+            $this->path .= '/';
     }
     public function pdf($name)
     {
@@ -88,10 +97,20 @@ class Files
             if (!is_dir($e)) continue;
         }
     }
+
+    public function mkDir($path)
+    {
+        mkdir($path,0777,true);
+    }
     public function getF($pat)
     {
         $pattern = $this->path . $pat;
         return $this->files = glob($pattern, GLOB_NOSORT);
+    }
+    public function countF($pat)
+    {
+        $this->getF($pat);
+        return count($this->files);
     }
     public function linkF($href)
     {
