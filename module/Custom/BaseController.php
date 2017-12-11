@@ -194,14 +194,16 @@ class BaseAdminController extends AbstractActionController
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
-    public function set($arr, $is_form = false, $is_req = false, $sets = null)
+    public function set($arr, $is_form = false, $is_req = false, $sets = null, $ent= null)
     {
         $this->getFm($this->plugin('flashMessenger'));
         $arr['getUrl']['name'] = $arr['table'];
         $this->setParam($arr['getUrl'],['count']);
         $this->getUrls = new MyURL($arr['getUrl']);
         if ($is_form){
+            if (empty($ent))
             $this->fields = new $arr['entity']();
+            else $this->fields = $ent;
             if (isset($sets)){
                 foreach ($sets as $k => $set) {
                     call_user_func_array([$this->fields,'set'.$k],[$set]);
@@ -233,10 +235,20 @@ class BaseAdminController extends AbstractActionController
         return $r;
     }
 
-    public function numberIzv($p, $y, &$dir)
+    public function numberIzv($p, &$dir, $inc = true)
     {
-        $dir = $y . sprintf("%03d", $p);
-        return 'ТПМШ.' . sprintf("%03d", $p) . '-' . $y;
+        if ($inc) $p++;
+        $dir = $p;
+        $m = null;
+        preg_match('/(\d{2})(\d{3})/is', $p, $m);
+        return 'ТПМШ.' . $m[2] . '-' . $m[1];
+    }
+
+    public function izvNumber($p)
+    {
+        $m = null;
+        preg_match('/(\d{3})-(\d{2})/is', $p, $m);
+        return $m[2] . $m[1];
     }
 
     public function PDF_DXF($pdf, $dxf)

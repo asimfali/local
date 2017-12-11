@@ -1,12 +1,72 @@
-
 <?php
-    if (isset($names)){
-        $names->getFiles();
-    } else {
-?>
-<form action="/izv/all/show/" method="post" enctype="multipart/form-data" >
-    <h3>Файлы:</h3> <br>
-    <input type="file" name="upload[]" multiple/>
-    <input type="submit" value="Отправить">
-</form>
-<?php } ?>
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $r
+ */
+$r = $this;
+
+$r->headLink()->appendStylesheet('/css/izv.css');
+$r->headLink()->appendStylesheet('/css/upload.css');
+//$r->headScript()->appendFile('/js/ui/jquery-ui.min.js');
+//$r->inlineScript()->captureStart();
+//echo <<<JS
+//    $(function() {
+//      $('.date').datepicker();
+//    });
+//JS;
+//$r->inlineScript()->captureEnd();
+/**
+ * @var \Zend\Form\Element $el
+ */
+$el = null;
+/**
+ * @var \Custom\MyForm $form
+ */
+$form = null;
+$bclass = 'form-horizontal col-lg-6';
+$cclass = '';
+$lclass = 'pd-10 control-label';
+echo "<form>";
+$main = new \Custom\BaseView($r,'main','w100');
+$main->addFields("Общие данные");
+
+$bv = new \Custom\BaseView($r, 'izvAdd1', 'form-horizontal col-lg-6 c-b');
+//$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('usrFirstName'), ['lclass' => $lclass.' col-lg-6',
+//    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('numberIzv'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('date'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('mailto'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('applicability'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$i1 = $bv->pr();
+
+$bv = new \Custom\BaseView($this, 'izvAdd2', 'form-horizontal col-lg-6 c-b');
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('reason'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('zadel'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('impl'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('department'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('appendix'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$i2 = $bv->pr();
+
+$main->addInCol($i1);
+$main->addInCol($i2);
+echo $main->pr();
+$main = new \Custom\BaseView($r,'main1','w100');
+$main->addFields("Содержание изменения");
+foreach ($this->vals as $val) {
+    $par = ['link' => $val->getLink(), 'numberIzv' => $val->getName(), 'act' => $val->getAct(), 'cont' => $val->getContent(), 'page' => 1];
+    $main->addInCol($r->partial('izv-content.phtml',$par));
+}
+$main->addInCol("<div class=\"w100 \"><a class='btn btn-success m-2mm fr bold pd-2' target='_blank' href={$this->pdf}>PDF</a></div>");
+$main->addInCol("<div class=\"w100 \"><a class='btn btn-success m-2mm fr bold pd-2' href='/izv/all/'>Вернуться</a></div>");
+echo $main->pr();
+echo "</form>";
+
+

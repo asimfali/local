@@ -14,7 +14,7 @@ body {
 	font: var(--fs) Arial;
 	margin: 0 auto;
     border-color: var(--b-c);
-    color: var(--b-c);
+    /*color: var(--b-c);*/
 }
 table > tbody > tr > td {
     border-color: var(--b-c);
@@ -132,10 +132,6 @@ td, tr {
 .w-list {
     width: calc(21mm - 0.3mm);
 }
-.w30 {
-	width: 30%;
-	display: inline-block;
-}
 .w10 {
     width: 10%;
 }
@@ -145,14 +141,32 @@ td, tr {
 .w20 {
     width: 20%;
 }
+.w25 {
+    width: 25%;
+}
 .w30 {
     width: 30%;
+}
+.w33 {
+    width: 33.33%;
+}
+.w35 {
+    width: 35%;
+}
+.w40 {
+    width: 40%;
+}
+.w45 {
+    width: 45%;
 }
 .w50 {
     width: 50%;
 }
 .w60 {
     width: 60%;
+}
+.w90 {
+    width: 90%;
 }
 .border{
     border: var(--b-t) solid var(--b-c);
@@ -169,8 +183,14 @@ td, tr {
 .m{
     margin: auto;
 }
+.ma{
+    margin: auto;
+}
 .ml{
     margin-left: 5mm;
+}
+.m-2mm{
+    margin: 2mm;
 }
 .dib{
     display: inline-block;
@@ -220,6 +240,9 @@ td, tr {
 }
 .dg{
     display: grid;
+}
+.dn{
+    display: none;
 }
 .wa{
     width: auto;
@@ -277,4 +300,25 @@ label{
 }
 .pl-1mm{
     padding-left: 1mm;
+}
+.pl-15px{
+    padding-left: 15px;
+}
+.pr-15px{
+    padding-right: 15px;
+}
+.lh-10mm{
+    line-height: 10mm;
+}
+.lh-7mm{
+    line-height: 7mm;
+}
+.lh-5mm{
+    line-height: 5mm;
+}
+.borCol-w {
+    border-color: white;
+}
+.borCol-i {
+    border-color: inherit;
 }

@@ -7,6 +7,14 @@ $r = $this;
 $r->headLink()->appendStylesheet('/css/izv.css');
 $r->headLink()->appendStylesheet('/css/upload.css');
 $r->headLink()->appendStylesheet('/css/jsrecord.css');
+//$r->headScript()->appendFile('/js/ui/jquery-ui.min.js');
+//$r->inlineScript()->captureStart();
+//echo <<<JS
+//    $(function() {
+//      $('.date').datepicker();
+//    });
+//JS;
+//$r->inlineScript()->captureEnd();
 /**
  * @var \Zend\Form\Element $el
  */
@@ -16,65 +24,60 @@ $el = null;
  */
 $form = null;
 $bclass = 'form-horizontal col-lg-6';
-$cclass = 'pd-10';
+$cclass = '';
 $lclass = 'pd-10 control-label';
 
 if (empty($status)){
    echo $r->partial('loadFile.phtml',['act' => '/izv/all/add/?name=notice']);
 }
+echo "<form>";
+$main = new \Custom\BaseView($r,'main','w100');
+$main->addFields("Общие данные");
 
-$bv = new \Custom\BaseView($r, 'izvAdd1', 'form-horizontal col-lg-4');
+$bv = new \Custom\BaseView($r, 'izvAdd1', 'form-horizontal col-lg-6 c-b');
 //$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('usrFirstName'), ['lclass' => $lclass.' col-lg-6',
 //    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('numberIzv'), ['lclass' => $lclass.' col-lg-6',
-    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('date'), ['lclass' => $lclass.' col-lg-6',
-    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('applicability'), ['lclass' => $lclass.' col-lg-6',
-    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('mailto'), ['lclass' => $lclass.' col-lg-6',
-    'eclass' => $cclass.' col-lg-6', 'class' => 'form-group']));
-echo $bv->pr();
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('numberIzv'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('date'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('mailto'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('applicability'), ['lclass' => $lclass.' col-lg-4',
+    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
+$i1 = $bv->pr();
 
-$bv = new \Custom\BaseView($this, 'izvAdd2', 'form-horizontal col-lg-8');
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('reason'), ['lclass' => $lclass.' col-lg-4',
-    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('zadel'), ['lclass' => $lclass.' col-lg-4',
-    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('impl'), ['lclass' => $lclass.' col-lg-4',
-    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('department'), ['lclass' => $lclass.' col-lg-4',
-    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
-$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('appendix'), ['lclass' => $lclass.' col-lg-4',
-    'eclass' => $cclass.' col-lg-8', 'class' => 'form-group']));
-echo $bv->pr();
+$bv = new \Custom\BaseView($this, 'izvAdd2', 'form-horizontal col-lg-6 c-b');
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('reason'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('zadel'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('impl'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('department'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$bv->addInCol(\Custom\BaseView::createEl($r, $this->form->getEl('appendix'), ['lclass' => $lclass.' col-lg-3',
+    'eclass' => $cclass.' col-lg-9', 'class' => 'form-group']));
+$i2 = $bv->pr();
 
-    ?>
+$main->addInCol($i1);
+$main->addInCol($i2);
+echo $main->pr();
+$main = new \Custom\BaseView($r,'main1','w100');
+$main->addFields("Содержание изменения");
+$main->addInCol($r->partial('izv-content.phtml',['act' => 'Действие','cont' => 'Примечание:', 'page' => 1]));
+$main->addInCol("<div id=\"save\" class=\"w100 dn\"><a class='btn btn-success m-2mm fr bold pd-2' href='#'>Сохранить</a></div>");
+$main->addInCol("<div id=\"create\" class=\"w100 dn\"><a class='btn btn-success m-2mm fr bold pd-2' href='#'>Создать</a></div>");
+echo $main->pr();
+echo "</form>";
+$rec = new \Custom\BaseView($r,'recs','bn c-w pl-15px pr-15px');
+$rec->addInCol($r->partial('head-content.phtml'));
+foreach ($this->vals as $val) {
+    $par = [];
+    if (is_array($val)) {$par['link'] = $this->path .'&pdf='. $val[1]; $par['name'] = $val[0];}
+    else {$par['link'] = $this->path .'&pdf='. $val; $par['name'] = $val;}
+    $rec->addInCol($r->partial('record.phtml',$par));
+}
+echo $rec->pr();
 
-<div class="main hidden">
-    <div class="border dib m" style="border-bottom: none; width: 185mm;">
-        <div class="fl">
-            <div class="border tac" style="width: 15mm; margin: -1px 0 0 -1px;">1</div>
-        </div>
-        <div class="fl" style="width: 90%;">
-            <div class="tac">
-                <div id="name" class="dib">КЭВ-П4040Е.00.000</div>
-                <div id="act" class="dib">Заменить</div>
-            </div>
-            <div id="cont" class="dib" style="width: 100%; margin-left: 5mm">a</div>
-        </div>
-    </div>
-</div>
 
-<div class="bn c-w">
-<table class="w100 bn">
-    <tr class="bn">
-        <th class="w15">Номер чертежа</th>
-        <th class="w15">Действие</th>
-        <th class="w60">Примечание (содержание изменения)</th>
-        <th class="w10"></th>
-    </tr>
-</table></div>
-<?php foreach ($this->vals as $val) {
-    echo $r->partial('record.phtml');
-}?>

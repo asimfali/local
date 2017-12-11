@@ -107,6 +107,21 @@ class Files
         $pattern = $this->path . $pat;
         return $this->files = glob($pattern, GLOB_NOSORT);
     }
+    public function parseF($pat)
+    {
+        $this->getF($pat);
+        foreach ($this->files as &$file) {
+            $link = $file = basename($file);
+            if (!stripos($file,'KEV')) continue;
+            $m = [];
+            preg_match('/KEV_([A-Z0-9]*)_(\d+)_(\d+)/is',$file, $m);
+            unset($m[0]);
+            $file = 'КЭВ-' . implode('.',$m);
+            $file = str_replace('P','П',$file);
+            $file = [$file,$link];
+        }
+        return $this->files;
+    }
     public function countF($pat)
     {
         $this->getF($pat);

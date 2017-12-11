@@ -1,4 +1,3 @@
-<h1>Извещения</h1>
 <?php
 if (isset($default)){
 
@@ -12,7 +11,7 @@ if (isset($default)){
     return;
 }
 if(isset($desc)) echo "<h2>{$desc}</h2>";
-echo "<a href=\"{$this->add}\">Добавить</a><br><br>";
+echo "<a class='btn-sm btn-success' href=\"{$this->add}\">Добавить</a><br>";
 $this->fm->pr();
 $this->q->prTable();
 $e =  $this->paginationControl($this->name, 'Sliding', 'pagination_control', ['route' => $this->route]);

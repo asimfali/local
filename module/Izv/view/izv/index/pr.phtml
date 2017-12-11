@@ -3,22 +3,12 @@
     $this->headLink(['rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'all'])->appendStylesheet('/css/izv.css');
     $c = "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document
     </title><link rel='stylesheet' media='all' href='css/print.css'></head><body>";
-    $cont = null; $h = 5.5;
-    $par = ['cause' => 'Введение конструктивных улучшений', 'list' => '&nbsp', 'listov' => '1', 'date' => '30.11.17',
-    'dep' => 'КБВиГ', 'desc' => 'см. ниже', 'name' => 'ТПМШ.001-18', 'code' => '1', 'zadel' =>'&nbsp', 'vn' => '&nbsp',
-    'inherit' => '&nbsp', 'mailto' => 'Учтенным абонентам', 'attach' => '2 эл черт в PDF; 2 развертки дет. в DXF'];
     $r = $this;
-    $style = ['line-height' => $h . 'mm'];
-    $style1 = ['line-height' => $h*2 . 'mm'];
-    $style3 = ['line-height' => 10 . 'mm'];
-    $style4 = ['line-height' => 5 . 'mm'];
-    $style5 = ['line-height' => 15.3 . 'mm'];
-    $style6 = ['line-height' => 20 . 'mm'];
 
     $bv = new \Custom\BaseView($r, 'main', 'Main fs-0');
     $bv->addPrefixDiv('subMain');
     $bv->addPostfixDiv();
-    $bv->head($par);
+    $bv->head($this->par);
     $bv->headIzm();
     $c .= $bv->pr();
     $bv = null;
@@ -26,58 +16,12 @@
     $bv = new \Custom\BaseView($r, 'main1', 'Main fs-0');
     $bv->addPrefixDiv('subMain');
     $bv->addPostfixDiv();
-    $bv->head1($par);
+    $bv->head1($this->par);
     $bv->headIzm();
     $c .= $bv->pr();
 
     $c .= "</body></html>";
     echo $c;
-
-//    echo "<div class=\"Main\">";
-//    echo "<div class=\"container0\">";
-//    echo $this->partial('head.phtml', $this->head);
-//    echo $this->partial('contentHead.html',  $this->head);
-//    echo "<div class=\"w100\" style='height: 175mm;'>";
-//        echo $this->partialLoop('content.phtml', [
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'заменить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '3','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//            array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '2','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-//            Примечание: Изменено количество пазов на фланце, введен вид А"),
-//
-//        ]);
-//    echo "</div>";
-//    echo $this->partial('foot1.phtml', $this->foot);
-//    echo "</div>";
-//    echo "</div>";
-
-//
-//    echo "<div class=\"Main\">";
-//    echo "<div class=\"container0\">";
-//    echo $this->partial('head1.phtml', $head);
-//    echo $this->partial('contentHead.html', $head);
-//    echo "<div class=\"main border m-1\">";
-//    echo $this->partialLoop('content.phtml', [
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'заменить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '3','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '2','cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-//                Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-//                Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-//                Примечание: Изменено количество пазов на фланце, введен вид А"),
-//        array('name' => 'КЭВ-П4040E.00.000', 'act' => 'добавить', 'num' => '1', 'cont' => "Примечание: Изменено количество пазов на фланце, введен вид А
-//                Примечание: Изменено количество пазов на фланце, введен вид А"),
-//    ]);
-//    echo "</div>";
-//    echo $this->partial('foot1.phtml', $foot);
-//    echo "</div>";
-//    echo "</div>";
 
     $this->headLink()->appendStylesheet('/css/jsrecord.css');
     $this->headScript()->appendFile('/js/hiddenPrint.js');

@@ -104,7 +104,8 @@ class BaseView
     }
     public function addFields($legend)
     {
-
+        $this->addPrefix("<fieldset><legend>{$legend}</legend>");
+        $this->addPostfix("</fieldset>");
     }
     public function addPrefixDiv($class)
     {
@@ -200,7 +201,7 @@ class BaseView
         $arr = ['div.phtml' => $vals];
         return self::addNewDiv($r, $name, $class, $arr);
     }
-    public function createStyle($lh = null, $h = null, $w = null, $units = 'mm')
+    public static function createStyle($lh = null, $h = null, $w = null, $units = 'mm')
     {
         $st = [];
         if (isset($lh)) $st['line-height'] = $lh . $units;
@@ -208,7 +209,7 @@ class BaseView
         if (isset($w)) $st['width'] = $w . $units;
         return $st;
     }
-    public function w($val)
+    public static function w($val)
     {
         return 'w-'.$val;
     }
@@ -227,8 +228,8 @@ class BaseView
 
         $arr = ['div.phtml' => [
             ['class' => 'fl br-a tac w-23 fs', 'style' => $style3, 'cont' => "ТЕПЛОМАШ"],
-            ['class' => 'fl br-a tac w-23 fs', 'style' => $style3, 'cont' => $par['dep']],
-            ['class' => 'fl br-a tac w-65 fs', 'style' => $style2, 'cont' => "ИЗВЕЩЕНИЕ<br>".$par['name']],
+            ['class' => 'fl br-a tac w-23 fs', 'style' => $style3, 'cont' => $par['department']],
+            ['class' => 'fl br-a tac w-65 fs', 'style' => $style2, 'cont' => "ИЗВЕЩЕНИЕ<br>".$par['numberIzv']],
             ['class' => 'fl tac w-74 fs', 'style' => $style2, 'cont' => "ОБОЗНАЧЕНИЕ<br>".$par['desc']],
         ]];
         $this->addInCol(self::addNewDiv($this->r,'name1',$tclass, $arr));
@@ -258,19 +259,22 @@ class BaseView
             ['class' => ' tac fs', 'style' => $style4, 'cont' => $par['code']]];
         $i1 = self::createStack($this->r,'fl '.$this->w(40).$rclass,$arr);
         $arr = [['class' => 'fl br-a tac w-32 fs', 'style' => $style0, 'cont' => 'Причина'],
-            ['class' => 'fl br-a tac w-32 fs', 'style' => $this->createStyle(10,10.6,111), 'cont' => $par['cause']],
+            ['class' => 'fl br-a tac w-32 fs', 'style' => $this->createStyle(10,10.6,110.9), 'cont' => $par['reason']],
             $i1];
         $this->addInCol(self::createStack($this->r,$tclass,$arr));
 
         $arr = self::createSub($this->r,$style1,$style3, $par['zadel'],'Указание о<br> заделе');
         $this->addInCol(self::createStack($this->r,'w100 oh',$arr));
 
-        $arr = self::createSub($this->r,$style1,$style3, $par['vn'], 'Указание о<br> внедрении');
+        $arr = self::createSub($this->r,$style1,$style3, $par['impl'], 'Указание о<br> внедрении');
         $this->addInCol(self::createStack($this->r,'w100 oh bt-a mt-03',$arr));
 
-        $this->addInCol(self::createLine($this->r,$style3,$par['inherit'],'Применяемость'));
+        $arr = [['class' => 'fl br-a tac fs w-32', 'style' => $style3, 'cont' => 'Применяемость'],
+            ['class' => 'fl tac fs w-153', 'style' => $style2, 'cont' => $par['applicability']]];
+        $this->addInCol(self::createStack($this->r,'w100 oh bt-a',$arr));
+//        $this->addInCol(self::createLine($this->r,$style2,$par['applicability'],'Применяемость'));
         $this->addInCol(self::createLine($this->r,$style3,$par['mailto'],'Разослать'));
-        $this->addInCol(self::createLine($this->r,$style3,$par['attach'],'Приложение'));
+        $this->addInCol(self::createLine($this->r,$style3,$par['appendix'],'Приложение'));
     }
     public function headIzm()
     {
@@ -278,20 +282,67 @@ class BaseView
         $style3 = $this->createStyle(10,10.3,null);
         $arr = [
             ['class' => 'fl br-a tac w-13 fs', 'style' => $style3, 'cont' => "Изм."],
-            ['class' => 'fl tac w-172 fs', 'style' => $style3, 'cont' => "Содержание изменения"],
+            ['class' => 'fl tac w90 fs', 'style' => $style3, 'cont' => "Содержание изменения"],
         ];
         $this->addInCol(self::createStack($this->r,$tclass,$arr));
     }
-    public function head1($par)
+    public function head1($par, $num)
     {
         $tclass = 'w100 oh';
         $style3 = $this->createStyle(10,10.3,null);
         $arr = [
-            ['class' => 'fl br-a tac w-69 fs', 'style' => $style3, 'cont' => $par['name']],
+            ['class' => 'fl br-a tac w-69 fs', 'style' => $style3, 'cont' => $par['numberIzv']],
             ['class' => 'fl br-a tac w-74 fs', 'style' => $style3, 'cont' => '&nbsp'],
             ['class' => 'fl tac w-list fs', 'style' => $style3, 'cont' => 'Лист'],
-            ['class' => 'fl tac w-list fs', 'style' => $style3, 'cont' => $par['list']],
+            ['class' => 'fl tac w-list fs', 'style' => $style3, 'cont' => $num],
         ];
         $this->addInCol(self::createStack($this->r,$tclass,$arr));
+    }
+    public static function record($r,$par)
+    {
+        $tclass = 'w100 oh';
+        $name = uniqid (rand(), true);
+        $bv = new BaseView($r,$name,$tclass);
+        $style3 = self::createStyle(10,10.3,null);
+        $arr = [
+            ['class' => 'fl br-a tac w-13 fs', 'style' => $style3, 'cont' => $par['name']],
+            ['class' => 'fl br-a tac w-13 fs', 'style' => $style3, 'cont' => '&nbsp'],
+        ];
+        $bv->addInCol(self::createStack($r,$tclass,$arr));
+        $arr = [
+            ['class' => 'fl br-a tac w-69 fs', 'style' => $style3, 'cont' => $par['name']],
+            ['class' => 'fl br-a tac w-69 fs', 'style' => $style3, 'cont' => '&nbsp'],
+        ];
+        $bv->addInCol(self::createStack($r,$tclass,$arr));
+        return $bv->pr();
+    }
+
+    public function foot($vals)
+    {
+        $bclass = " fl w50 oh";
+        $tclass = "fl";
+        $style3 = self::createStyle(5,5.3,null);
+        $b1 = new BaseView($this->r,'col1','br-a' . $bclass);
+        $b2 = new BaseView($this->r,'col2',$bclass);
+        for ($i = 0; $i < 4; $i++) {
+            $arr = [
+                ['class' => $tclass . ' br-a w25 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['act']],
+                ['class' => $tclass . ' br-a w35 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['user']],
+                ['class' => $tclass . ' br-a w20 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['sign']],
+                ['class' => $tclass . ' w20 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['date']],
+            ];
+            $b1->addInCol(self::createStack($this->r,'w100 oh bt-a',$arr));
+        }
+        for ($i = 4; $i < 9; $i++) {
+            $arr = [
+                ['class' => $tclass . ' br-a w35 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['act']],
+                ['class' => $tclass . ' br-a w25 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['user']],
+                ['class' => $tclass . ' br-a w20 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['sign']],
+                ['class' => $tclass . ' w20 fs pl-1mm', 'style' => $style3, 'cont' => $vals[$i]['date']],
+            ];
+            $b2->addInCol(self::createStack($this->r,'w100 oh bt-a',$arr));
+        }
+        $b1->addInCol(self::createStack($this->r, 'w100 fs oh bt-a pl-1mm', [['class' => 'w100', 'style' => $style3, 'cont' => 'Измен. внес']]));
+        $this->addInCol($b1->pr()); $this->addInCol($b2->pr());
     }
 }

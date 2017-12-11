@@ -4,52 +4,48 @@ echo "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Docu
 $this->headLink(['rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'all'])->appendStylesheet('/css/izv.css');
 $c = "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document
     </title><link rel='stylesheet' media='all' href='css/print.css'></head><body>";
-$cont = null; $h = 5.5;
-$par = ['cause' => 'Введение конструктивных улучшений', 'list' => '&nbsp', 'listov' => '1', 'date' => '30.11.17',
-    'dep' => 'КБВиГ', 'desc' => 'см. ниже', 'name' => 'ТПМШ.001-18', 'code' => '1', 'zadel' =>'&nbsp', 'vn' => '&nbsp',
-    'inherit' => '&nbsp', 'mailto' => 'Учтенным абонентам', 'attach' => '2 эл черт в PDF; 2 развертки дет. в DXF'];
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $r
+ */
 $r = $this;
-$style = ['line-height' => $h . 'mm'];
-$style1 = ['line-height' => $h*2 . 'mm'];
-$style3 = ['line-height' => 10 . 'mm'];
-$style4 = ['line-height' => 5 . 'mm'];
-$style5 = ['line-height' => 15.3 . 'mm'];
-$style6 = ['line-height' => 20 . 'mm'];
 
-$bv = new \Custom\BaseView($r, 'main', 'Main fs-0');
-$bv->addPrefixDiv('subMain');
-$bv->addPostfixDiv();
-$bv->head($par);
-$bv->headIzm();
-$c .= $bv->pr();
-
-$bv = new \Custom\BaseView($r, 'main1', 'Main fs-0');
-$bv->addPrefixDiv('subMain');
-$bv->addPostfixDiv();
-$bv->head1($par);
-$bv->headIzm();
-$c .= $bv->pr();
+foreach ($this->cont as $k=>$items) {
+    $bv = new \Custom\BaseView($r, 'main', 'Main fs-0');
+    $bv->addPrefixDiv('subMain pr');
+    $bv->addPostfixDiv();
+    if ($k == 1)
+    {
+        $bv->head($this->par);
+        $foot = new \Custom\BaseView($r,"foot",'w100 pa bottom-0');
+        $foot->foot($this->foot);
+        $bv->addInCol($foot->pr());
+    }
+    else {
+        $bv->head1($this->par, $k);
+    }
+    $bv->headIzm();
+    foreach ($items as $item) {
+        $bv->addInCol($r->partial('izv-content-pdf.phtml',$item));
+    }
+    $c .= $bv->pr();
+}
 
 $c .= "</body></html>";
 echo $c;
 
 $cont = ob_get_clean();
 $fn = uniqid() . '.html';
-$fout = 'test' . '.pdf';
+$fout = 't' . '.pdf';
 file_put_contents(\Custom\Exec::$path . $fn, $cont);
 $cmd = new \Custom\Exec('wkhtmltopdf', ['--margin-top 0mm --margin-bottom 0mm --margin-left 0mm --margin-right 0mm --zoom 1.5',
     \Custom\Exec::$path . $fn, \Custom\Exec::$path . $fout]);
 $cmd->runExec();
-rename(\Custom\Exec::$path . $fout, \Custom\Exec::$contMovePath . $fout);
-//unlink(\Custom\Exec::$path.$fn);
-file_force_download(\Custom\Exec::$contMovePath . $fout);
-//    ob_start ();
-//    header('Content-type: application/pdf');
-//    header('Content-Disposition: attachment; filename="test.pdf"');
-//    $c = file_get_contents(\Custom\Exec::$contMovePath . $fout);
-//
-//    ob_end_flush ();
-
+rename(\Custom\Exec::$path . $fout, \Custom\Exec::$contMovePath . 'izv\\' . $this->par['numberIzv'].'.pdf');
+unlink(\Custom\Exec::$path.$fn);
+ob_end_clean();
+echo json_encode(['success' => 1,'link' => '/izv/all/show/?path=izv/&pdf=' . $this->par['numberIzv'].'.pdf']);
+exit;
+//file_force_download(\Custom\Exec::$contMovePath . $fout);
 
 function file_force_download($file) {
     if (file_exists($file)) {
