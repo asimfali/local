@@ -14,10 +14,8 @@ use Custom\Files;
 use Custom\Izv;
 use Custom\MyURL;
 use Custom\Query;
-use Entity\IzvContent;
-use Entity\Templates;
 use Entity\User;
-use Zend\Http\Request;
+use Zend\Form\Element;
 use Zend\Mvc\MvcEvent;
 
 class IndexController extends BaseAddController
@@ -74,8 +72,8 @@ class IndexController extends BaseAddController
         $page = $_GET['page'];
         if (empty($page)) $page = 1;
         $q->setPaginator($count, $page);
-        unset($arr['ths']['Действие']);
-        $arr['ths']['Действие'] = ['show' => 'Посмотреть', 'delete' => 'Удалить'];
+//        unset($arr['ths']['Действие']);
+//        $arr['ths']['Действие'] = ['show' => 'Посмотреть', 'delete' => 'Удалить'];
         $this->getFm($this->plugin('flashMessenger'));
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
@@ -92,29 +90,40 @@ class IndexController extends BaseAddController
          */
         $user = $this->auth->getIdentity();
         $izv = new Izv(new \Entity\Izv(),$user,$this->entityManager);
-        $izv->init();
-        $p = $this->lastNumber('Izv','numberIzv');
-        if (!isset($p)) $p = date('y').'000';
-        else $p = $p->getNumberIzv();
-        $arr = $this->model; $dir = '';
-        $p = $this->numberIzv($p, $dir);
-        $path = $this->path . '/izv/' . $dir;
-        $this->upload($path);
-        $f = new Files($path);
-        $pdf = $f->countF('*.pdf');
-        $dxf = $f->countF('*.dxf');
-        $this->set($arr, true, true, ['NumberIzv' => $p, 'Appendix' => $this->PDF_DXF($pdf,$dxf),
-            'UsrFirstName' => $user, 'Department' => $izv->dep]);
+
+        $p = $this->params()->fromQuery('num'); $inc = false;
+        if (empty($p)) {
+            $p = $this->lastNumber('Izv', 'numberIzv');
+            if (!isset($p)) $p = date('y') . '000';
+            else $p = $p->getNumberIzv();
+            $inc = true;
+        } else {
+            $p = $izv->izvNumber($p);
+        }
+        $p = $izv->numberIzv($p, $inc);
+        $izv->init($this->path);
+        $izv->upload($this->req);
+        $arr = $this->model;
+        $this->set($arr, true, true, ['NumberIzv' => $p, 'Appendix' => $izv->count(),
+            'UsrFirstName' => $izv->user, 'Department' => $izv->dep]);
         $this->form->setAction($arr['add']['Action']);
         $v = null;
         $this->form->setElemPar('date', 'Format', 'Y-m-d');
         $this->form->setElemPar('date', 'Value', date('Y-m-d'));
-        if (!empty($pdf)){
-            $pdf = $f->parseF('*.pdf');
-        } else $pdf = [1];
-        $spl = explode('/',$path);
+        $pdf = null;
+        if (!empty($izv->pdf)){
+            $pdf = $izv->f->readIzv();
+            if (!$pdf)
+                $pdf = $izv->f->parseF('*.pdf');
+        }
+        $spl = explode('/',$izv->path);
         $l = count($spl);
         $p = '/izv/all/show/?path=' . $spl[$l-2] .'/'. $spl[$l-1] . '/';
+        /**
+         * @var Element $el
+         */
+//        $el = $this->form->getEl('numberIzv');
+//        $num = $izv->izvNumber($el->getValue());
         return $this->showForm($arr, ['vals' => $pdf, 'path' => $p, 'user' => $user->getUsrFirstName()]);
     }
     public function showAction()
@@ -208,7 +217,12 @@ class IndexController extends BaseAddController
         $izv = new Izv(new \Entity\Izv(), $user, $this->entityManager);
         $par = $izv->pr($_POST);
         $par['resp'] = $this->response;
-        $par['par']['numberIzv'] = $this->izvNumber($par['par']['numberIzv']);
+        $par['par']['name'] = $this->izvNumber($_POST['vals']['numberIzv']);
+        if ($this->check('Izv',['numberIzv' => $par['par']['name']]))
+        {
+            echo json_encode(['error' => 'Номер извещения занят']);
+            exit;
+        }
         return $par;
     }
     public function saveAction()
@@ -240,8 +254,52 @@ class IndexController extends BaseAddController
          * @var \Entity\Izv $editIzv
          */
         $editIzv = $this->entityManager->getRepository(\Entity\Izv::class)->find($this->id);
-        if ($user != $editIzv->getUsrFirstName()) return null;
-
-        $this->delete($this->model);
+        if ($user != $editIzv->getUsrFirstName())
+        {
+            $this->set($this->model);
+            $this->fm->status = 'error';
+            $this->fm->add('Вы не можете удалить чужое извещение!!!');
+            return $this->redirect()->toRoute('izv/all');
+//            return $this->redir([$this->model['Redirect']], $this->getUrls->get());
+        }
+        else {
+            $num = $editIzv->getNumberIzv();
+            $f = new Files($this->path . '/izv/');
+            $f->remove($num);
+            $this->delete($this->model);
+        }
+        return null;
+    }
+    public function clearAction()
+    {
+        if (!isset($this->auth) || !$this->auth->hasIdentity()){
+            return $this->redirect()->toRoute('auth-doctrine',['controller' => 'index', 'action' => 'login']);
+        }
+        $this->getReq();
+        $num = $this->params()->fromQuery('num');
+        if (empty($num)){
+            return null;
+        } else if ($this->check('Izv',['numberIzv' => $num])){
+            echo json_encode(['error' => 'Номер извещиния занят']);
+            exit;
+        }
+        $num = $this->izvNumber($num);
+        $f = new Files($this->path . '/izv/');
+        $f->remove($num);
+        echo json_encode(['success' => 1]);
+        exit;
+    }
+    public function zipAction()
+    {
+        $this->getReq();
+        $this->getId();
+        /**
+         * @var \Entity\Izv $editIzv
+         */
+        $editIzv = $this->entityManager->getRepository(\Entity\Izv::class)->find($this->id);
+        $numberIzv = $editIzv->getNumberIzv(); $m = null;
+        $num = $this->numberIzv($numberIzv,$m,false);
+        $f = new Files($this->path . '/izv/');
+        $f->zip($numberIzv,$num);
     }
 }

@@ -16,7 +16,7 @@ class FlashMsgr
     public $status = 'success';
     public $message = '';
     /**
-     * @var FlashMessenger
+     * @var FlashMessenger $fm
      */
     public $fm;
     public $entities = array();
@@ -24,35 +24,44 @@ class FlashMsgr
     {
         $this->fm = $flashMessenger;
     }
+
+    public function setStatus()
+    {
+        if ($this->fm->hasSuccessMessages()) $this->status = 'success';
+        else if ($this->fm->hasWarningMessages()) $this->status = 'warning';
+        else if ($this->fm->hasInfoMessages()) $this->status = 'info';
+        else if ($this->fm->hasErrorMessages()) $this->status = 'error';
+    }
     public function pr()
     {
+        $this->setStatus();
         $header = '';
         $this->entities[] = '<ul>';
         switch ($this->status){
             case 'error':
                 foreach ($this->fm->getErrorMessages() as $errorMessage) {
-                    $header = "<div class='alert alert-dismissable alert-danger'>
+                    $header = "<div class='alert alert-dismissable alert-danger' style='margin-top: 21px;'>
                         <button class='close' type='button' data-dismiss='alert' aria-hidden='true'>x</button>";
                     $this->entities[] = '<li>'. $errorMessage . '</li>';
                 }
                 break;
             case 'success':
                 foreach ($this->fm->getSuccessMessages() as $successMessage) {
-                    $header = "<div class='alert alert-dismissable alert-success'>
+                    $header = "<div class='alert alert-dismissable alert-success' style='margin-top: 21px;'>
                         <button class='close' type='button' data-dismiss='alert' aria-hidden='true'>x</button>";
                     $this->entities[] = '<li>'. $successMessage . '</li>';
                 }
                 break;
             case 'info':
                 foreach ($this->fm->getInfoMessages() as $infoMessage) {
-                    $header = "<div class='alert alert-dismissable alert-info'>
+                    $header = "<div class='alert alert-dismissable alert-info' style='margin-top: 21px;'>
                         <button class='close' type='button' data-dismiss='alert' aria-hidden='true'>x</button>";
                     $this->entities[] = '<li>'. $infoMessage . '</li>';
                 }
                 break;
             case 'warning':
                 foreach ($this->fm->getWarningMessages() as $warningMessage) {
-                    $header = "<div class='alert alert-dismissable alert-warning'>
+                    $header = "<div class='alert alert-dismissable alert-warning' style='margin-top: 21px;'>
                         <button class='close' type='button' data-dismiss='alert' aria-hidden='true'>x</button>";
                     $this->entities[] = '<li>'. $warningMessage . '</li>';
                 }

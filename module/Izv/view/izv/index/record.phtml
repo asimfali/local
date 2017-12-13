@@ -6,11 +6,15 @@
         </div>
         <div class="fl w10 va form-group-sm pr-1mm">
             <select class="w100 form-control" name="" id="" title="#">
-                <option value="">заменить</option>
-                <option value="">добавить</option>
+                <?php $opts = ['заменить', 'добавить']; $sel = "";
+                foreach ($opts as $opt) {
+                     if ($opt == $this->act) $sel = 'selected="selected"';
+                    else $sel = '';?>
+                <option value="" <?=$this->EscapeHtml($sel)?>><?=$this->EscapeHtml($opt)?></option>
+                <?php } ?>
             </select>
         </div>
-        <div class="fl w60 va form-group-sm"><textarea class="w100 form-control" style="height: 30px;" title="#"></textarea>
+        <div class="fl w60 va form-group-sm"><textarea class="w100 form-control" style="height: 30px;" title="#"><?=$this->cont?></textarea>
         </div>
         <div class="fl w10 form-group-sm"><input class="btn btn-default form-control w100" type="button" id="dob" value="Добавить"></div>
     </div>

@@ -330,7 +330,9 @@ return [
             'css' => 'table table-striped table-hover',
             'ths' => [
                 'Номер извещения' => 'numberIzv',
-                'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
+                'Создал' => ['usrFirstName','usrFirstName'],
+                'Действие' => ['show' => 'Посмотреть','edit' => 'Редактировать',
+                    'delete' => 'Удалить', 'zip' => 'Скачать архив']],
             'entity' => '\\Entity\\Izv',
             'Redirect' => 'izv/all',
             'MessageError' => 'Ошибка',

@@ -40,10 +40,10 @@ file_put_contents(\Custom\Exec::$path . $fn, $cont);
 $cmd = new \Custom\Exec('wkhtmltopdf', ['--margin-top 0mm --margin-bottom 0mm --margin-left 0mm --margin-right 0mm --zoom 1.5',
     \Custom\Exec::$path . $fn, \Custom\Exec::$path . $fout]);
 $cmd->runExec();
-rename(\Custom\Exec::$path . $fout, \Custom\Exec::$contMovePath . 'izv\\' . $this->par['numberIzv'].'.pdf');
+rename(\Custom\Exec::$path . $fout, \Custom\Exec::$contMovePath . 'izv\\' . $this->par['name'].'.pdf');
 unlink(\Custom\Exec::$path.$fn);
 ob_end_clean();
-echo json_encode(['success' => 1,'link' => '/izv/all/show/?path=izv/&pdf=' . $this->par['numberIzv'].'.pdf']);
+echo json_encode(['success' => 1,'link' => '/izv/all/show/?path=izv/&pdf=' . $this->par['name'].'.pdf']);
 exit;
 //file_force_download(\Custom\Exec::$contMovePath . $fout);
 

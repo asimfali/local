@@ -28,7 +28,11 @@ $cclass = '';
 $lclass = 'pd-10 control-label';
 
 if (empty($status)){
-   echo $r->partial('loadFile.phtml',['act' => '/izv/all/add/?name=notice']);
+    $act = '/izv/all/add/?name=notice';
+//    if (isset($num)){
+//        $act .= '&num='.$num;
+//    }
+    echo $r->partial('loadFile.phtml',['act' => $act]);
 }
 echo "<form>";
 $main = new \Custom\BaseView($r,'main','w100');
@@ -65,19 +69,28 @@ $main->addInCol($i2);
 echo $main->pr();
 $main = new \Custom\BaseView($r,'main1','w100');
 $main->addFields("Содержание изменения");
-$main->addInCol($r->partial('izv-content.phtml',['act' => 'Действие','cont' => 'Примечание:', 'page' => 1]));
+if (count($this->vals) > 0) {
+    $main->addInCol($r->partial('izv-content.phtml', ['act' => 'Действие', 'cont' => 'Примечание:', 'page' => 1]));
+}
 $main->addInCol("<div id=\"save\" class=\"w100 dn\"><a class='btn btn-success m-2mm fr bold pd-2' href='#'>Сохранить</a></div>");
 $main->addInCol("<div id=\"create\" class=\"w100 dn\"><a class='btn btn-success m-2mm fr bold pd-2' href='#'>Создать</a></div>");
 echo $main->pr();
 echo "</form>";
-$rec = new \Custom\BaseView($r,'recs','bn c-w pl-15px pr-15px');
-$rec->addInCol($r->partial('head-content.phtml'));
-foreach ($this->vals as $val) {
-    $par = [];
-    if (is_array($val)) {$par['link'] = $this->path .'&pdf='. $val[1]; $par['name'] = $val[0];}
-    else {$par['link'] = $this->path .'&pdf='. $val; $par['name'] = $val;}
-    $rec->addInCol($r->partial('record.phtml',$par));
+if (count($this->vals) > 0) {
+    $rec = new \Custom\BaseView($r, 'recs', 'bn c-w pl-15px pr-15px');
+    $rec->addInCol($r->partial('head-content.phtml'));
+    foreach ($this->vals as $val) {
+//        $par = [];
+//        if (is_array($val)) {
+//            $par['link'] = $this->path . '&pdf=' . $val[1];
+//            $par['name'] = $val[0];
+//        } else {
+//            $par['link'] = $this->path . '&pdf=' . $val;
+//            $par['name'] = $val;
+//        }
+        $rec->addInCol($r->partial('record.phtml', $val));
+    }
+    echo $rec->pr();
 }
-echo $rec->pr();
 
 

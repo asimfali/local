@@ -35,7 +35,7 @@ return [
     // Настройка сессии.
     'session_config' => [
         // Срок действия cookie сессии истечет через 1 час.
-        'cookie_lifetime' => 60*60*1,
+        'cookie_lifetime' => 60*60*24*15,
         // Данные сессии будут храниться на сервере до 30 дней.
         'gc_maxlifetime'     => 60*60*24*30,
     ],
@@ -43,13 +43,13 @@ return [
     'session_manager' => [
         // Валидаторы сессии (используются для безопасности).
         'validators' => [
-            RemoteAddr::class,
-            HttpUserAgent::class,
+            \Zend\Session\Validator\RemoteAddr::class,
+            \Zend\Session\Validator\HttpUserAgent::class,
         ]
     ],
     // Настройка хранилища сессий.
     'session_storage' => [
-        'type' => SessionArrayStorage::class
+        'type' => \Zend\Session\Storage\SessionArrayStorage::class
     ],
     'navigation' => [
         'default' => [

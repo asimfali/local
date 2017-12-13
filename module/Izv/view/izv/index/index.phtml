@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $r
+ */
+$r = $this;
+$this->headLink()->appendStylesheet('/css/btnstyle.css');
+$this->headScript()->appendFile('/js/btnstyle.js');
 if (isset($default)){
 
     foreach ($default as $item) {

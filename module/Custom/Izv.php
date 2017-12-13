@@ -12,10 +12,10 @@ namespace Custom;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\Collection;
 use Entity\Department;
-use Entity\Fields;
 use Entity\IzvContent;
 use Entity\Templates;
 use Entity\User;
+use Zend\Http\Request;
 use Zend\View\Renderer\PhpRenderer;
 
 class Izv
@@ -36,12 +36,20 @@ class Izv
     /**
      * @var User $user
      */
-    protected $user;
+    public $user;
     protected $alias;
     /**
      * @var Templates $tmpl
      */
     protected $tmpl;
+    /**
+     * @var Files $f
+     */
+    public $f;
+    public $dir;
+    public $path;
+    public $pdf;
+    public $dxf;
     public function __construct(\Entity\Izv $izv, User $user,EntityManager $entityManager)
     {
         $this->ent = $izv;
@@ -64,9 +72,35 @@ class Izv
         $this->dep = $this->user->getUsrDepartment();
         $this->alias = $this->dep->getAlias();
     }
-    public function init()
+    public function init($p = null)
     {
         $this->tmpl = $this->findValue('Templates',['name' => $this->alias]);
+        if(isset($p)) {
+            $this->path = $p . '/izv/' . $this->dir;
+            $this->f = new Files($this->path);
+        }
+    }
+    public function upload(Request $req, $name = null, $pdf = false)
+    {
+        $f = null;
+        if ($req->isPost()){
+            $f = new Files($_FILES['upload']);
+            $f->copy($this->path);
+        } else if ($pdf){
+            $f = new Files(null);
+            $f->pdf($this->path);
+        }
+        return ['names' => $f, 'path' => $name];
+    }
+
+    public function count()
+    {
+        $this->pdf = $this->f->countF('*.pdf');
+        $this->dxf = $this->f->countF('*.dxf');
+        $r = '';
+        if (!empty($this->pdf)) $r .= $this->pdf . ' эл. черт в PDF; ';
+        if (!empty($this->pdf)) $r .= $this->dxf . ' разв. детали в DXF; ';
+        return $r;
     }
     public function toArray($ent, $act, &$arr)
     {
@@ -147,6 +181,21 @@ class Izv
         $this->entityManager->persist($this->ent);
         $this->entityManager->flush();
         return true;
+    }
+    public function numberIzv($p, $inc = true)
+    {
+        if ($inc) $p++;
+        $this->dir = $p;
+        $m = null;
+        preg_match('/(\d{2})(\d{3})/is', $p, $m);
+        return 'ТПМШ.' . $m[2] . '-' . $m[1];
+    }
+
+    public function izvNumber($p)
+    {
+        $m = null;
+        preg_match('/(\d{3})-(\d{2})/is', $p, $m);
+        return $m[2] . $m[1];
     }
     public function pr($post)
     {

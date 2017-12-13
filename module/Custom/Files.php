@@ -39,7 +39,7 @@ class Files
         $this->path = $path;
         if (!file_exists($this->path))
             $this->mkDir($path);
-        $i = 0;
+        $i = 0; $b = false;
         foreach ($this->files as $file) {
             $name =  $this->names[$i];
 //            $name = mb_convert_encoding($name, 'CP1251', mb_detect_encoding($name));
@@ -48,6 +48,62 @@ class Files
             $i++;
         }
         return $b;
+    }
+    public function remove($name)
+    {
+        unlink($this->path . $name . '.pdf');
+        $this->path .= $name .'/';
+        $files = $this->getF('*');
+        foreach ($files as $file) {
+            unlink($file);
+        }
+        rmdir($this->path);
+    }
+    public function zip($name, $rname)
+    {
+        $z = new \ZipArchive();
+        $izv = $this->path . $rname . '.pdf';
+        $this->path .= $name . '/';
+        if ($z->open($name, \ZipArchive::CREATE) === true) {
+            $files = $this->getF('*');
+            foreach ($files as $file) {
+                $z->addFile($file,basename($file));
+            }
+            $z->addFile($izv,basename($izv));
+            $z->close();
+            header("Content-Type: application/octet-stream");
+            header("Accept-Ranges: bytes");
+            header("Content-Length: " . filesize($name));
+            header("Content-Disposition: attachment; filename=" . $rname . '.zip');
+            readfile($name);
+            unlink($name);
+            } else {
+            die ("Ошибка создания архива");
+        }
+    }
+    public function readIzv()
+    {
+        $files = $this->getF('*.izv');
+        if (empty($files)) return false;
+        $f = file_get_contents($files[0]);
+        if (empty($f)) return false;
+        $spl = explode("\n",$f);
+        $arr = [];
+        foreach ($spl as $item) {
+            $tmp = explode('=',$item); $n = '';
+            if (isset($tmp) && count($tmp) == 3){
+                $n = $tmp[0];
+                $arr[$n]['link'] = trim($tmp[0]);
+                $arr[$n]['name'] = trim($tmp[1]);
+                $arr[$n]['act'] = trim($tmp[2]);
+            } else {
+                $arr[$n]['cont'] .= trim($item) . "\n";
+            }
+        }
+        foreach ($arr as &$item) {
+            $item['cont'] = trim($item['cont']);
+        }
+        return $arr;
     }
     public function slash()
     {
@@ -112,13 +168,13 @@ class Files
         $this->getF($pat);
         foreach ($this->files as &$file) {
             $link = $file = basename($file);
-            if (!stripos($file,'KEV')) continue;
+            if (!stripos($file,'KEV')) {$file = ['name' => $link, 'link' => $link]; continue;}
             $m = [];
             preg_match('/KEV_([A-Z0-9]*)_(\d+)_(\d+)/is',$file, $m);
             unset($m[0]);
             $file = 'КЭВ-' . implode('.',$m);
             $file = str_replace('P','П',$file);
-            $file = [$file,$link];
+            $file = ['name' => $file, 'link' => $link];
         }
         return $this->files;
     }

@@ -71,6 +71,32 @@ function getRecs() {
 }
 
 $(document).ready(function () {
+    $('#upload').on('submit',function () {
+        let el = $('#upload');
+        let a = el.attr('action');
+        let name = $('#name').val();
+        el.attr('action', a + '&num=' + name);
+        return true;
+    });
+    $('#clear').click(function () {
+        let name = $('#name').val();
+        $.ajax({
+            url: '/izv/all/clear/?name=notice&num=' + name,
+            type: 'post',
+            dataType: 'json',
+            data: name
+        }).then(function (data) {
+            if (data['success'] == 1){
+                alert('Папка с извещением очищина');
+                $('.main').hide();
+                $('.record').remove();
+                $('table').hide();
+                $('#appendix').val('');
+            } else {
+                alert(data['error']);
+            }
+        })
+    });
     $(':button').click(function () {
         let divs;
         let str = {};
@@ -136,13 +162,14 @@ $(document).ready(function () {
                 b = $('#save');
                 b.show();
             } else {
-                $('#errors').html('');
-                for (let key in data) {
-                    $('#errors').append('<span>' + data[key][0] + '</span>');
-                }
+                alert(data['error']);
+                // $('#errors').html('');
+                // for (let key in data) {
+                //     $('#errors').append('<span>' + data[key][0] + '</span>');
+                // }
             }
         }).catch(function (error) {
-
+            alert('Непредвиденная ошибка');
         });
     });
     $('#save').click('click', function () {

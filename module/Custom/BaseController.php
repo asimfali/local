@@ -11,7 +11,6 @@ namespace Custom;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Zend\Authentication\AuthenticationService;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
@@ -251,14 +250,6 @@ class BaseAdminController extends AbstractActionController
         return $m[2] . $m[1];
     }
 
-    public function PDF_DXF($pdf, $dxf)
-    {
-        $r = '';
-        if (isset($pdf)) $r .= $pdf . ' эл. черт в PDF; ';
-        if (isset($pdf)) $r .= $dxf . ' разв. детали в DXF; ';
-        return $r;
-    }
-
     public function lastNumber($table,$sort)
     {
         $query = $this->entityManager->createQueryBuilder();
@@ -269,6 +260,12 @@ class BaseAdminController extends AbstractActionController
             ->setMaxResults(1);
         $p = $query->getQuery()->getResult();
         return $p[0];
+    }
+    public function check($name, $val)
+    {
+        $rep = $this->entityManager->getRepository('Entity\\'.$name);
+        $el = $rep->findBy($val);
+        return (empty($el)) ? false : true;
     }
     public function add($arr)
     {
