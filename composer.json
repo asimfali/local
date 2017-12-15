@@ -37,7 +37,9 @@
             "Entity\\": "module/Blog/src/Entity/",
             "Custom\\": "module/Custom/",
             "AuthDoctrine\\": "module/AuthDoctrine/src/",
-            "Izv\\": "module/Izv/src/"
+            "Izv\\": "module/Izv/src/",
+            "Passport\\": "module/Passport/src/",
+            "Info\\": "module/Info/src/"
         },
         "classmap": ["module/Admin/src/Filter"]
     },

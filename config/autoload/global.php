@@ -44,7 +44,7 @@ return [
         // Валидаторы сессии (используются для безопасности).
         'validators' => [
             \Zend\Session\Validator\RemoteAddr::class,
-            \Zend\Session\Validator\HttpUserAgent::class,
+//            \Zend\Session\Validator\HttpUserAgent::class,
         ]
     ],
     // Настройка хранилища сессий.
@@ -67,6 +67,11 @@ return [
             [
                 'label' => 'Извещения',
                 'route' => 'izv/all',
+                'action' => 'index',
+            ],
+            [
+                'label' => 'Паспорта',
+                'route' => 'passport/all',
                 'action' => 'index',
             ],
         ],

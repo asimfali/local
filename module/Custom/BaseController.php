@@ -175,21 +175,20 @@ class BaseAdminController extends AbstractActionController
         }
         return ['names' => $f, 'path' => $name];
     }
-    public function index($arr, $count = 10)
+    public function index($arr, $count = 10, $get = null)
     {
         if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
         $this->getReq();
-        $q = new Query($this->entityManager, $arr['query']);
+        $q = new Query($this->entityManager, $arr['query'],'typeCurtain = 18');
         $arr['getUrl']['name'] = $arr['table'];
         $arr['getUrl']['count'] = $count;
         $getUrls = new MyURL($arr['getUrl']);
-
         $page = $_GET['page'];
         if (empty($page)) $page = 1;
         $q->setPaginator($count, $page);
-
         $this->getFm($this->plugin('flashMessenger'));
-        $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
+        $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'get' => $get,
+            'table' => $arr['table'], 'thClasses' => $arr['thClasses'], 'tdClasses' => $arr['tdClasses']]);
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }

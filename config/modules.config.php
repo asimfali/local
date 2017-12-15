@@ -32,4 +32,6 @@ return [
     'Admin',
     "AuthDoctrine",
     "Izv",
+    "Passport",
+    "Info",
 ];

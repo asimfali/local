@@ -80,6 +80,7 @@ if (count($this->vals) > 0) {
     $rec = new \Custom\BaseView($r, 'recs', 'bn c-w pl-15px pr-15px');
     $rec->addInCol($r->partial('head-content.phtml'));
     foreach ($this->vals as $val) {
+        $val['link'] = $this->path . '&pdf=' . $val['link'];
 //        $par = [];
 //        if (is_array($val)) {
 //            $par['link'] = $this->path . '&pdf=' . $val[1];

@@ -90,7 +90,7 @@ class Files
         $spl = explode("\n",$f);
         $arr = [];
         foreach ($spl as $item) {
-            $tmp = explode('=',$item); $n = '';
+            $tmp = explode('=',$item);
             if (isset($tmp) && count($tmp) == 3){
                 $n = $tmp[0];
                 $arr[$n]['link'] = trim($tmp[0]);
@@ -116,6 +116,7 @@ class Files
 //        $name = mb_convert_encoding($name, 'UTF-8', mb_detect_encoding($name));
 //        $f_pdf = file_get_contents($name);
         $items = file($name);
+        if (empty($items)) return;
 //        if (empty($f_pdf)) return;
         ob_start ();
         header ('Content-type: application/pdf');

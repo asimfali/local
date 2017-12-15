@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: Simanov
- * Date: 22.11.2017
- * Time: 12:19
+ * Date: 13.12.2017
+ * Time: 11:08
  */
 
-namespace Izv\Controller;
-
+namespace Passport\Controller;
 
 use Custom\BaseController;
+use Doctrine\ORM\EntityManager;
 use Zend\Mvc\MvcEvent;
 
 class AdminController extends BaseController
@@ -26,12 +26,13 @@ class AdminController extends BaseController
      * @var $path
      */
     protected $path;
-    public function __construct($entityManager, $authenticationService, $config)
+    public function __construct(EntityManager $entityManager, $authenticationService, $config)
     {
         $this->config = $config;
         $this->path = $this->config['Path'];
         parent::__construct($entityManager, $authenticationService);
     }
+
     public function onDispatch(MvcEvent $e)
     {
         $this->model = $this->findModel();
@@ -39,11 +40,11 @@ class AdminController extends BaseController
         $admin = stripos($_SERVER['SCRIPT_NAME'],'admin');
         if (empty($this->model)) {
             foreach ($this->config as $k => $item) {
-                if (is_array($item) && $item['name'] == 'izv/admin') {
+                if (is_array($item) && $item['name'] == 'passport/admin') {
                     if (!empty($admin) && isset($item['admin'])) {
                         $this->names[$k][0] = $k;
                         $this->names[$k][1] = $item['desc'];
-                    } 
+                    }
                 }
             }
         }
@@ -56,40 +57,22 @@ class AdminController extends BaseController
         if (empty($c)) $c = 20;
         return $this->index($this->model, $c);
     }
-    public function addAction()
-    {
-        return $this->add($this->model);
-    }
-    public function addItemAction()
-    {
-        return $this->itemAdd($this->model, $this->config[$this->model['refTable']]);
-    }
-    public function deleteItemAction()
-    {
-        $id = $this->params()->fromQuery('id');
-        $pname = $this->params()->fromQuery('pname');
-        return $this->deleteItem($this->config[$pname], $id);
-    }
-    public function collectionAction()
-    {
 
-    }
     public function editAction()
     {
         return $this->edit($this->model);
+    }
+    public function addAction()
+    {
+        return $this->add($this->model);
     }
     public function deleteAction()
     {
         return $this->delete($this->model);
     }
-    public function showAction()
+    public function uploadAction()
     {
-        $pdf = null;
-        $p = $this->params()->fromQuery()['pdf'];
-        if (isset($p)) $pdf = true;
-        $name = reset($this->config);
-        $name = $name['name'];
-        $name .= '/show';
-        return $this->upload($this->path . 'izv/' . $p, $name, $pdf);
+        $this->upload($this->path);
+        $this->redir('passport/admin');
     }
 }

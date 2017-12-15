@@ -1,0 +1,10 @@
+<?php
+$this->headLink()->appendStylesheet('/css/btnstyle.css');
+if(isset($desc)) echo "<h2>{$desc}</h2>";
+$this->fm->pr();
+$this->q->prTable();
+$e = $this->paginationControl($this->name, 'Sliding', 'pagination_control', ['route' => $this->route]);
+$e = str_replace('?page', $this->table.'&page', $e);
+echo $e;
+$this->headScript()->appendFile('/js/btnstyle.js');
+?>

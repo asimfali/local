@@ -311,6 +311,47 @@ return [
                 'MessageSuccess' => 'Коллекция изменена'
             ],
         ],
+        'status' => [
+            'name' => 'izv/admin',
+            'admin' => '/admin',
+            'table' => 'status',
+            'desc' => 'Статус',
+            'getUrl' => [
+                'name' => '',
+                'count' => '',
+                'filterName' => '',
+                'filterVal' => '',
+            ],
+            'query' => [
+                'select' => 'a',
+                'from' => 'Status',
+                'order' => 'a.id',
+                'desc' => 'DESC',
+            ],
+            'css' => 'table table-striped table-hover',
+            'ths' => [
+                'Категория' => 'category','Статус' => 'status',
+                'Действие' => ['edit' => 'Редактировать', 'delete' => 'Удалить']],
+            'entity' => '\\Entity\\Status',
+            'Redirect' => 'izv/admin',
+            'MessageError' => 'Ошибка',
+            'add' => [
+                'Action' => '/izv/admin/add/',
+                'css' => 'btn btn-success',
+                'MessageError' => 'Статус не верный',
+                'MessageSuccess' => 'Статус добавлен'
+            ],
+            'edit' => [
+                'Action' => '/izv/admin/edit/',
+                'MessageError' => 'Статус не найден',
+                'MessageSuccess' => 'Статус обновлен'
+            ],
+            'delete' => [
+                'Action' => '/izv/admin/delete/',
+                'MessageError' => 'Ошибка удаления записи',
+                'MessageSuccess' => 'Запись удалена'
+            ],
+        ],
         'notice' => [
             'name' => 'izv/all',
             'table' => 'notice',

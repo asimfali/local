@@ -217,11 +217,12 @@ class MyForm
             $type = isset($this->attr['type']) ? $this->attr['type'] : '';
             $fe = '';
             switch ($type){
-//                case 'text':
-////                    $fe = $this->r->
-//                    break;
+                case 'date':
+                    $this->el->setValue(date('Y-m-d'));
+                    $fe = $this->r->formDate($this->el);
+                    break;
                 case 'select':
-                    $fe = $this->r->formSelect($el);
+                    $fe = $this->r->formSelect($this->el);
                     break;
                 default:
                     $fe = $this->r->formElement($this->el);
