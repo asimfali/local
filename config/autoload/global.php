@@ -43,7 +43,7 @@ return [
     'session_manager' => [
         // Валидаторы сессии (используются для безопасности).
         'validators' => [
-            \Zend\Session\Validator\RemoteAddr::class,
+//            \Zend\Session\Validator\RemoteAddr::class,
 //            \Zend\Session\Validator\HttpUserAgent::class,
         ]
     ],
@@ -53,17 +53,17 @@ return [
     ],
     'navigation' => [
         'default' => [
-            [
-                'label' => 'Главная',
-                'route' => 'home',
-            ],
-            [
-                'label' => 'Вход',
-//                'uri' => 'index/login/',
-                'route' => 'auth-doctrine',
-//                'controller' => 'index',
-//                'action' => 'login',
-            ],
+//            [
+//                'label' => 'Главная',
+//                'route' => 'home',
+//            ],
+//            [
+//                'label' => 'Вход',
+////                'uri' => 'index/login/',
+//                'route' => 'auth-doctrine',
+////                'controller' => 'index',
+////                'action' => 'login',
+//            ],
             [
                 'label' => 'Извещения',
                 'route' => 'izv/all',
@@ -72,6 +72,11 @@ return [
             [
                 'label' => 'Паспорта',
                 'route' => 'passport/all',
+                'action' => 'index',
+            ],
+            [
+                'label' => 'Инфо',
+                'route' => 'info/all',
                 'action' => 'index',
             ],
         ],

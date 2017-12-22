@@ -1,13 +1,13 @@
-<h1>Извещения</h1>
+<h2>Извещения админка</h2>
 <?php
     $this->headLink()->appendStylesheet('/css/btnstyle.css');
     if (isset($default)){
         
         foreach ($default as $item) {
             $url = $this->base . '?name='.$item[0];
-            echo "<h2><a href=\"{$url}\">{$item[1]}</a><br></h2>";
+            echo "<a style='margin: 10px;' class='btn btn-default' href=\"{$url}\">{$item[1]}</a>";
         }
-        echo "<a href=\"{$this->show}\">Показать</a><br><br>";
+//        echo "<a href=\"{$this->show}\">Показать</a><br><br>";
         return;
     }
     if(isset($desc)) echo "<h2>{$desc}</h2>";

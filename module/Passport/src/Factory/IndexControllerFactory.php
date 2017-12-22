@@ -36,7 +36,7 @@ class IndexControllerFactory implements FactoryInterface
         $em = $container->get('doctrine.entitymanager.orm_default');
         $auth = $container->get('doctrine.authenticationservice.orm_default');
         $config = $container->get('configuration');
-        $path['Path'] = $config['Path'];
+        $path['Path'] = $config['PathPassport'];
         $config = $config['models'];
         $config = array_merge($config, $path);
         return new IndexController($em, $auth, $config);

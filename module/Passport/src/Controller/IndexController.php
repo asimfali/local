@@ -11,6 +11,7 @@ namespace Passport\Controller;
 use Custom\BaseAddController;
 use Doctrine\ORM\EntityManager;
 use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 class IndexController extends BaseAddController
 {
@@ -55,7 +56,8 @@ class IndexController extends BaseAddController
     {
         $c = $this->params()->fromQuery('count');
         if (empty($c)) $c = 20;
-        return $this->index($this->model, $c, ['pdf','number']);
+        $p = $this->indexPDO($this->model, $c, ['pdf','number']);
+        return $this->baseView('view',['lside','passport'],['lside' => ['fsdf' => 'fsdfsd'], 'cont' => $p]);
     }
 
     public function showAction()

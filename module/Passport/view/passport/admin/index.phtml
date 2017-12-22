@@ -1,4 +1,4 @@
-<h1>Паспорт админка</h1>
+<h2>Паспорт админка</h2>
 <?php
 /**
  * @var \Zend\View\Renderer\PhpRenderer $r
@@ -12,7 +12,7 @@ if (isset($default)){
     echo $r->partial('loadFile.phtml',['act' => '/passport/admin/upload/?name=passport']);
     foreach ($default as $item) {
         $url = $this->base . '?name='.$item[0];
-        echo "<h2><a href=\"{$url}\">{$item[1]}</a><br></h2>";
+        echo "<a class='btn btn-default' style='margin: 10px;' href=\"{$url}\">{$item[1]}</a>";
     }
 //    echo "<a href=\"{$this->show}\">Показать</a><br><br>";
     return;

@@ -19,7 +19,7 @@ use Zend\I18n\Validator\DateTime;
 use Zend\Paginator\Paginator;
 use Zend\View\Renderer\PhpRenderer;
 
-class Query
+class DQuery
 {
     /**
      * @var EntityManager
@@ -51,7 +51,7 @@ class Query
     protected $css;
 
     /**
-     * Query constructor.
+     * DQuery constructor.
      * @param EntityManager $entityManager
      * @param $arr - array
      * @param string $filter

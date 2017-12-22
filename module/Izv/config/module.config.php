@@ -82,8 +82,13 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'template_map' => [
+            'izv' => __DIR__ . '/../view/izv/index/index.phtml',
+            'lside' => __DIR__ . '/../../Custom/left-sidebar.phtml',
+            'view' => __DIR__ . '/../../Custom/view.phtml',
+        ],
     ],
-    'Path' => __DIR__ . '/../../../public/content/',
+    'PathIzv' => __DIR__ . '/../../../public/content/',
     'models' => [
         'fields' => [
             'name' => 'izv/admin',

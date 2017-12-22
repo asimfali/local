@@ -69,6 +69,11 @@ class BaseView
     }
     public function addDiv($name,$vals)
     {
+//        $path = __DIR__ .'\\'. $name;
+//        if (file_exists($path))
+//        {
+//            $name = $path;
+//        }
         foreach ($vals as $val) {
             $this->compStyle($val);
             if (is_array($val))

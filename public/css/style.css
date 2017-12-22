@@ -31,3 +31,17 @@ div.container a.navbar-brand > img {
     margin-right: 4px;
     margin-top: -2px;
 }
+
+.aside {
+    /*position: absolute;*/
+    /*top: 40px;*/
+    /*left: 0;*/
+    /*background: #4E5D6C;*/
+    color: #000;
+    padding: 10px;
+    width: 20%;
+    float: left;
+}
+.w100{
+    width: 100%;
+}

@@ -19,9 +19,9 @@ class IndexControllerFactory implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $config = $container->get('configuration');
-        $path['Path'] = $config['Path'];
+        $path['Path'] = $config['PathIzv'];
         $config = $config['models'];
         $config = array_merge($config, $path);
-        return new IndexController($entityManager, $config);
+        return new IndexController($entityManager,null, $config);
     }
 }

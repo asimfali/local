@@ -40,15 +40,14 @@
                 <div class="collapse navbar-collapse">
                     <?= $this->navigation('Zend\\Navigation\\Default')->menu()->setUlClass('nav navbar-nav')->render(); ?>
                     <ul class="nav navbar-nav navbar-right">
-<!--                        <li><a href="/admin/">Admin</a></li>-->
+                        <li><a href="/auth-doctrine/">Вход</a></li>
 <!--                        <li><a href="/izv/admin/">AdminNotice</a></li>-->
 <!--                        <li><a href="/passport/admin/">AdminPassport</a></li>-->
                     </ul>
                 </div>
             </div>
         </nav>
-        <div class="container">
-            <?= '<div class="breadcrumbs hi"> <br>'. $this->navigation('Zend\\Navigation\\Admin_navigation')->breadcrumbs()->setLinkLast(false)->setMinDepth(0)->render() . '</div>';?>
+        <div class="">
             <?= $this->content ?>
             <hr class="hi">
             <footer class="container hi">

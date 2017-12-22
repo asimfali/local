@@ -16,6 +16,7 @@ use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Plugin\FlashMessenger\FlashMessenger;
+use Zend\View\Model\ViewModel;
 
 class BaseAdminController extends AbstractActionController
 {
@@ -55,6 +56,10 @@ class BaseAdminController extends AbstractActionController
      * @var $fields
      */
     protected $fields;
+    /**
+     * @var ViewModel $view
+     */
+    protected $view;
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -179,7 +184,7 @@ class BaseAdminController extends AbstractActionController
     {
         if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
         $this->getReq();
-        $q = new Query($this->entityManager, $arr['query'],'typeCurtain = 18');
+        $q = new DQuery($this->entityManager, $arr['query']);
         $arr['getUrl']['name'] = $arr['table'];
         $arr['getUrl']['count'] = $count;
         $getUrls = new MyURL($arr['getUrl']);
@@ -190,6 +195,42 @@ class BaseAdminController extends AbstractActionController
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'get' => $get,
             'table' => $arr['table'], 'thClasses' => $arr['thClasses'], 'tdClasses' => $arr['tdClasses']]);
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
+            'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
+    }
+    public function baseView($b,$n,$vals)
+    {
+        $this->view = $this->setTempl($b,null);
+        $i = 0;
+        foreach ($vals as $k => $val) {
+            $e = $this->setTempl($n[$i], $val);
+            $this->view->addChild($e, $k);
+            $i++;
+        }
+        return $this->view;
+    }
+    public function setTempl($n,$cont)
+    {
+        $v = new ViewModel($cont);
+        $v->setTemplate($n);
+        return $v;
+    }
+    public function indexPDO($arr, $count = 10, $get = null)
+    {
+        if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
+        $this->getReq();
+        $q = new PDOQuery(['t' => $arr['table'],'j' => $arr['joins'], 'out' => $arr['ths'],'w' => $arr['where'][0],'c' => $arr['columns'] , 's' => $arr['sort']]);
+        $q->build();
+        $q->run($arr['where'][1],true);
+        $arr['getUrl']['name'] = $arr['table'];
+        $arr['getUrl']['count'] = $count;
+        $getUrls = new MyURL($arr['getUrl']);
+        $page = $_GET['page'];
+        if (empty($page)) $page = 1;
+        $q->setPaginator($count, $page);
+        $this->getFm($this->plugin('flashMessenger'));
+        $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'get' => $get,
+            'table' => $arr['table'], 'thClasses' => $arr['thClasses'], 'tdClasses' => $arr['tdClasses']]);
+        return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->p, 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
     public function set($arr, $is_form = false, $is_req = false, $sets = null, $ent= null)
@@ -341,7 +382,7 @@ class BaseAdminController extends AbstractActionController
 //            $this->redir($_SERVER['SCRIPT_NAME'],);
 //            header('Location: ' . $_SERVER["HTTP_REFERER"]);
         $cols = call_user_func([$elem, 'get' . $arr['collection']]);
-        $q = new Query($this->entityManager);
+        $q = new DQuery($this->entityManager);
         $q->resetPaginator($cols);
         unset($table['ths']['Действие']);
         $table['ths']['Действие'] = ['delete-item' => 'Удалить элемент'];

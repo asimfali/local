@@ -13,7 +13,7 @@ use Custom\BaseAddController;
 use Custom\Files;
 use Custom\Izv;
 use Custom\MyURL;
-use Custom\Query;
+use Custom\DQuery;
 use Entity\User;
 use Zend\Form\Element;
 use Zend\Mvc\MvcEvent;
@@ -64,7 +64,7 @@ class IndexController extends BaseAddController
         $arr = $this->model;
         if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'all' ,'show'])];
         $this->getReq();
-        $q = new Query($this->entityManager, $arr['query']);
+        $q = new DQuery($this->entityManager, $arr['query']);
         $arr['getUrl']['name'] = $arr['table'];
         $arr['getUrl']['count'] = $count;
         $getUrls = new MyURL($arr['getUrl']);
@@ -76,8 +76,9 @@ class IndexController extends BaseAddController
 //        $arr['ths']['Действие'] = ['show' => 'Посмотреть', 'delete' => 'Удалить'];
         $this->getFm($this->plugin('flashMessenger'));
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
-        return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
+        $p = ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
+        return $this->baseView('view',['lside','izv'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
     public function addAction()
     {
@@ -134,7 +135,7 @@ class IndexController extends BaseAddController
         if (isset($p))
         {
             $pdf = true;
-            $name = reset($this->config);
+            $name = $this->config['notice'];
             $name = $name['name'];
             $name .= '/show';
             return $this->upload($this->path . $path . $p, $name, $pdf);

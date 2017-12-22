@@ -16,7 +16,7 @@ if (isset($default)){
     echo "<a href=\"/izv/all/download/\">Скачать pdf</a><br><br>";
     return;
 }
-if(isset($desc)) echo "<h2>{$desc}</h2>";
+//if(isset($desc)) echo "<h2>{$desc}</h2>";
 echo "<a class='btn-sm btn-success' href=\"{$this->add}\">Добавить</a><br>";
 $this->fm->pr();
 $this->q->prTable();

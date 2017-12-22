@@ -69,8 +69,13 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'template_map' => [
+            'passport' => __DIR__ . '/../view/passport/index/index.phtml',
+            'lside' => __DIR__ . '/../../Custom/left-sidebar.phtml',
+            'view' => __DIR__ . '/../../Custom/view.phtml',
+        ],
     ],
-    'Path' => __DIR__ . '/../../../public/content/passport/',
+    'PathPassport' => __DIR__ . '/../../../public/content/passport/',
     'models' => [
         'passportAll' => [
             'name' => 'passport/all',
@@ -85,18 +90,29 @@ return [
             'query' => [
                 'select' => 'a',
                 'from' => 'Passport',
-                'order' => 'a.status',
-                'desc' => 'DESC',
+                'order' => ['a.status','a.seria','a.typeCurtain'],
+                'desc' => ['DESC','DESC','DESC'],
             ],
             'css' => 'table table-striped table-hover',
+            'joins' => [
+                ['table' => 'user', 'alias' => 'u', 'pid' => 'creator', 'id' => 'id', 'act' => '='],
+                ['table' => 'tu', 'alias' => 'tu', 'pid' => 'tu', 'id' => 'id', 'act' => '='],
+                ['table' => 'seria', 'alias' => 's', 'pid' => 'seria', 'id' => 'id', 'act' => '='],
+                ['table' => 'status', 'alias' => 'st', 'pid' => 'status', 'id' => 'id', 'act' => '='],
+                ['table' => 'type_curtain', 'alias' => 'tc', 'pid' => 'typeCurtain', 'id' => 'id', 'act' => '='],
+            ],
+//            'where' => [['table' => 'passport','name' => ['seria','typeCurtain'], 'act' => ' = ', 'val' => '?'],[8,5]],
+            'sort' => [['p.status','DESC'],['p.seria','DESC'],['p.typeCurtain','DESC']],
+            'columns' => ['p.typeCurtain','p.seria','p.status'],
             'ths' => [
-                'Тип' => ['typeCurtain','alias'],'Название' => 'name',
-                'Серия' => ['seria','number'],'Исполнение' => ['seria','performance'], 'ТУ' => ['tu','name'],
-                'Дата' => 'date', 'Разработал' => ['creator','usrFirstName'],
-                'Номер паспорта' => 'number', 'Статус' => ['status','status'],
+                'Тип' => 'tc.alias','Название' => ['p.name',0],
+                'Серия' => 'CONCAT(s.number," ",s.performance)' /*[['s.number','s.performance'],0]*/, 'ТУ' => ['tu.name',1],
+                'Дата' => 'date',
+                'Разработал' => 'u.usr_first_name',
+                'Номер паспорта' => ['p.number',1], 'Статус' => ['st.status',0],
                 'Действие' => ['show' => 'PDF']],
             'tdClasses' => [
-                'tac',null,'tac','tac','tac','tac','tac','tac','tac',null
+                'tac','tac','tac','tac','tac','tac','tac','tac','tac',null
             ],
             'thClasses' => [
                 'tac','tac','tac','tac','tac','tac','tac','tac','tac','tac'
@@ -140,14 +156,14 @@ return [
             ],
             'css' => 'table table-striped table-hover',
             'ths' => [
-                'Тип' => ['typeCurtain','alias'], 'Название' => 'name',
-                'Серия' => ['seria','number'],'Исполнение' => ['seria','performance'], 'ТУ' => ['tu','name'],
+                'Тип' => ['typeCurtain','alias'], 'Серия' => ['seria','number'],
+                'Исполнение' => ['seria','performance'], 'ТУ' => ['tu','name'],
                 'Дата' => 'date', 'Разработал' => ['creator','usrFirstName'],
-                'Номер паспорта' => 'number', 'Статус' => ['status','status'],
+                'Номер паспорта' => 'number','Пароль' => 'password', 'Статус' => ['status','status'],
                 'Действие' => ['edit' => '<span class="glyphicon glyphicon-pencil"></span>',
                     'delete' => '<span class="glyphicon glyphicon-trash"></span>']],
             'tdClasses' => [
-                'tac',null,'tac','tac','tac','tac','tac','tac','tac',null
+                'tac','tac','tac','tac','tac','tac','tac','tac','tac',null
             ],
             'thClasses' => [
                 'tac','tac','tac','tac','tac','tac','tac','tac','tac','tac'

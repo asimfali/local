@@ -196,4 +196,12 @@ class Files
         $this->getF('*.pdf');
         $this->linkF('/izv/all/show/');
     }
+
+    /**
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
 }
