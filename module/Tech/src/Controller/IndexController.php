@@ -2,37 +2,27 @@
 /**
  * Created by PhpStorm.
  * User: Simanov
- * Date: 13.12.2017
- * Time: 13:52
+ * Date: 25.12.2017
+ * Time: 11:38
  */
 
-namespace Info\Controller;
+namespace Tech\Controller;
 
 
 use Custom\BaseAddController;
 use Doctrine\ORM\EntityManager;
+use Zend\Authentication\AuthenticationService;
 use Zend\Mvc\MvcEvent;
 
 class IndexController extends BaseAddController
 {
-    /**
-     * @var array $config
-     */
-    public $config;
-    /**
-     * @var $model
-     */
-    protected $model;
-    /**
-     * @var $path
-     */
-    protected $path;
-    public function __construct(EntityManager $entityManager, $authenticationService, $config)
+    public function __construct(EntityManager $entityManager, AuthenticationService $authenticationService, $config)
     {
         $this->config = $config;
         $this->path = $this->config['Path'];
         parent::__construct($entityManager, $authenticationService);
     }
+
     public function onDispatch(MvcEvent $e)
     {
         $this->model = $this->findModel();
@@ -40,20 +30,21 @@ class IndexController extends BaseAddController
         $this->model = $this->config[$this->model];
         $admin = stripos($_SERVER['SCRIPT_NAME'],'admin');
 //        if (empty($this->model)) {
-            foreach ($this->config as $k => $item) {
-                if (is_array($item) && $item['name'] == 'info/admin') {
-                    if (!empty($admin) && isset($item['admin'])) {
-                        $this->names[$k][0] = $k;
-                        $this->names[$k][1] = $item['desc'];
-                    }
-                } else if (is_array($item) && $item['name'] == 'info/all'){
+        foreach ($this->config as $k => $item) {
+            if (is_array($item) && $item['name'] == 'tech/admin') {
+                if (!empty($admin) && isset($item['admin'])) {
                     $this->names[$k][0] = $k;
                     $this->names[$k][1] = $item['desc'];
                 }
+            } else if (is_array($item) && $item['name'] == 'tech/all'){
+                $this->names[$k][0] = $k;
+                $this->names[$k][1] = $item['desc'];
+            }
 //            }
         }
         return parent::onDispatch($e);
     }
+
     public function indexAction()
     {
         $c = $this->params()->fromQuery('count');

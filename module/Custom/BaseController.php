@@ -11,7 +11,9 @@ namespace Custom;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
+use Entity\User;
 use Zend\Authentication\AuthenticationService;
+use Zend\Form\Element;
 use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
@@ -60,6 +62,18 @@ class BaseAdminController extends AbstractActionController
      * @var ViewModel $view
      */
     protected $view;
+    /**
+     * @var array $config
+     */
+    public $config;
+    /**
+     * @var $model
+     */
+    protected $model;
+    /**
+     * @var $path
+     */
+    protected $path;
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
@@ -182,7 +196,8 @@ class BaseAdminController extends AbstractActionController
     }
     public function index($arr, $count = 10, $get = null)
     {
-        if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
+        if (empty($arr)) return ['default' => 1];
+//            ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
         $this->getReq();
         $q = new DQuery($this->entityManager, $arr['query']);
         $arr['getUrl']['name'] = $arr['table'];
@@ -314,6 +329,17 @@ class BaseAdminController extends AbstractActionController
         if ($this->req->isPost()){
             $this->flush($arr, $this->fields);
         } else {
+            /**
+             * @var Element $e
+             */
+            if ($arr['defVals']){
+                $e = null; $i = 0;
+                foreach ($this->form->getForm()->getElements() as $e) {
+                    if (!$e->getLabel()) continue;
+                    $e->setValue($arr['defVals'][$i]);
+                    $i++;
+                }
+            }
             return $this->showForm($arr);
         }
         $this->redir([$arr['Redirect']],  $this->getUrls->get());
@@ -416,11 +442,31 @@ class BaseAdminController extends AbstractActionController
 class BaseAddController extends BaseAdminController
 {
     protected $auth;
+    /**
+     * @var User $user
+     */
+    protected $user;
+    protected $var;
     public function __construct($entityManager, AuthenticationService $authenticationService = null)
     {
         parent::__construct($entityManager);
         if (isset($authenticationService)){
             $this->auth = $authenticationService;
+        }
+    }
+
+    public function isIdentity($class, $usr, $msg)
+    {
+        if (empty($this->id)) $this->id = $this->getId();
+        if (empty($this->user)) $this->user = $this->auth->getIdentity();
+        $ent = $this->entityManager->getRepository('\\Entity\\' . ucfirst($class))->find($this->id);
+        $this->var = call_user_func([$ent, 'get'.ucfirst($usr)]);
+        if ($this->user != $this->var){
+            $this->fm->status = 'error';
+            $this->fm->add($msg);
+            return false;
+        } else {
+            return true;
         }
     }
 }

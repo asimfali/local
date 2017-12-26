@@ -236,9 +236,11 @@ class MyForm
 
         $this->elements[] = $this->helper->closeTag();
     }
-    public function pr(){
+    public function pr($start, $end){
+        if (isset($start)) echo $start;
         foreach ($this->elements as $element) {
             echo $element;
         }
+        if (isset($end)) echo $end;
     }
 }

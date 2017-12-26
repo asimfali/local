@@ -83,6 +83,8 @@ return [
             __DIR__ . '/../view',
         ],
         'template_map' => [
+            'izvAdmin' => __DIR__ . '/../view/izv/admin/index.phtml',
+            'izvAdd' => __DIR__ . '/../view/izv/admin/add.phtml',
             'izv' => __DIR__ . '/../view/izv/index/index.phtml',
             'lside' => __DIR__ . '/../../Custom/left-sidebar.phtml',
             'view' => __DIR__ . '/../../Custom/view.phtml',

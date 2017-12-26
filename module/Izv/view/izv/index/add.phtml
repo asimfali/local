@@ -32,7 +32,7 @@ if (empty($status)){
 //    if (isset($num)){
 //        $act .= '&num='.$num;
 //    }
-    echo $r->partial('loadFile.phtml',['act' => $act]);
+    echo $r->partial('load-file.phtml',['act' => $act]);
 }
 echo "<form>";
 $main = new \Custom\BaseView($r,'main','w100');

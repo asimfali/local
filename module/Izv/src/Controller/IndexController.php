@@ -126,6 +126,7 @@ class IndexController extends BaseAddController
 //        $el = $this->form->getEl('numberIzv');
 //        $num = $izv->izvNumber($el->getValue());
         return $this->showForm($arr, ['vals' => $pdf, 'path' => $p, 'user' => $user->getUsrFirstName()]);
+//        return $this->baseView('view',['lside','izvAdd'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
     public function showAction()
     {
@@ -246,29 +247,39 @@ class IndexController extends BaseAddController
             return $this->redirect()->toRoute('auth-doctrine',['controller' => 'index', 'action' => 'login']);
         }
         $this->getReq();
-        $this->getId();
-        /**
-         * @var User $user
-         */
-        $user = $this->auth->getIdentity();
-        /**
-         * @var \Entity\Izv $editIzv
-         */
-        $editIzv = $this->entityManager->getRepository(\Entity\Izv::class)->find($this->id);
-        if ($user != $editIzv->getUsrFirstName())
+        if ($this->isIdentity('izv','UsrFirstName','Вы не можете удалить чужое извещение!!!'))
         {
-            $this->set($this->model);
-            $this->fm->status = 'error';
-            $this->fm->add('Вы не можете удалить чужое извещение!!!');
-            return $this->redirect()->toRoute('izv/all');
-//            return $this->redir([$this->model['Redirect']], $this->getUrls->get());
-        }
-        else {
-            $num = $editIzv->getNumberIzv();
+            $num = $this->var->getNumberIzv();
             $f = new Files($this->path . '/izv/');
             $f->remove($num);
             $this->delete($this->model);
+        } else {
+            $this->set($this->model);
+            return $this->redirect()->toRoute('izv/all');
         }
+//        $this->getId();
+//        /**
+//         * @var User $user
+//         */
+//        $user = $this->auth->getIdentity();
+//        /**
+//         * @var \Entity\Izv $editIzv
+//         */
+//        $editIzv = $this->entityManager->getRepository(\Entity\Izv::class)->find($this->id);
+//        if ($user != $editIzv->getUsrFirstName())
+//        {
+//            $this->set($this->model);
+//            $this->fm->status = 'error';
+//            $this->fm->add('Вы не можете удалить чужое извещение!!!');
+//            return $this->redirect()->toRoute('izv/all');
+////            return $this->redir([$this->model['Redirect']], $this->getUrls->get());
+//        }
+//        else {
+//            $num = $editIzv->getNumberIzv();
+//            $f = new Files($this->path . '/izv/');
+//            $f->remove($num);
+//            $this->delete($this->model);
+//        }
         return null;
     }
     public function clearAction()

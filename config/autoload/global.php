@@ -79,6 +79,11 @@ return [
                 'route' => 'info/all',
                 'action' => 'index',
             ],
+//            [
+//                'label' => 'Технологи',
+//                'route' => 'tech/all',
+//                'action' => 'index',
+//            ],
         ],
         'admin_navigation' => [
             [

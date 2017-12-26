@@ -70,9 +70,11 @@ return [
             __DIR__ . '/../view',
         ],
         'template_map' => [
+            'passportAdmin' => __DIR__ . '/../view/passport/admin/index.phtml',
             'passport' => __DIR__ . '/../view/passport/index/index.phtml',
             'lside' => __DIR__ . '/../../Custom/left-sidebar.phtml',
             'view' => __DIR__ . '/../../Custom/view.phtml',
+            'load-file' => __DIR__ . '/../view/passport/admin/load-file.phtml'
         ],
     ],
     'PathPassport' => __DIR__ . '/../../../public/content/passport/',
@@ -118,7 +120,7 @@ return [
                 'tac','tac','tac','tac','tac','tac','tac','tac','tac','tac'
             ],
             'entity' => '\\Entity\\Passport',
-            'Redirect' => 'passport/admin',
+            'Redirect' => 'passport/all',
             'MessageError' => 'Ошибка',
             'add' => [
                 'Action' => '/passport/admin/add/',

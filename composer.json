@@ -40,7 +40,8 @@
             "AuthDoctrine\\": "module/AuthDoctrine/src/",
             "Izv\\": "module/Izv/src/",
             "Passport\\": "module/Passport/src/",
-            "Info\\": "module/Info/src/"
+            "Info\\": "module/Info/src/",
+            "Tech\\": "module/Tech/src/"
         },
         "classmap": ["module/Admin/src/Filter"]
     },

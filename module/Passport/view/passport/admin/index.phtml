@@ -8,8 +8,16 @@ $r->headLink()->appendStylesheet('/css/izv.css');
 $r->headLink()->appendStylesheet('/css/upload.css');
 $this->headLink()->appendStylesheet('/css/btnstyle.css');
 if (isset($default)){
-
-    echo $r->partial('loadFile.phtml',['act' => '/passport/admin/upload/?name=passport']);
+//    $oldResolver = $r->resolver();
+//    $r->setResolver(new \Zend\View\Resolver\TemplateMapResolver(['loadFile' => __DIR__ . 'load-file.phtml']));
+//    $re = new \Zend\View\Renderer\PhpRenderer();
+//    $re->setResolver(new \Zend\View\Resolver\TemplatePathStack(['i' => [__DIR__]]));
+//    $m = new Zend\View\Model\ViewModel(['act' => '/passport/admin/upload/?name=passport']);
+//    $dir = __DIR__;
+//    $m->setTemplate('load-file');
+//    echo $re->render($m,['act' => '/passport/admin/upload/?name=passport']);
+    echo $r->partial('load-file',['act' => '/passport/admin/upload/?name=passport']);
+//    $r->setResolver($oldResolver);
     foreach ($default as $item) {
         $url = $this->base . '?name='.$item[0];
         echo "<a class='btn btn-default' style='margin: 10px;' href=\"{$url}\">{$item[1]}</a>";

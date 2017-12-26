@@ -3,5 +3,12 @@
  * @var \Zend\View\Renderer\PhpRenderer $r
  */
 $r = $this;
+if (isset($list)){
+    foreach ($list as $item) {
+        $url = $this->base . '?name='.$item[0];
+        echo "<a class='btn btn-default' style='margin: 10px;' href=\"{$url}\">{$item[1]}</a><br>";
+    }
+//    echo "<a href=\"{$this->show}\">Показать</a><br><br>";
+    return;
+}
 ?>
-left sidebar

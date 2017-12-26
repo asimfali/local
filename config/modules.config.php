@@ -35,4 +35,5 @@ return [
     "Izv",
     "Passport",
     "Info",
+    "Tech",
 ];

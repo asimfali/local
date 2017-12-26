@@ -3,32 +3,6 @@
  */
 
 var i = 1;
-$(function (urlName) {
-    $("form#item").submit(function () {
-        let fData = $('#item').serialize();
-        $.ajax({
-            url: urlName,
-            type: 'post',
-            dataType: 'json',
-            data: fData,
-            success: function (data) {
-                if (data['success'] == 1) {
-
-                } else {
-                    $('#errors').html('');
-                    for (let key in data) {
-                        $('#errors').append('<span>' + data[key][0] + '</span>');
-                    }
-                }
-            }
-        })
-    })
-});
-
-
-function addRecord() {
-    console.log(this.innerHTML);
-}
 
 function objForm(formArray) {
     var returnArray = {};
