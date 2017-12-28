@@ -47,9 +47,20 @@ class IndexController extends BaseAddController
 
     public function indexAction()
     {
-        $c = $this->params()->fromQuery('count');
-        if (empty($c)) $c = 20;
-        $p = $this->indexPDO($this->model, $c);
-        return $this->baseView('view',['lside','info'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
+        $p = $this->indexPDO($this->model, 45);
+        return $this->baseView('view',['index/lside','tech/index/index'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
+    }
+    public function prAction()
+    {
+        $this->getReq();
+        if ($this->req->isPost()){
+            $p = $this->req->getPost();
+            $start = $p->get('start');
+            $end = $p->get('end');
+            $this->model['where'] = ['cond' => ['table' => 'p','name' => 'date', 'act' => ' BETWEEN ', 'val' => '?,?'],
+                'vals' => [$start,$end]];
+        }
+        $c = 45;
+        return $this->forPrint($this->model,'',$c);
     }
 }

@@ -1,9 +1,9 @@
-<h1>Технологи</h1>
 <?php
 /**
  * @var \Zend\View\Renderer\PhpRenderer $r
  */
 $r = $this;
+$d = date('Y-m-d');
 $this->headLink()->appendStylesheet('/css/btnstyle.css');
 if (isset($default)) return;
 //$bv = new \Custom\BaseView($r, 'main', 'container');
@@ -11,6 +11,12 @@ if (isset($default)) return;
 //echo $r->partial('sidebar.phtml');
 //echo "<div style='float: left;'>";
 //if(isset($desc)) echo "<h2>{$desc}</h2>";
+echo " <form action='{$this->pdf}' method='post' target='_blank'>
+    от <input name='start' type='date' value='{$d}'>
+    по <input name='end' type='date' value='{$d}'> &nbsp; &nbsp; 
+    <input class='btn btn-success' type='submit' value='Отчет'> <br><br>
+</form>
+";
 $this->fm->pr();
 $this->q->prTable();
 $e = $this->paginationControl($this->name, 'Sliding', 'pagination_control', ['route' => $this->route]);

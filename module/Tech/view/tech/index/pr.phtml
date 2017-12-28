@@ -1,0 +1,68 @@
+<?php
+ob_start();
+echo "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document</title><link rel='stylesheet' media='print' href='css/print.css'></head><body>";
+$this->headLink(['rel' => 'stylesheet', 'type' => 'text/css', 'media' => 'all'])->appendStylesheet('/css/izv.css');
+$c = "<!doctype html><html lang=\"ru\"><head><meta charset=\"UTF-8\"><title>Document
+    </title><link rel='stylesheet' media='all' href='css/print.css'></head><body style='font: 10pt arial'>";
+/**
+* @var \Zend\View\Renderer\PhpRenderer $r
+*/
+$r = $this;
+$j = 1;
+foreach ($this->cont as $k=>$items) {
+    $st = 'hmain';
+    if (count($cont) === $j) $st = 'hmainlast';
+    $bv = new \Custom\BaseView($r, 'main', $st);
+    $bv->addInCol('<table style="text-align: center; border: 1px solid black; border-collapse: collapse;">');
+    $first = true;
+    foreach ($items as $item) {
+        if ($first) {
+            $bv->addInCol($r->partial('head'));
+            $first = false;
+        } else {
+            $bv->addInCol($r->partial('row', $item));
+        }
+    }
+    $bv->addInCol('</table>');
+    $c .= $bv->pr();
+    $j++;
+}
+
+$c .= "</body></html>";
+echo $c;
+
+$cont = ob_get_clean();
+//echo $cont;
+$fn = uniqid() . '.html';
+$fout = 'otchet' . '.pdf';
+file_put_contents(\Custom\Exec::$path . $fn, $cont);
+$cmd = new \Custom\Exec('wkhtmltopdf', ['--margin-top 0mm --margin-bottom 0mm --margin-left 0mm --margin-right 0mm --zoom 1.5 -O Landscape',
+\Custom\Exec::$path . $fn, \Custom\Exec::$path . $fout]);
+$cmd->runExec();
+unlink(\Custom\Exec::$path.$fn);
+file_force_download(\Custom\Exec::$path . $fout);
+
+function file_force_download($file, $rem = true) {
+    if (file_exists($file)) {
+        // сбрасываем буфер вывода PHP, чтобы избежать переполнения памяти выделенной под скрипт
+        // если этого не сделать файл будет читаться в память полностью!
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        // заставляем браузер показать окно сохранения файла
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename=' . basename($file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        // читаем файл и отправляем его пользователю
+        readfile($file);
+        if ($rem)
+            unlink($file);
+        exit;
+    }
+}
+

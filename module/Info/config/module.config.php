@@ -83,7 +83,7 @@ return [
             'table' => 'ta',
             'desc' => 'Теплообменники',
             'getUrl' => [
-                'name' => '',
+                'name' => 'taAll',
                 'count' => '',
                 'filterName' => '',
                 'filterVal' => '',
@@ -103,7 +103,7 @@ return [
 //                ['table' => 'type_curtain', 'alias' => 'tc', 'pid' => 'typeCurtain', 'id' => 'id', 'act' => '='],
 //            ],
 //            'where' => [['table' => 'passport','name' => ['seria','typeCurtain'], 'act' => ' = ', 'val' => '?'],[8,5]],
-            'sort' => [['p.name','DESC']],
+            'sort' => [['p.name','ASC']],
 //            'columns' => ['p.name','p.v','p.row','p.cu','p.stp','p.t','p.count','p.type','p.conf'],
             'ths' => [
                 'Марка' => 'name', 'Длина<br>мм' => 'l', 'Ширина<br>мм' => 'w', 'Толщина<br>мм' => 'h',

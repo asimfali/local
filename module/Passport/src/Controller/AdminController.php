@@ -57,19 +57,21 @@ class AdminController extends BaseController
         $c = $this->params()->fromQuery('count');
         if (empty($c)) $c = 20;
         $p = $this->index($this->model, $c);
-        return $this->baseView('view',['lside','passportAdmin'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
+        return $this->baseView('view',['admin/lside','passport/admin/index'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
     }
 
     public function editAction()
     {
-        return $this->edit($this->model);
+        $p = $this->edit($this->model);
+        return $this->baseView('view',['admin/lside','passport/admin/edit'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
     }
     public function addAction()
     {
 //        $cr = new CustomRender(['lside' => __DIR__ . '/../../../Custom/left-sidebar.phtml'],[__DIR__ . '/../../../Custom']);
-//        $p = $cr->render('view',[]);
-        return $this->add($this->model);
-//        return $this->baseView('view',['lside','passportAdmin'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
+//        $m = $this->baseView('view',['lside','passportAdmin'],['lside'=>['list' => $this->names,'base' => ''],'cont' => ['fsd']]);
+//        $p = $cr->render($m,[]);
+        $p = $this->add($this->model);
+        return $this->baseView('view',['admin/lside','passport/admin/add'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
     }
     public function deleteAction()
     {

@@ -57,7 +57,7 @@ class IndexController extends BaseAddController
     public function indexAction()
     {
         $c = $this->params()->fromQuery('count');
-        if (empty($c)) $c = 20;
+        if (empty($c)) $c = 50;
         $p = $this->indexPDO($this->model, $c);
         return $this->baseView('view',['lside','info'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
     }

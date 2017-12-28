@@ -55,9 +55,43 @@ class IndexController extends BaseAddController
     public function indexAction()
     {
         $c = $this->params()->fromQuery('count');
+        $post = $this->params()->fromQuery('post');
+        $this->getReq();
+        if (isset($post) && $this->req->isPost())
+        {
+            $where = $this->req->getPost()->toArray();
+            $s = ['n' => 'CONCAT(s.number," ",s.performance)', 'act' => '=', 'type' => 'AND'];
+            $date = ['t' => 'p', 'n' => 'date', 'act' => 'BETWEEN', 'type' => 'AND'];
+            $in = ['t' => 'tc', 'n' => 'alias', 'act' => 'IN', 'type' => 'AND'];
+            $name = ['t' => 'p', 'n' => 'name', 'act' => '=', 'type' => 'AND'];
+            $status = ['t' => 'st', 'n' => 'status', 'act' => '=', 'type' => 'AND'];
+            $cond = []; $vals = [];
+            if (isset($where['seria'])) {$cond[] = $s; $vals[] = $where['seria'];}
+            if (isset($where['start']) && isset($where['end'])){
+                $cond[] = $date; $vals[] = $where['start']; $vals[] = $where['end'];
+            }
+            if (isset($where['EWA'])) {
+                $in['count'] = count($where['EWA']);
+                $cond[] = $in;
+                foreach ($where['EWA'] as $item) {
+                    $vals[] = $item;
+                }
+            }
+            if (isset($where['status'])) {$cond[] = $status; $vals[] = $where['status'];}
+            if (isset($where['type'])){
+                $cond[] = $name; $vals[] = $where['type'];
+            }
+            $last = array_pop($cond);
+            unset($last['type']);
+            array_push($cond, $last);
+            $this->setWhere($this->model,$cond,$vals);
+        }
         if (empty($c)) $c = 20;
         $p = $this->indexPDO($this->model, $c, ['pdf','number']);
-        return $this->baseView('view',['lside','passport'],['lside' => ['fsdf' => 'fsdfsd'], 'cont' => $p]);
+        $q = $p['q'];
+        $s = $this->assembly($q->vals,'CONCAT(s.number," ",s.performance)');
+        return $this->baseView('view',['passport/index/filter','passport'],
+            ['lside' => ['status' => ['Действующий','Архивный'], 'series' => $s], 'cont' => $p]);
     }
 
     public function showAction()

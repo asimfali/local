@@ -55,15 +55,17 @@ class AdminController extends BaseController
         $c = $this->params()->fromQuery('count');
         if (empty($c)) $c = 20;
         $p = $this->index($this->model, $c);
-        return $this->baseView('view',['lside','izvAdmin'],['lside' => ['list' => $this->names, 'base' => ''],'cont' => $p]);
+        return $this->baseView('view',['admin/lside','izv/admin/index'],['lside' => ['list' => $this->names, 'base' => ''],'cont' => $p]);
     }
     public function addAction()
     {
-        return $this->add($this->model);
+        $p = $this->add($this->model);
+        return $this->baseView('view',['admin/lside','izv/admin/add'],['lside' => ['list' => $this->names, 'base' => ''],'cont' => $p]);
     }
     public function addItemAction()
     {
-        return $this->itemAdd($this->model, $this->config[$this->model['refTable']]);
+        $p = $this->itemAdd($this->model, $this->config[$this->model['refTable']]);
+        return $this->baseView('view',['admin/lside','izv/admin/add-item'],['lside' => ['list' => $this->names, 'base' => ''],'cont' => $p]);
     }
     public function deleteItemAction()
     {
@@ -77,7 +79,8 @@ class AdminController extends BaseController
     }
     public function editAction()
     {
-        return $this->edit($this->model);
+        $p = $this->edit($this->model);
+        return $this->baseView('view',['admin/lside','izv/admin/edit'],['lside' => ['list' => $this->names, 'base' => ''],'cont' => $p]);
     }
     public function deleteAction()
     {

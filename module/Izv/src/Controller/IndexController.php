@@ -78,7 +78,7 @@ class IndexController extends BaseAddController
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'table' => $arr['table']]);
         $p = ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
-        return $this->baseView('view',['lside','izv'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
+        return $this->baseView('view',['index/lside','izv/index/index'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
     public function addAction()
     {
@@ -125,8 +125,8 @@ class IndexController extends BaseAddController
          */
 //        $el = $this->form->getEl('numberIzv');
 //        $num = $izv->izvNumber($el->getValue());
-        return $this->showForm($arr, ['vals' => $pdf, 'path' => $p, 'user' => $user->getUsrFirstName()]);
-//        return $this->baseView('view',['lside','izvAdd'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
+        $p = $this->showForm($arr, ['vals' => $pdf, 'path' => $p, 'user' => $user->getUsrFirstName()]);
+        return $this->baseView('view',['index/lside','izv/index/add'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
     public function showAction()
     {
@@ -165,7 +165,8 @@ class IndexController extends BaseAddController
         $spl = explode('/',$path);
         $l = count($spl);
         $p = '/izv/all/show/?path=' . $spl[$l-2] .'/'. $spl[$l-1] . '/';
-        return $this->showForm($arr, ['vals' => $vals, 'path' => $p, 'pdf' => '/izv/all/show/?path=izv/&pdf='.$dir.'.pdf', 'user' => $user->getUsrFirstName()]);
+        $p = $this->showForm($arr, ['vals' => $vals, 'path' => $p, 'pdf' => '/izv/all/show/?path=izv/&pdf='.$dir.'.pdf', 'user' => $user->getUsrFirstName()]);
+        return $this->baseView('view',['index/lside','izv/index/show'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
 
 //    public function editAction()

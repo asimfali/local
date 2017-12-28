@@ -46,8 +46,12 @@ class CustomRender
     public function render($name, $arr)
     {
         if (!isset($this->model)) $this->model = new ViewModel();
-        $this->model->setVariables($arr);
-        $this->model->setTemplate($name);
+        if (get_class($name) === 'Zend\\View\\Model\\ViewModel'){
+            $this->model = $name;
+        } else {
+            $this->model->setVariables($arr);
+            $this->model->setTemplate($name);
+        }
         return $this->r->render($this->model);
     }
 }

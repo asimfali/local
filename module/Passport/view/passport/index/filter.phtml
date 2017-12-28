@@ -1,0 +1,57 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $r
+ */
+$r = $this;
+$r->headLink()->appendStylesheet('/css/filterPassport.css');
+$d = date('Y-m-d');
+?>
+<form method='post' class='filter' action="/passport/all/?post=1">
+
+    <div class='form-row'>
+        <label for='form_fname'>Выберите тип изделия: </label>
+        <hr><br>
+        <label class="radio-inline"><input type="radio" name="type" value="Завесы">Завесы</label><br>
+        <label class="radio-inline"><input type="radio" name="type" value="Тепловентиляторы">Тепловентиляторы</label><br>
+        <label class="radio-inline"><input type="radio" name="type" value="Фанкойлы">Фанкойлы</label>
+    </div>
+
+    <div class='form-row'>
+        <label for='EWA[]'>Выберите источник тепла: </label> <br>
+        <label class="checkbox-inline"><input type="checkbox" name="EWA[]" value="E">E</label>
+        <label class="checkbox-inline"><input type="checkbox" name="EWA[]" value="W">W</label>
+        <label class="checkbox-inline"><input type="checkbox" name="EWA[]" value="A">A</label>
+        <label class="checkbox-inline"><input type="checkbox" name="EWA[]" value="G">G</label>
+
+    </div>
+
+    <div class='form-row'>
+        <label for='seria'>Выберите серию: </label>
+        <select class="form-control" id="seria" name="seria">
+            <?php foreach ($this->series as $seria) {
+                echo "<option>{$seria}</option>";
+            } ?>
+        </select>
+    </div>
+
+    <div class='form-row'>
+        <label for='status'>Статус: </label><br>
+        <?php foreach ($this->status as $item) {?>
+        <div class="radio">
+            <label><input type="radio" name="status" value="<?=$item?>"><?=$item?></label>
+        </div>
+        <?php } ?>
+    </div>
+
+    <div class='form-row'>
+        <label for='form_about'>Редакция: </label>
+        <div>от<input type="date" class="form-control" min="2017-04-01" name="start" value="2017-04-30"></div>
+        <!-- <div class="input-group-addon">до</div> -->
+        <div>до<input type="date" class="form-control" name="end" value="<?=$d?>"></div>
+    </div>
+
+    <div class="form-row">
+        <input type="submit" value='Найти паспорт'>
+    </div>
+
+</form>

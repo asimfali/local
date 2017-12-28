@@ -212,6 +212,16 @@ class BaseAdminController extends AbstractActionController
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->ret(), 'table' => $getUrls->get(), 'desc' => $arr['desc'],
             'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
     }
+    public function assembly($vals, $name)
+    {
+        $arr = [];
+        foreach ($vals as $val) {
+            $arr[] = $val[$name];
+        }
+        $arr = array_unique($arr);
+        asort($arr);
+        return $arr;
+    }
     public function baseView($b,$n,$vals)
     {
         $this->view = $this->setTempl($b,null);
@@ -233,9 +243,10 @@ class BaseAdminController extends AbstractActionController
     {
         if (empty($arr)) return ['default' => $this->names, 'base' => '', 'show' => $this->crurl(['izv', 'admin' ,'show'])];
         $this->getReq();
-        $q = new PDOQuery(['t' => $arr['table'],'j' => $arr['joins'], 'out' => $arr['ths'],'w' => $arr['where'][0],'c' => $arr['columns'] , 's' => $arr['sort']]);
+        $q = new PDOQuery(['t' => $arr['table'],'j' => $arr['joins'], 'out' => $arr['ths'],'w' => $arr['where']['cond'],'c' => $arr['columns'] , 's' => $arr['sort']]);
         $q->build();
-        $q->run($arr['where'][1],true);
+        $q->run($arr['where']['vals'],true);
+        if (empty($arr['getUrl']['name']))
         $arr['getUrl']['name'] = $arr['table'];
         $arr['getUrl']['count'] = $count;
         $getUrls = new MyURL($arr['getUrl']);
@@ -246,7 +257,35 @@ class BaseAdminController extends AbstractActionController
         $q->set(['name' => $arr['name'], 'class' => $arr['css'], 'ths' => $arr['ths'], 'get' => $get,
             'table' => $arr['table'], 'thClasses' => $arr['thClasses'], 'tdClasses' => $arr['tdClasses']]);
         return ['fm' => $this->fm, 'route' => $arr['name'], 'q' => $q, 'name' => $q->p, 'table' => $getUrls->get(), 'desc' => $arr['desc'],
-            'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
+            'pdf' => $this->crurl([$arr['name'], 'pr'], $getUrls->get()), 'add' => $this->crurl([$arr['name'], 'add'], $getUrls->get())];
+    }
+    public function setWhere(&$arr, $c, $vals)
+    {
+        $cond = [];
+        foreach ($c as $val) {
+            $cond[] = ['table' => $val['t'],'name' => $val['n'], 'act' => $val['act'], 'type' => $val['type'], 'count' => $val['count']];
+        }
+        $arr['where'] = ['cond' => $cond, 'vals' => $vals];
+    }
+    public function forPrint($arr, $head, $count = 45)
+    {
+        $this->getReq();
+        $q = new PDOQuery(['t' => $arr['table'],'j' => $arr['joins'], 'out' => $arr['ths'],'w' => $arr['where']['cond'],'c' => $arr['columns'] , 's' => $arr['sort']]);
+        $q->build();
+        $q->run($arr['where']['vals'],true);
+        $cont = []; $i = 0; $tmp[] = $head;
+        foreach ($q->vals as $val) {
+            if ($i == $count){
+                $i = 0;
+                $cont[] = $tmp;
+                $tmp = null;
+                $tmp[] = $head;
+            }
+            $i++;
+            $tmp[$i] = $val;
+        }
+        if (!empty($tmp)) $cont[] = $tmp;
+        return ['cont' => $cont];
     }
     public function set($arr, $is_form = false, $is_req = false, $sets = null, $ent= null)
     {

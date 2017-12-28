@@ -1,82 +1,61 @@
-:root {
-    --b-bgc: white;
-    --b-c: black;
-    --fs: 3.5mm;
-    --b-t: 0.3mm;
-    --w-74: 74mm;
+body {
+    font: 3.5mm Arial;
+    margin: 0 auto;
+    border-color: black;
+    color: black;
+}
+table > tbody > tr > td {
+    border-color: black;
+    opacity: 1;
+}
+td, tr {
+    border: 0.3mm solid black;
 }
 *{
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-body {
-    font: var(--fs) Arial;
-    margin: 0 auto;
-    border-color: var(--b-c);
-    color: var(--b-c);
-}
-table > tbody > tr > td {
-    border-color: var(--b-c);
-    opacity: 1;
-}
-td, tr {
-    border: var(--b-t) solid var(--b-c);
-    border-left: 0.6mm solid var(--b-c);
-}
 .Main {
     width: 210mm;
     height: 297mm;
     padding: 5mm 5mm 5mm 20mm;
-    background-color: var(--b-bgc);
+    background-color: white;
+}
+.hmain {
+    width: 297mm;
+    height: 210mm;
+    padding: 5mm;
+    background-color: white;
+}
+.hmainlast {
+    width: 297mm;
+    height: 205mm;
+    padding: 5mm;
+    background-color: white;
 }
 .subMain{
     width: 185mm;
     height: 287mm;
-    border: var(--b-t) solid var(--b-c);
+    border: 0.3mm solid black;
 }
 .container0{
     position: relative;
-    border: 0.6mm solid var(--b-c);
     width: 100%;
     height: auto;
 }
-.container1 {
-    top: 0;
-    right: 0;
-    left: 0;
-    text-align: center;
-}
 .m-1 {
-    margin: -0.6mm;
-}
-.container2 {
-    border: 0.6mm solid var(--b-c);
-    right: 5mm;
-    bottom: 5mm;
-    left: 20mm;
-    width: 100mm;
-}
-.container3 {
-    width: 100%;
-}
-.table1 {
-    text-indent: 1mm;
-    /*border: 0.6mm solid var(--b-c);*/
-    border-collapse: collapse;
-    width: 100%;
-    height: 115mm;
+    margin: -0.3mm;
 }
 .table3 {
-    font: var(--fs) Arial;
+    font: 3.5mm Arial;
     text-indent: 1mm;
-    border: 0.6mm solid var(--b-c);
     border-collapse: collapse;
     width: 100%;
     height: 25mm;
 }
 .cell-1 {
-    width: 23mm;
+    width: 32mm;
 }
 .cell-2 {
     width: 28mm;
@@ -85,10 +64,10 @@ td, tr {
     width: 37mm;
 }
 .cell-4 {
-    width: 32mm;
+    width: 23mm;
 }
 .cell-5 {
-    width: 18mm;
+    width: 19mm;
 }
 .cell-6 {
     width: 13mm;
@@ -112,7 +91,7 @@ td, tr {
     width: 42mm;
 }
 .w-40 {
-    width: 41.5mm;
+    width: 41.9mm;
 }
 .w-65 {
     width: 65mm;
@@ -124,20 +103,52 @@ td, tr {
     width: 72mm;
 }
 .w-153 {
-    width: calc(153mm - 0.6mm);
+    width: 152.4mm;
 }
 .w-172 {
     width: 171mm;
 }
 .w-list {
-    width: calc(21mm - 0.3mm);
+    width: 20mm;
 }
-.w-30 {
+.w10 {
+    width: 10%;
+}
+.w15 {
+    width: 15%;
+}
+.w20 {
+    width: 20%;
+}
+.w25 {
+    width: 25%;
+}
+.w30 {
     width: 30%;
-    display: inline-block;
+}
+.w33 {
+    width: 33.33%;
+}
+.w35 {
+    width: 35%;
+}
+.w40 {
+    width: 40%;
+}
+.w45 {
+    width: 45%;
+}
+.w50 {
+    width: 50%;
+}
+.w60 {
+    width: 60%;
+}
+.w90 {
+    width: 90%;
 }
 .border{
-    border: var(--b-t) solid var(--b-c);
+    border: 0.3mm solid black;
 }
 .fl{
     float: left;
@@ -173,23 +184,34 @@ td, tr {
     width: 100%;
 }
 .br-a{
-    border-right: var(--b-t) solid var(--b-c);
+    border-right: 0.3mm solid black;
 }
 .bl-a{
-    border-left: var(--b-t) solid var(--b-c);
+    border-left: 0.3mm solid black;
 }
 .bb-a{
-    border-bottom: var(--b-t) solid var(--b-c);
+    border-bottom: 0.3mm solid black;
 }
 .bt-a{
-    border-top: var(--b-t) solid var(--b-c);
+    border-top: 0.3mm solid black;
 }
 .pa{
     position: absolute;
-    top: 0;
 }
 .pr{
     position: relative;
+}
+.bottom-0{
+    bottom: 0;
+}
+.top-0{
+    top: 0;
+}
+.right-0{
+    right: 0;
+}
+.left-0{
+    left: 0;
 }
 .bc-n{
     background-color: white;
@@ -216,17 +238,68 @@ td, tr {
     vertical-align: middle;
 }
 .mt-1{
-    margin-top: calc(0 - var(--b-t));
+    margin-top: -0.3mm;
 }
 .fs-0{
     font-size: 0;
 }
 .fs{
-    font-size: var(--fs);
+    font-size: 3.5mm;
 }
 .oh{
     overflow: hidden;
 }
 .mt-03{
     margin-top: -0.3mm;
+}
+.pd-10{
+    padding: 1mm 10mm;
+}
+label{
+    color: black;
+}
+.bn{
+    border: none;
+}
+.c-w{
+    color: black;
+}
+.c-b{
+    color: black;
+}
+.bold{
+    font-weight: bold;
+}
+.mt-2mm{
+    margin-top: 2mm;
+}
+.mt-1mm{
+    margin-top: 1mm;
+}
+.pr-1mm{
+    padding-right: 1mm;
+}
+.pl-1mm{
+    padding-left: 1mm;
+}
+.pl-15px{
+    padding-left: 15px;
+}
+.pr-15px{
+    padding-right: 15px;
+}
+.lh-10mm{
+    line-height: 10mm;
+}
+.lh-7mm{
+    line-height: 7mm;
+}
+.lh-5mm{
+    line-height: 5mm;
+}
+.borCol-w {
+    border-color: black;
+}
+.borCol-i {
+    border-color: inherit;
 }

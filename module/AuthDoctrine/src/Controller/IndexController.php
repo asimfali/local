@@ -99,9 +99,10 @@ class IndexController extends AbstractActionController
             }
         }
         return ['form' => $form, 'messages' => $messages, 'auth' => $this->authService];
+//        return $this->baseView('view',['index/lside','auth-doctrine/index/register'],['lside' =>['fsdf' => 'fsd'],'cont' => $p]);
     }
     public function registrationSuccessAction()
     {
-        
+//        return $this->baseView('view',['index/lside','auth-doctrine/index/register-success'],['lside' =>['fsdf' => 'fsd'],'cont' => []]);
     }
 }

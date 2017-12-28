@@ -68,6 +68,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',
+            __DIR__ . '/../../Views',
         ],
         'template_map' => [
             'passportAdmin' => __DIR__ . '/../view/passport/admin/index.phtml',
@@ -84,7 +85,7 @@ return [
             'table' => 'passport',
             'desc' => 'Паспорта',
             'getUrl' => [
-                'name' => '',
+                'name' => 'passportAll',
                 'count' => '',
                 'filterName' => '',
                 'filterVal' => '',
@@ -103,13 +104,18 @@ return [
                 ['table' => 'status', 'alias' => 'st', 'pid' => 'status', 'id' => 'id', 'act' => '='],
                 ['table' => 'type_curtain', 'alias' => 'tc', 'pid' => 'typeCurtain', 'id' => 'id', 'act' => '='],
             ],
-//            'where' => [['table' => 'passport','name' => ['seria','typeCurtain'], 'act' => ' = ', 'val' => '?'],[8,5]],
+//            'where' => [
+//                'cond' => [
+//                    ['table' => 'p','name' => 'date', 'act' => 'BETWEEN', 'val' => '?', 'type' => 'AND'],
+//                    ['table' => 'st','name' => 'status', 'act' => '=', 'val' => '?', 'type' => 'AND'],
+//                    ['table' => 'tc','name' => 'alias', 'act' => '=', 'val' => '?']],
+//                'vals' => ['2017-11-30','2017-11-30','Действующий','W']],
             'sort' => [['p.status','DESC'],['p.seria','DESC'],['p.typeCurtain','DESC']],
             'columns' => ['p.typeCurtain','p.seria','p.status'],
             'ths' => [
                 'Тип' => 'tc.alias','Название' => ['p.name',0],
                 'Серия' => 'CONCAT(s.number," ",s.performance)' /*[['s.number','s.performance'],0]*/, 'ТУ' => ['tu.name',1],
-                'Дата' => 'date',
+                'Редакция' => 'date',
                 'Разработал' => 'u.usr_first_name',
                 'Номер паспорта' => ['p.number',1], 'Статус' => ['st.status',0],
                 'Действие' => ['show' => 'PDF']],
@@ -160,7 +166,7 @@ return [
             'ths' => [
                 'Тип' => ['typeCurtain','alias'], 'Серия' => ['seria','number'],
                 'Исполнение' => ['seria','performance'], 'ТУ' => ['tu','name'],
-                'Дата' => 'date', 'Разработал' => ['creator','usrFirstName'],
+                'Редакция' => 'date', 'Разработал' => ['creator','usrFirstName'],
                 'Номер паспорта' => 'number','Пароль' => 'password', 'Статус' => ['status','status'],
                 'Действие' => ['edit' => '<span class="glyphicon glyphicon-pencil"></span>',
                     'delete' => '<span class="glyphicon glyphicon-trash"></span>']],

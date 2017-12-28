@@ -81,6 +81,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             __DIR__ . '/../view',
+            __DIR__ . '/../../Views',
         ],
         'template_map' => [
             'izvAdmin' => __DIR__ . '/../view/izv/admin/index.phtml',

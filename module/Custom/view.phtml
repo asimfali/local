@@ -5,7 +5,7 @@
 $r = $this;
 ?>
 <div class='col-lg-2' style='float: left;'><?=$this->lside?></div>
-<div class='container'>
+<div class='col-lg-8'>
     <?='<div class=\"breadcrumbs hi\"> '. $this->navigation('Zend\\Navigation\\Default')->breadcrumbs()->setLinkLast(false)->setMinDepth(0)->render() . '</div><br>';?>
     <?=$this->cont?>
 </div>

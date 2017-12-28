@@ -103,10 +103,42 @@ class PDOQuery
                 $l = trim($l,', '); $r = trim($r,', ');
                 $l .= ')'; $r .= ')';
             } else {
-                $l .= $arr['table'] . '.' . $arr['name']; $r = '?';
+                $tmp = $this->createWhere($arr['table'], $arr['name'], $arr['act'], $arr['count']);
+                $l = $tmp[0]; $r = $tmp[1];
             }
             $this->where .= $l . $arr['act'] . $r;
+            if (isset($arr['type'])){
+                $this->where .= ' ' . $arr['type'] . ' ';
+            }
+        } else if(is_array($arr)) {
+            foreach ($arr as $item) {
+                $this->setWhere($item);
+            }
         }
+    }
+
+    public function createWhere($table, $p, $acts, $count = null)
+    {
+        $l = $table . '.'; $r = '?';
+        if (empty($table)) $l = '';
+        $acts = trim($acts);
+        switch ($acts)
+        {
+            case 'BETWEEN':
+                $l .= $p . ' ';
+                $r = " ? AND ? ";
+                break;
+            case 'IN':
+                $l .= $p . ' ';
+                if (isset($count))
+                    $r = ' (' . str_repeat('?, ', $count-1) . '?) ';
+                else $r = ' ? ';
+                break;
+            default:
+                $l .= $p;
+                break;
+        }
+        return [$l, $r];
     }
 
     public function init($arr)
@@ -286,8 +318,8 @@ class PDOQuery
     public function getInArr($v, $f, $num = 1)
     {
         $v = $v[$f];
-        if (is_string($v)) return $v;
-        else if(is_array($v)) return $v[$num];
+        if(is_array($v)) return $v[$num];
+        else return $v;
     }
     public function getContent($item,$name)
     {
@@ -350,6 +382,8 @@ class PDOQuery
                         }
                         if ($key == 'delete')
                             $onClick = "onclick=\"if (confirm('Удалить запись?')){ document.location = this.href; } return false;\"";
+                        else if($d == 'PDF')
+                            $onClick = "target=\"_blank\"";
                         $this->addAction(['url' => $url, 'txt' => $d, 'name' => $arr['table'], 'id' => $arr['id'], 'get' => $get, 'pname' => $arr['pname']],$onClick);
                     }
                     $tmp = '';
