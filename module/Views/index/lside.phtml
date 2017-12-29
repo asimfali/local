@@ -1,3 +1,7 @@
+<fieldset>
+    <legend>Панель управления</legend>
+<?='<div class=\"breadcrumbs hi\"> '. $this->navigation('Zend\\Navigation\\Default')->menu()->setOnlyActiveBranch(true)->setMinDepth(0)->render() . '</div><br>';?>
+</fieldset>
 <?php
 /**
  * @var \Zend\View\Renderer\PhpRenderer $r

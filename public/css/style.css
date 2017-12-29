@@ -45,3 +45,6 @@ div.container a.navbar-brand > img {
 .w100{
     width: 100%;
 }
+.navbar-default .navbar-nav > .active > a {
+    background-color: #DF691A;
+}

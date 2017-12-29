@@ -22,3 +22,10 @@
 	font-family:arial;
 	font-size:10pt;
 }
+legend {
+	font-size: 12pt;
+	margin-bottom: 10px;
+}
+fieldset {
+	padding-bottom: 10px;
+}

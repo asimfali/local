@@ -78,11 +78,39 @@ return [
                 'label' => 'Инфо',
                 'route' => 'info/all',
                 'action' => 'index',
+                'pages' => [
+                    [
+                        'label' => 'Теплообменники',
+                        'route' => 'info/all',
+                        'action' => 'index',
+                        'query' => [
+                            'name' => 'taAll',
+                        ],
+                    ],
+                    [
+                        'label' => 'Рабочие колеса',
+                        'route' => 'info/all',
+                        'action' => 'index',
+                        'query' => [
+                            'name' => 'wwAll',
+                        ],
+                    ],
+                ],
             ],
             [
                 'label' => 'Технологи',
                 'route' => 'tech/all',
                 'action' => 'index',
+                'pages' => [
+                    [
+                        'label' => 'Дефекты',
+                        'route' => 'tech/all',
+                        'action' => 'index',
+                        'query' => [
+                            'name' => 'defectAll',
+                        ],
+                    ],
+                ],
             ],
         ],
         'admin_navigation' => [

@@ -48,7 +48,7 @@ class IndexController extends BaseAddController
     public function indexAction()
     {
         $p = $this->indexPDO($this->model, 45);
-        return $this->baseView('view',['index/lside','tech/index/index'],['lside'=>['list' => $this->names,'base' => ''],'cont' => $p]);
+        return $this->baseView('view',['index/lside','tech/index/index'],['lside'=>[],'cont' => $p]);
     }
     public function prAction()
     {

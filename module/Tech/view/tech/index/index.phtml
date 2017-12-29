@@ -5,6 +5,7 @@
 $r = $this;
 $d = date('Y-m-d');
 $this->headLink()->appendStylesheet('/css/btnstyle.css');
+echo '<div class="breadcrumbs hi"> <br>'. $this->navigation('Zend\\Navigation\\default')->breadcrumbs()->setLinkLast(true)->render() . '</div>';
 if (isset($default)) return;
 //$bv = new \Custom\BaseView($r, 'main', 'container');
 //$bv->addInCol()

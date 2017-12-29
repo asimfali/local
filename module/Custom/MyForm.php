@@ -218,7 +218,8 @@ class MyForm
             $fe = '';
             switch ($type){
                 case 'date':
-                    $this->el->setValue(date('Y-m-d'));
+                    if (empty($this->el->getValue()))
+                        $this->el->setValue(date('Y-m-d'));
                     $fe = $this->r->formDate($this->el);
                     break;
                 case 'select':
